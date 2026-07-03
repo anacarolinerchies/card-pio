@@ -662,6 +662,7 @@ window.finalizarPedido = async function() {
   var hora = document.getElementById('cli-hora').value;
   var obs = document.getElementById('cli-obs').value.trim();
   if(!nome||!fone||!data){ showToast('Preencha nome, WhatsApp e data!'); return; }
+  var whatsWindow = window.open('', '_blank');
   var dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
   var msg = '🌿 *Pedido Ana Chies Confeitaria*\n\n👤 *Cliente:* '+nome+'\n📱 *WhatsApp:* '+fone+'\n📅 *Retirada:* '+dataFmt+' — '+hora+'\n💳 *Pagamento:* '+(window.pagSelecionado==='pix'?'Pix':'Dinheiro')+'\n\n🛍 *Itens do pedido:*\n';
   var total = 0;
@@ -678,7 +679,8 @@ window.finalizarPedido = async function() {
     itens:window.carrinho.slice(), total:total, pagamento:window.pagSelecionado,
     status:'pendente', criado:new Date().toLocaleString('pt-BR')
   });
-  window.open('https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg),'_blank');
+  if(whatsWindow) whatsWindow.location = 'https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg);
+  else window.open('https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg),'_blank');
   window.carrinho=[]; atualizarFloat(); showPage('home');
   showToast('Pedido enviado! Aguarde confirmação no WhatsApp 💚');
 };
@@ -803,7 +805,7 @@ function renderCarrinho() {
     '<div class="form-group"><label>Nome completo</label><input type="text" id="cli-nome" placeholder="Seu nome"></div>'+
     '<div class="form-group"><label>WhatsApp</label><input type="text" id="cli-fone" placeholder="(54) 99999-9999"></div>'+
     '<div class="form-group"><label>Data de retirada</label><input type="date" id="cli-data" min="'+dataMin+'" value="'+dataMin+'"></div>'+
-    '<div class="form-group"><label>Horário preferido</label><select id="cli-hora"><option>Manhã (8h–12h)</option><option>Tarde (13h–18h)</option><option>Combinar via WhatsApp</option></select></div>'+
+    '<div class="form-group"><label>Horário preferido</label><select id="cli-hora"><option>Tarde (13h–18h)</option><option>Noite (18h–21h)</option><option>Combinar via WhatsApp</option></select></div>'+
     '<div class="form-group full"><label>Observações</label><textarea id="cli-obs" placeholder="Alergias, variações, pedidos especiais..."></textarea></div>'+
     '</div></div>'+
     '<div class="form-section"><div class="form-title serif">Forma de pagamento</div>'+
