@@ -400,6 +400,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBFduCEVYccHrARoCURil42qvYq5RHXhLo",
@@ -413,9 +414,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
+const ADMIN_EMAIL = 'admin@anachies.com';
 
 // ── ESTADO LOCAL ──
-window.ADMIN_SENHA = 'anachies2025';
 window.novaFoto = null;
 window.editFoto = null;
 window.editandoId = null;
@@ -618,6 +620,41 @@ window.salvarConfiguracoes = async function() {
 };
 
 // ── FINALIZAR PEDIDO (salva no Firebase) ──
+// ── LOGIN ADMIN (Firebase Authentication) ──
+window.loginAdmin = async function() {
+  var senha = document.getElementById('adminSenha').value;
+  var erroEl = document.getElementById('adminErro');
+  erroEl.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, ADMIN_EMAIL, senha);
+    fecharAdmin();
+    showPage('admin');
+  } catch (e) {
+    erroEl.textContent = 'Senha incorreta.';
+  }
+};
+
+window.logout = async function() {
+  await signOut(auth);
+  showPage('home');
+};
+
+window.alterarSenha = async function() {
+  var nova = document.getElementById('cfg-senha-nova').value;
+  var conf = document.getElementById('cfg-senha-conf').value;
+  if(!nova){ showToast('Digite a nova senha!'); return; }
+  if(nova!==conf){ showToast('As senhas não coincidem!'); return; }
+  if(nova.length<6){ showToast('A senha precisa ter ao menos 6 caracteres!'); return; }
+  try {
+    await updatePassword(auth.currentUser, nova);
+    document.getElementById('cfg-senha-nova').value='';
+    document.getElementById('cfg-senha-conf').value='';
+    showToast('Senha alterada com sucesso!');
+  } catch(e) {
+    showToast('Não foi possível alterar. Saia e entre de novo no admin, depois tente outra vez.');
+  }
+};
+
 window.finalizarPedido = async function() {
   var nome = document.getElementById('cli-nome').value.trim();
   var fone = document.getElementById('cli-fone').value.trim();
@@ -782,11 +819,6 @@ function removerItem(id){ window.carrinho=window.carrinho.filter(function(c){ret
 
 function abrirAdmin(){document.getElementById('adminOverlay').classList.add('open');}
 function fecharAdmin(){document.getElementById('adminOverlay').classList.remove('open');document.getElementById('adminSenha').value='';document.getElementById('adminErro').textContent='';}
-function loginAdmin(){
-  if(document.getElementById('adminSenha').value===window.ADMIN_SENHA){fecharAdmin();showPage('admin');}
-  else document.getElementById('adminErro').textContent='Senha incorreta.';
-}
-function logout(){showPage('home');}
 
 function adminTab(tab,el){
   var tabs=document.querySelectorAll('.admin-tab');
@@ -906,18 +938,6 @@ function renderAdminPedidos(){
       '<button onclick="abrirWhats(\'Olá '+p.nome+'! Seu pedido foi confirmado para '+dataFmt+' 💚\')" style="background:var(--dourado);border:none;color:var(--marrom-escuro);padding:8px 16px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:1px;text-transform:uppercase;">Avisar Cliente</button></div>';
   }
   document.getElementById('lista-pedidos').innerHTML=html;
-}
-
-function alterarSenha(){
-  var nova=document.getElementById('cfg-senha-nova').value;
-  var conf=document.getElementById('cfg-senha-conf').value;
-  if(!nova){showToast('Digite a nova senha!');return;}
-  if(nova!==conf){showToast('As senhas não coincidem!');return;}
-  if(nova.length<6){showToast('A senha precisa ter ao menos 6 caracteres!');return;}
-  window.ADMIN_SENHA=nova;
-  document.getElementById('cfg-senha-nova').value='';
-  document.getElementById('cfg-senha-conf').value='';
-  showToast('Senha alterada com sucesso!');
 }
 
 function abrirWhats(msg){window.open('https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg),'_blank');}
