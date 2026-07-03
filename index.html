@@ -34,13 +34,15 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
 .btn-primary{background:var(--dourado);color:var(--marrom-escuro);border:none;padding:14px 32px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:500;transition:all 0.2s;}
 .btn-primary:hover{background:var(--dourado-claro);}
-.btn-outline{background:transparent;color:var(--offwhite);border:1px solid rgba(249,245,239,0.4);padding:14px 32px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+.btn-sm{background:var(--dourado);color:var(--marrom-escuro);border:none;padding:8px 16px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
+.btn-outline{background:transparent;color:var(--offwhite);border:1px solid rgba(249,245,239,0.4);padding:14px 32px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;}
 .section{max-width:900px;margin:0 auto;padding:60px 2rem;}
 .section-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--marrom);text-align:center;margin-bottom:8px;}
 .section-line{width:60px;height:1px;background:var(--dourado);margin:0 auto 40px;}
 .categoria-titulo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--marrom);margin-bottom:4px;display:flex;align-items:center;gap:12px;}
 .categoria-titulo::after{content:'';flex:1;height:1px;background:var(--borda);}
 .categoria-bloco{margin-bottom:48px;}
+.especiais-banner{background:linear-gradient(135deg,var(--marrom-escuro),var(--verde));padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
 .produtos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px;}
 .produto-card{background:white;border:1px solid var(--borda);transition:all 0.25s;position:relative;overflow:hidden;}
 .produto-card:hover{border-color:var(--dourado);transform:translateY(-2px);}
@@ -52,13 +54,12 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .produto-bottom{display:flex;align-items:center;justify-content:space-between;}
 .produto-preco{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--marrom);}
 .produto-preco span{font-size:13px;font-weight:300;}
-.adicionar-btn{background:var(--marrom-escuro);color:white;border:none;padding:8px 16px;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;transition:background 0.2s;}
+.adicionar-btn{background:var(--marrom-escuro);color:white;border:none;padding:8px 16px;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
 .adicionar-btn:hover{background:var(--verde);}
 .vegano-badge{position:absolute;top:12px;right:12px;background:var(--verde);color:white;font-size:9px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;}
 .adicional-box{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
 .adicional-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .adicional-nome{font-size:12px;font-weight:500;color:var(--marrom);}
-.adicional-desc{font-size:11px;color:var(--texto-medio);}
 .adicional-btn{background:var(--verde);color:white;border:none;padding:5px 10px;font-size:10px;letter-spacing:1px;cursor:pointer;font-family:'Jost',sans-serif;white-space:nowrap;margin-left:8px;}
 .carrinho-float{position:fixed;bottom:24px;right:24px;background:var(--marrom-escuro);color:white;border:1px solid var(--dourado);padding:14px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;z-index:200;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:1px;}
 .carrinho-count{background:var(--dourado);color:var(--marrom-escuro);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
@@ -110,8 +111,8 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .admin-erro{color:#e74c3c;font-size:12px;margin-bottom:12px;}
 .admin-header{background:var(--marrom-escuro);padding:20px 32px;display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
 .admin-header h2{font-family:'Cormorant Garamond',serif;color:var(--dourado-claro);font-size:22px;font-weight:300;letter-spacing:2px;}
-.admin-tabs{display:flex;margin-bottom:28px;border-bottom:2px solid var(--borda);}
-.admin-tab{padding:12px 24px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;color:var(--texto-medio);border:none;background:none;font-family:'Jost',sans-serif;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.admin-tabs{display:flex;margin-bottom:28px;border-bottom:2px solid var(--borda);flex-wrap:wrap;}
+.admin-tab{padding:12px 20px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;color:var(--texto-medio);border:none;background:none;font-family:'Jost',sans-serif;border-bottom:2px solid transparent;margin-bottom:-2px;}
 .admin-tab.active{color:var(--marrom);border-bottom-color:var(--marrom);}
 .admin-content{display:none;}.admin-content.active{display:block;}
 .produto-admin-card{background:white;border:1px solid var(--borda);padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;}
@@ -137,25 +138,30 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .status-confirmado{background:#D4EDDA;color:#155724;}
 .edit-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:600;display:none;align-items:center;justify-content:center;}
 .edit-modal-overlay.open{display:flex;}
-.edit-modal{background:white;padding:32px;width:480px;border-top:3px solid var(--dourado);max-height:90vh;overflow-y:auto;}
+.edit-modal{background:white;padding:32px;width:520px;border-top:3px solid var(--dourado);max-height:90vh;overflow-y:auto;}
 .edit-modal h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--marrom);margin-bottom:20px;}
 .edit-modal-grupo{margin-bottom:14px;}
 .edit-modal-grupo label{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-medio);margin-bottom:6px;}
 .edit-modal-grupo input,.edit-modal-grupo select,.edit-modal-grupo textarea{width:100%;border:1px solid var(--borda);padding:10px 12px;font-family:'Jost',sans-serif;font-size:14px;color:var(--texto);background:var(--offwhite);outline:none;}
 .edit-modal-grupo textarea{resize:vertical;min-height:70px;}
 .edit-modal-actions{display:flex;gap:10px;margin-top:20px;}
+.adicional-admin-item{background:var(--offwhite2);border:1px solid var(--borda);padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.adicional-admin-info{flex:1;font-size:13px;}
 .success-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--verde);color:white;padding:12px 24px;font-size:13px;z-index:700;opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .success-toast.show{opacity:1;}
+.sync-indicator{position:fixed;top:70px;right:16px;background:var(--marrom-escuro);color:var(--dourado-claro);padding:8px 14px;font-size:11px;letter-spacing:1px;z-index:300;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.sync-indicator.show{opacity:1;}
 .footer{background:var(--marrom-escuro);padding:40px 2rem;text-align:center;color:rgba(249,245,239,0.6);font-size:12px;letter-spacing:1px;}
 .footer-logo{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--dourado-claro);font-weight:300;margin-bottom:8px;}
 .footer-insta{color:var(--dourado-claro);text-decoration:none;font-size:12px;letter-spacing:2px;display:inline-block;margin-bottom:20px;border-bottom:1px solid var(--dourado);padding-bottom:2px;}
-.especiais-banner{background:linear-gradient(135deg,var(--marrom-escuro),var(--verde));padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
 .voltar-btn{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--marrom);cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:1px;margin-bottom:24px;padding:0;}
 @media(max-width:600px){.hero h1{font-size:36px;}.form-grid{grid-template-columns:1fr;}.contato-grid{grid-template-columns:1fr;}.nav-links{display:none;}}
 </style>
 </head>
 <body>
 <div class="success-toast" id="toast"></div>
+<div class="sync-indicator" id="sync">☁️ Salvando...</div>
+
 <nav>
   <div class="nav-logo serif">Ana Chies</div>
   <ul class="nav-links">
@@ -165,7 +171,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   </ul>
   <button class="admin-btn" onclick="abrirAdmin()">Admin ⚙</button>
 </nav>
-<div class="aviso-bar" id="aviso-bar">✦ <span>Prazo mínimo: 1 dia de antecedência</span> · Para pronta entrega disponível hoje, consulte no WhatsApp ✦</div>
+<div class="aviso-bar" id="aviso-bar">✦ <span id="aviso-texto-pub">Prazo mínimo: 1 dia de antecedência</span> · Para pronta entrega disponível hoje, consulte no WhatsApp ✦</div>
 
 <!-- HOME -->
 <div id="page-home" class="page active">
@@ -199,7 +205,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <h2 class="section-title serif">Cardápio</h2>
     <div class="section-line"></div>
     <button class="voltar-btn" onclick="showPage('home')">← Voltar</button>
-    <div id="produtos-lista"></div>
+    <div id="produtos-lista"><div style="text-align:center;padding:40px;color:var(--texto-medio);">Carregando cardápio... ☁️</div></div>
   </div>
 </div>
 
@@ -241,14 +247,14 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="contato-grid">
       <div class="contato-card">
         <h3 class="serif">Local de Retirada</h3>
-        <div class="contato-linha"><span class="contato-icon">📍</span><span>Rua Pinheiro Machado, 514<br>Bairro Vila Nova · Carlos Barbosa – RS</span></div>
-        <div class="contato-linha"><span class="contato-icon">📱</span><span>+55 54 99151-2886</span></div>
+        <div class="contato-linha"><span class="contato-icon">📍</span><span id="pub-endereco">Rua Pinheiro Machado, 514<br>Bairro Vila Nova · Carlos Barbosa – RS</span></div>
+        <div class="contato-linha"><span class="contato-icon">📱</span><span id="pub-whats">+55 54 99151-2886</span></div>
         <div class="contato-linha"><span class="contato-icon">📸</span><a href="https://www.instagram.com/anachies.fit" target="_blank" style="color:var(--dourado);text-decoration:none;">@anachies.fit</a></div>
         <div style="margin-top:16px;"><button class="btn-primary" onclick="abrirWhats('Olá! Quero informações sobre a Ana Chies Confeitaria')">Falar no WhatsApp</button></div>
       </div>
       <div class="contato-card">
         <h3 class="serif">Formas de Pagamento</h3>
-        <div class="contato-linha"><span class="contato-icon">💚</span><span>Pix · <small style="color:var(--dourado)">Chave: 04452047025</small></span></div>
+        <div class="contato-linha"><span class="contato-icon">💚</span><span>Pix · <small style="color:var(--dourado)" id="pub-pix">Chave: 04452047025</small></span></div>
         <div class="contato-linha"><span class="contato-icon">💵</span><span>Dinheiro</span></div>
         <div style="background:var(--offwhite2);border-left:3px solid var(--dourado);padding:12px 14px;margin-top:16px;font-size:12px;color:var(--texto-medio);line-height:1.7;">Após o pagamento via Pix, envie o comprovante no WhatsApp para confirmação do pedido.</div>
         <div style="margin-top:16px;background:var(--verde);color:white;padding:12px 14px;font-size:12px;line-height:1.7;"><strong>Pedidos sob encomenda</strong><br>Prazo mínimo: 1 dia de antecedência.<br>Para pronta entrega, consulte no WhatsApp.</div>
@@ -259,35 +265,31 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 
 <!-- ADMIN -->
 <div id="page-admin" class="page">
-  <div class="admin-header"><h2 class="serif">Painel Administrativo</h2><button class="admin-btn" onclick="logout()">Sair</button></div>
-  <div style="max-width:860px;margin:0 auto;padding:0 2rem 60px;">
+  <div class="admin-header"><h2 class="serif">Painel Administrativo · Ana Chies</h2><button class="admin-btn" onclick="logout()">Sair</button></div>
+  <div style="max-width:900px;margin:0 auto;padding:0 2rem 60px;">
+    <div style="background:var(--offwhite2);border:1px solid var(--borda);padding:12px 16px;margin-bottom:24px;font-size:12px;color:var(--verde);display:flex;align-items:center;gap:8px;">
+      ☁️ <strong>Firebase conectado</strong> — todas as alterações são salvas automaticamente na nuvem em tempo real.
+    </div>
     <div class="admin-tabs">
       <button class="admin-tab active" onclick="adminTab('produtos',this)">Produtos</button>
+      <button class="admin-tab" onclick="adminTab('categorias',this)">Categorias</button>
       <button class="admin-tab" onclick="adminTab('pedidos',this)">Pedidos</button>
-      <button class="admin-tab" onclick="adminTab('avisos',this)">Avisos</button>
+      <button class="admin-tab" onclick="adminTab('configuracoes',this)">Configurações</button>
     </div>
+
+    <!-- PRODUTOS -->
     <div class="admin-content active" id="admin-produtos">
       <div class="novo-produto-form">
         <div class="form-title serif">Adicionar Novo Produto</div>
         <div class="form-grid">
-          <div class="form-group"><label>Nome do produto</label><input type="text" id="novo-nome" placeholder="Ex: Brownie de Cacau"></div>
+          <div class="form-group"><label>Nome do produto</label><input type="text" id="novo-nome" placeholder="Ex: Cheesecake Vegano"></div>
           <div class="form-group"><label>Preço (R$)</label><input type="number" id="novo-preco" placeholder="0.00" step="0.01"></div>
-          <div class="form-group"><label>Categoria</label>
-            <select id="novo-cat">
-              <option>Cookies</option><option>Brownie</option><option>Muffins</option>
-              <option>Bolos Tradicionais</option><option>Bolos Três Camadas</option>
-              <option>Matilda no Pote</option><option>Especiais</option>
-            </select>
-          </div>
+          <div class="form-group"><label>Categoria</label><select id="novo-cat"></select></div>
           <div class="form-group"><label>Vegano?</label><select id="novo-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
-          <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva os ingredientes e diferenciais..."></textarea></div>
+          <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva o produto..."></textarea></div>
           <div class="form-group full">
             <label>Foto do produto</label>
-            <div class="upload-area">
-              <input type="file" accept="image/*" onchange="previewNovaFoto(event)">
-              <div style="font-size:28px;margin-bottom:8px;">📷</div>
-              <div style="font-size:12px;color:var(--texto-medio);">Clique para escolher uma foto</div>
-            </div>
+            <div class="upload-area"><input type="file" accept="image/*" onchange="previewFoto(event,'novo-preview','novaFoto')"><div style="font-size:28px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para escolher uma foto</div></div>
             <img id="novo-preview" class="upload-preview" style="display:none;">
           </div>
         </div>
@@ -295,22 +297,50 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
       </div>
       <div id="lista-admin-produtos"></div>
     </div>
+
+    <!-- CATEGORIAS -->
+    <div class="admin-content" id="admin-categorias">
+      <div class="form-section">
+        <div class="form-title serif">Gerenciar Categorias</div>
+        <p style="font-size:13px;color:var(--texto-medio);margin-bottom:20px;line-height:1.7;">Crie, edite e organize as categorias do seu cardápio. As marcadas como "Especial" aparecem com banner dourado.</p>
+        <div id="lista-categorias"></div>
+        <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;">
+          <input type="text" id="nova-cat-nome" placeholder="Nome da nova categoria" style="border:1px solid var(--borda);padding:10px 14px;font-family:'Jost',sans-serif;font-size:14px;flex:1;background:var(--offwhite);outline:none;min-width:200px;">
+          <select id="nova-cat-especial" style="border:1px solid var(--borda);padding:10px 14px;font-family:'Jost',sans-serif;font-size:13px;background:var(--offwhite);outline:none;">
+            <option value="nao">Categoria normal</option>
+            <option value="sim">Especial (banner dourado)</option>
+          </select>
+          <button class="btn-sm" onclick="adicionarCategoria()">+ Adicionar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PEDIDOS -->
     <div class="admin-content" id="admin-pedidos"><div id="lista-pedidos"></div></div>
-    <div class="admin-content" id="admin-avisos">
+
+    <!-- CONFIGURAÇÕES -->
+    <div class="admin-content" id="admin-configuracoes">
       <div class="form-section">
         <div class="form-title serif">Aviso no Topo do Site</div>
-        <div class="form-group" style="margin-bottom:16px;"><label>Texto do aviso</label><input type="text" id="aviso-texto" placeholder="Ex: Novidade: Cheesecake vegano disponível!"></div>
+        <div class="form-group" style="margin-bottom:16px;"><label>Texto do aviso</label><input type="text" id="cfg-aviso" placeholder="Ex: Novidade: Cheesecake vegano disponível!"></div>
         <button class="btn-primary" onclick="salvarAviso()">Salvar Aviso</button>
       </div>
       <div class="form-section">
-        <div class="form-title serif">Informações de Contato</div>
+        <div class="form-title serif">Contato & Pagamento</div>
         <div class="form-grid">
-          <div class="form-group"><label>WhatsApp</label><input type="text" id="cfg-whats" value="+55 54 991512886"></div>
+          <div class="form-group"><label>WhatsApp (somente números)</label><input type="text" id="cfg-whats" value="5554991512886"></div>
           <div class="form-group"><label>Chave Pix</label><input type="text" id="cfg-pix" value="04452047025"></div>
-          <div class="form-group full"><label>Endereço</label><input type="text" id="cfg-end" value="Rua Pinheiro Machado, 514, Bairro Vila Nova, Carlos Barbosa – RS"></div>
+          <div class="form-group full"><label>Endereço de retirada</label><input type="text" id="cfg-end" value="Rua Pinheiro Machado, 514, Bairro Vila Nova, Carlos Barbosa – RS"></div>
         </div>
-        <button class="btn-primary" style="margin-top:16px;" onclick="showToast('Configurações salvas!')">Salvar Configurações</button>
-        <p style="font-size:11px;color:var(--texto-medio);margin-top:12px;">* Firebase: integração em breve — dados salvos na nuvem em tempo real.</p>
+        <button class="btn-primary" style="margin-top:16px;" onclick="salvarConfiguracoes()">Salvar Configurações</button>
+      </div>
+      <div class="form-section">
+        <div class="form-title serif">Alterar Senha</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Nova senha</label><input type="password" id="cfg-senha-nova" placeholder="Nova senha"></div>
+          <div class="form-group"><label>Confirmar senha</label><input type="password" id="cfg-senha-conf" placeholder="Repita a senha"></div>
+        </div>
+        <button class="btn-primary" style="margin-top:16px;" onclick="alterarSenha()">Alterar Senha</button>
       </div>
     </div>
   </div>
@@ -336,27 +366,26 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <h3 class="serif">Editar Produto</h3>
     <div class="edit-modal-grupo"><label>Nome</label><input type="text" id="edit-nome"></div>
     <div class="edit-modal-grupo"><label>Preço (R$)</label><input type="number" id="edit-preco" step="0.01"></div>
-    <div class="edit-modal-grupo"><label>Categoria</label>
-      <select id="edit-cat">
-        <option>Cookies</option><option>Brownie</option><option>Muffins</option>
-        <option>Bolos Tradicionais</option><option>Bolos Três Camadas</option>
-        <option>Matilda no Pote</option><option>Especiais</option>
-      </select>
-    </div>
+    <div class="edit-modal-grupo"><label>Categoria</label><select id="edit-cat"></select></div>
     <div class="edit-modal-grupo"><label>Vegano?</label><select id="edit-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
     <div class="edit-modal-grupo"><label>Descrição</label><textarea id="edit-desc"></textarea></div>
     <div class="edit-modal-grupo">
-      <label>Foto do produto</label>
-      <div class="upload-area">
-        <input type="file" accept="image/*" onchange="previewEditFoto(event)">
-        <div style="font-size:28px;margin-bottom:8px;">📷</div>
-        <div style="font-size:12px;color:var(--texto-medio);">Clique para trocar a foto</div>
-      </div>
+      <label>Foto</label>
+      <div class="upload-area"><input type="file" accept="image/*" onchange="previewFoto(event,'edit-preview','editFoto')"><div style="font-size:24px;margin-bottom:6px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para trocar</div></div>
       <img id="edit-preview" class="upload-preview" style="display:none;">
+    </div>
+    <div class="edit-modal-grupo">
+      <label>Adicionais</label>
+      <div id="edit-adicionais-lista"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <input type="text" id="ad-nome" placeholder="Nome do adicional" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:140px;">
+        <input type="number" id="ad-preco" placeholder="R$" step="0.01" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:80px;background:var(--offwhite);outline:none;">
+        <button class="btn-sm" onclick="adicionarAdicionalTemp()">+</button>
+      </div>
     </div>
     <div class="edit-modal-actions">
       <button class="btn-primary" onclick="salvarEdicao()">Salvar</button>
-      <button class="btn-outline" style="color:var(--marrom);border-color:var(--borda);" onclick="fecharEditModal()">Cancelar</button>
+      <button style="background:transparent;border:1px solid var(--borda);color:var(--marrom);padding:14px 24px;cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;" onclick="fecharEditModal()">Cancelar</button>
     </div>
   </div>
 </div>
@@ -367,332 +396,536 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   <p>Pedidos sob encomenda · Carlos Barbosa – RS · +55 54 99151-2886</p>
 </footer>
 
-<script>
-var ADMIN_SENHA = 'anachies2025';
-var novaFotoBase64 = null;
-var editFotoBase64 = null;
-var editandoId = null;
-var ultimoId = 20;
-var pedidos = [];
-var carrinho = [];
-var pagSelecionado = 'pix';
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-var produtos = [
-  {id:1,nome:'Cookie Americano',preco:6.00,cat:'Cookies',desc:'Cookie clássico com gotas de chocolate 70%, crocante por fora e macio por dentro.',vegano:'nao',foto:null,adicionais:[]},
-  {id:2,nome:'Cookie de Cacau',preco:4.00,cat:'Cookies',desc:'Cookie de cacau puro, levemente adoçado com adoçante natural. Sem glúten e sem açúcar branco.',vegano:'sim',foto:null,adicionais:[]},
-  {id:3,nome:'Cookie Vegano',preco:4.00,cat:'Cookies',desc:'Cookie 100% vegano, sem leite animal e sem ovos. Sabor irresistível com ingredientes limpos.',vegano:'sim',foto:null,adicionais:[]},
-  {id:4,nome:'Brownie Tradicional Funcional',preco:14.00,cat:'Brownie',desc:'Brownie denso e intenso de chocolate, adoçado com açúcar de coco. Sem farinha de trigo e sem açúcar branco. Prefere a versão zero adição de açúcar? É só pedir!',vegano:'nao',foto:null,adicionais:[{id:'brig',nome:'+ Brigadeiro Rosa',preco:2.00,desc:'Brigadeiro de frutas vermelhas, sem açúcar branco.',vegano:'sim'}]},
-  {id:7,nome:'Muffin de Maçã com Especiarias',preco:7.50,cat:'Muffins',desc:'Adoçado apenas com a doçura natural da maçã. Acompanha pedacinhos de nozes.',vegano:'nao',foto:null,adicionais:[]},
-  {id:8,nome:'Muffin de Banana com Mirtilo',preco:6.50,cat:'Muffins',desc:'Adoçado com banana madura e mirtilo fresco. Acompanha pedacinhos de nozes.',vegano:'nao',foto:null,adicionais:[]},
-  {id:9,nome:'Bolo de Cenoura com Ganache',preco:64.00,cat:'Bolos Tradicionais',desc:'Bolo tradicional funcional de cenoura com ganache de chocolate vegano. Versão vegana: R$ 68,00.',vegano:'nao',foto:null,adicionais:[]},
-  {id:10,nome:'Bolo de Banana com Mirtilos',preco:40.00,cat:'Bolos Tradicionais',desc:'Adoçado com a própria fruta, sem adição de açúcar. Levinho e saboroso.',vegano:'sim',foto:null,adicionais:[]},
-  {id:11,nome:'Bolo de Maçã com Especiarias',preco:55.00,cat:'Bolos Tradicionais',desc:'Adoçado com a própria fruta e perfumado com especiarias naturais.',vegano:'sim',foto:null,adicionais:[]},
-  {id:12,nome:'Bolo de Abacaxi com Coco',preco:95.00,cat:'Bolos Três Camadas',desc:'Bolo três camadas com recheio de abacaxi e cobertura de coco fresco.',vegano:'nao',foto:null,adicionais:[]},
-  {id:13,nome:'Bolo de Brigadeiro Rosa com Frutas Vermelhas',preco:85.00,cat:'Bolos Três Camadas',desc:'Bolo três camadas com brigadeiro de frutas vermelhas. Visual deslumbrante.',vegano:'sim',foto:null,adicionais:[]},
-  {id:14,nome:'Matilda no Pote',preco:22.00,cat:'Matilda no Pote',desc:'O bolo de chocolate funcional da Ana Chies em um pote individual. Zero adição de açúcar — adoçado apenas com a doçura natural dos ingredientes.',vegano:'nao',foto:null,adicionais:[{id:'calda',nome:'+ Calda Extra',preco:15.00,desc:'Calda artesanal para acompanhar.',vegano:'sim'}]},
-  {id:16,nome:'Brownie no Pote',preco:30.00,cat:'Matilda no Pote',desc:'Brownie funcional servido em pote individual. Adoçado com açúcar de coco. Prefere sem adição de açúcar? É só pedir a versão zero!',vegano:'nao',foto:null,adicionais:[{id:'calda-brownie',nome:'+ Calda Extra',preco:15.00,desc:'Calda artesanal para acompanhar.',vegano:'sim'}]},
-  {id:17,nome:'Paçoca Zero Adição de Açúcar',preco:6.00,cat:'Especiais',desc:'Paçoca artesanal zero adição de açúcar, feita para quem não pode consumir adoçantes. Adoçada apenas com a doçura natural dos ingredientes.',vegano:'sim',foto:null,adicionais:[]}
+const firebaseConfig = {
+  apiKey: "AIzaSyBFduCEVYccHrARoCURil42qvYq5RHXhLo",
+  authDomain: "ana-chies.firebaseapp.com",
+  databaseURL: "https://ana-chies-default-rtdb.firebaseio.com",
+  projectId: "ana-chies",
+  storageBucket: "ana-chies.firebasestorage.app",
+  messagingSenderId: "373444890232",
+  appId: "1:373444890232:web:a13fd1fb6c67b8b3cd678d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ── ESTADO LOCAL ──
+window.ADMIN_SENHA = 'anachies2025';
+window.novaFoto = null;
+window.editFoto = null;
+window.editandoId = null;
+window.adicionaisTemp = [];
+window.carrinho = [];
+window.pedidos = [];
+window.pagSelecionado = 'pix';
+window.whatsNum = '5554991512886';
+window.pixChave = '04452047025';
+window.categorias = [];
+window.produtos = [];
+
+// ── DADOS PADRÃO (primeira vez) ──
+const categoriasDefault = [
+  {id:'cookies',nome:'Cookies',especial:'nao'},
+  {id:'brownie',nome:'Brownie',especial:'nao'},
+  {id:'muffins',nome:'Muffins',especial:'nao'},
+  {id:'bolos-trad',nome:'Bolos Tradicionais',especial:'nao'},
+  {id:'bolos-3',nome:'Bolos Três Camadas',especial:'nao'},
+  {id:'matilda',nome:'Matilda no Pote',especial:'nao'},
+  {id:'tortas',nome:'Tortas',especial:'nao'},
+  {id:'cheesecake',nome:'Cheesecake',especial:'nao'},
+  {id:'especiais',nome:'Especiais',especial:'sim'}
 ];
 
-function showPage(p) {
-  var pages = document.querySelectorAll('.page');
-  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
-  document.getElementById('page-'+p).classList.add('active');
-  if(p === 'cardapio') renderCardapio();
-  if(p === 'carrinho') renderCarrinho();
-  if(p === 'admin') { renderAdminProdutos(); renderAdminPedidos(); }
-  window.scrollTo(0,0);
-}
+const produtosDefault = [
+  {id:'p1',nome:'Cookie Americano',preco:6.00,cat:'Cookies',desc:'Cookie clássico com gotas de chocolate 70%, crocante por fora e macio por dentro.',vegano:'nao',foto:'',adicionais:[]},
+  {id:'p2',nome:'Cookie de Cacau',preco:4.00,cat:'Cookies',desc:'Cookie de cacau puro, levemente adoçado com adoçante natural.',vegano:'sim',foto:'',adicionais:[]},
+  {id:'p3',nome:'Cookie Vegano',preco:4.00,cat:'Cookies',desc:'Cookie 100% vegano, sem leite animal e sem ovos.',vegano:'sim',foto:'',adicionais:[]},
+  {id:'p4',nome:'Brownie Tradicional Funcional',preco:14.00,cat:'Brownie',desc:'Brownie denso de chocolate, adoçado com açúcar de coco. Prefere zero adição de açúcar? É só pedir!',vegano:'nao',foto:'',adicionais:[{id:'brig',nome:'+ Brigadeiro Rosa',preco:2.00,vegano:'sim'}]},
+  {id:'p7',nome:'Muffin de Maçã com Especiarias',preco:7.50,cat:'Muffins',desc:'Adoçado com a doçura natural da maçã. Acompanha pedacinhos de nozes.',vegano:'nao',foto:'',adicionais:[]},
+  {id:'p8',nome:'Muffin de Banana com Mirtilo',preco:6.50,cat:'Muffins',desc:'Adoçado com banana madura e mirtilo fresco. Acompanha pedacinhos de nozes.',vegano:'nao',foto:'',adicionais:[]},
+  {id:'p9',nome:'Bolo de Cenoura com Ganache',preco:64.00,cat:'Bolos Tradicionais',desc:'Bolo funcional de cenoura com ganache de chocolate vegano. Versão vegana: R$ 68,00.',vegano:'nao',foto:'',adicionais:[]},
+  {id:'p10',nome:'Bolo de Banana com Mirtilos',preco:40.00,cat:'Bolos Tradicionais',desc:'Adoçado com a própria fruta, sem adição de açúcar.',vegano:'sim',foto:'',adicionais:[]},
+  {id:'p11',nome:'Bolo de Maçã com Especiarias',preco:55.00,cat:'Bolos Tradicionais',desc:'Adoçado com a própria fruta e perfumado com especiarias naturais.',vegano:'sim',foto:'',adicionais:[]},
+  {id:'p12',nome:'Bolo de Abacaxi com Coco',preco:95.00,cat:'Bolos Três Camadas',desc:'Bolo três camadas com recheio de abacaxi e cobertura de coco fresco.',vegano:'nao',foto:'',adicionais:[]},
+  {id:'p13',nome:'Bolo de Brigadeiro Rosa com Frutas Vermelhas',preco:85.00,cat:'Bolos Três Camadas',desc:'Bolo três camadas com brigadeiro de frutas vermelhas.',vegano:'sim',foto:'',adicionais:[]},
+  {id:'p14',nome:'Matilda no Pote',preco:22.00,cat:'Matilda no Pote',desc:'Bolo de chocolate funcional em pote individual. Zero adição de açúcar.',vegano:'nao',foto:'',adicionais:[{id:'calda',nome:'+ Calda Extra',preco:15.00,vegano:'sim'}]},
+  {id:'p16',nome:'Brownie no Pote',preco:30.00,cat:'Matilda no Pote',desc:'Brownie funcional em pote individual. Adoçado com açúcar de coco. Versão zero a pedido!',vegano:'nao',foto:'',adicionais:[{id:'calda-b',nome:'+ Calda Extra',preco:15.00,vegano:'sim'}]},
+  {id:'p17',nome:'Paçoca Zero Adição de Açúcar',preco:6.00,cat:'Especiais',desc:'Paçoca artesanal zero adição de açúcar, para quem não pode consumir adoçantes.',vegano:'sim',foto:'',adicionais:[]}
+];
 
-function renderCardapio() {
-  var ordem = ['Cookies','Brownie','Muffins','Bolos Tradicionais','Bolos Três Camadas','Matilda no Pote','Especiais'];
-  var html = '';
-  for(var o=0; o<ordem.length; o++) {
-    var cat = ordem[o];
-    var prods = produtos.filter(function(p){ return p.cat === cat; });
-    if(!prods.length) continue;
-    if(cat === 'Especiais') {
-      html += '<div class="categoria-bloco"><div class="especiais-banner"><span style="font-size:20px;">✨</span><div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dourado-claro);margin-bottom:2px;">Edição Limitada</div><div style="font-family:\'Cormorant Garamond\',serif;font-size:24px;color:white;font-weight:300;">Produtos Especiais</div></div></div><div class="produtos-grid">';
-    } else {
-      html += '<div class="categoria-bloco"><div class="categoria-titulo serif">' + cat + '</div><div class="produtos-grid">';
-    }
-    for(var j=0; j<prods.length; j++) {
-      var prod = prods[j];
-      var adHtml = '';
-      if(prod.adicionais && prod.adicionais.length > 0) {
-        adHtml = '<div class="adicional-box">';
-        for(var k=0; k<prod.adicionais.length; k++) {
-          var ad = prod.adicionais[k];
-          adHtml += '<div class="adicional-item"><div><div class="adicional-nome">' + ad.nome + (ad.vegano==='sim' ? ' <span style="background:var(--verde);color:white;font-size:9px;padding:2px 6px;">Vegano</span>' : '') + '</div><div class="adicional-desc">' + ad.desc + '</div></div><button class="adicional-btn" onclick="addAdicional(' + prod.id + ',\'' + ad.id + '\')">+ R$ ' + ad.preco.toFixed(2).replace('.',',') + '</button></div>';
-        }
-        adHtml += '</div>';
-      }
-      html += '<div class="produto-card">' +
-        (prod.vegano==='sim' ? '<span class="vegano-badge">Vegano</span>' : '') +
-        (prod.foto ? '<img src="' + prod.foto + '" class="produto-foto" alt="' + prod.nome + '">' : '<div class="produto-foto-ph">🍫</div>') +
-        '<div class="produto-info"><div class="produto-nome serif">' + prod.nome + '</div><div class="produto-desc">' + prod.desc + '</div><div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>' + prod.preco.toFixed(2).replace('.',',') + '</div><button class="adicionar-btn" onclick="addCarrinho(' + prod.id + ')">+ Adicionar</button></div>' + adHtml + '</div></div>';
-    }
-    html += '</div></div>';
+// ── INIT: carrega ou inicializa dados ──
+async function init() {
+  const catSnap = await get(ref(db, 'categorias'));
+  if(!catSnap.exists()) {
+    await set(ref(db, 'categorias'), categoriasDefault.reduce((o,c)=>{ o[c.id]=c; return o; }, {}));
   }
-  document.getElementById('produtos-lista').innerHTML = html;
-}
-
-function addCarrinho(id) {
-  var prod = null;
-  for(var i=0;i<produtos.length;i++) if(produtos[i].id===id) { prod=produtos[i]; break; }
-  var ex = null;
-  for(var i=0;i<carrinho.length;i++) if(carrinho[i].id===id) { ex=carrinho[i]; break; }
-  if(ex) ex.qty++;
-  else carrinho.push({id:prod.id,nome:prod.nome,preco:prod.preco,foto:prod.foto,qty:1});
-  atualizarFloat();
-  showToast('"' + prod.nome + '" adicionado!');
-}
-
-function addAdicional(prodId, adId) {
-  var prod = null;
-  for(var i=0;i<produtos.length;i++) if(produtos[i].id===prodId) { prod=produtos[i]; break; }
-  var ad = null;
-  for(var i=0;i<prod.adicionais.length;i++) if(prod.adicionais[i].id===adId) { ad=prod.adicionais[i]; break; }
-  var key = 'ad-' + prodId + '-' + adId;
-  var ex = null;
-  for(var i=0;i<carrinho.length;i++) if(carrinho[i].id===key) { ex=carrinho[i]; break; }
-  if(ex) ex.qty++;
-  else carrinho.push({id:key,nome:ad.nome + ' (' + prod.nome + ')',preco:ad.preco,foto:null,qty:1});
-  atualizarFloat();
-  showToast('"' + ad.nome + '" adicionado!');
-}
-
-function atualizarFloat() {
-  var total = 0;
-  for(var i=0;i<carrinho.length;i++) total += carrinho[i].qty;
-  document.getElementById('carrinhoCount').textContent = total;
-  document.getElementById('carrinhoFloat').style.display = total > 0 ? 'flex' : 'none';
-}
-
-function renderCarrinho() {
-  if(!carrinho.length) {
-    document.getElementById('carrinho-itens').innerHTML = '<div style="text-align:center;padding:60px 0;color:var(--texto-medio);"><div style="font-size:40px;margin-bottom:16px;">🛍</div><p style="font-family:\'Cormorant Garamond\',serif;font-size:22px;margin-bottom:16px;">Seu pedido está vazio</p><button class="btn-primary" onclick="showPage(\'cardapio\')">Ver Cardápio</button></div>';
-    document.getElementById('carrinho-form').innerHTML = '';
-    return;
+  const prodSnap = await get(ref(db, 'produtos'));
+  if(!prodSnap.exists()) {
+    await set(ref(db, 'produtos'), produtosDefault.reduce((o,p)=>{ o[p.id]=p; return o; }, {}));
   }
-  var total = 0;
-  var html = '';
-  for(var i=0;i<carrinho.length;i++) {
-    var item = carrinho[i];
-    var sub = item.preco * item.qty;
-    total += sub;
-    html += '<div class="carrinho-item">' +
-      (item.foto ? '<img src="' + item.foto + '" class="carrinho-item-foto" alt="">' : '<div class="carrinho-item-foto-ph">🍫</div>') +
-      '<div class="carrinho-item-info"><div class="carrinho-item-nome serif">' + item.nome + '</div><div class="carrinho-item-preco">R$ ' + item.preco.toFixed(2).replace('.',',') + ' cada</div></div>' +
-      '<div class="qty-controls"><button class="qty-btn" onclick="mudarQty(\'' + item.id + '\',-1)">−</button><span style="font-size:15px;min-width:20px;text-align:center;">' + item.qty + '</span><button class="qty-btn" onclick="mudarQty(\'' + item.id + '\',1)">+</button></div>' +
-      '<div style="font-family:\'Cormorant Garamond\',serif;font-size:17px;color:var(--marrom);min-width:70px;text-align:right;">R$ ' + sub.toFixed(2).replace('.',',') + '</div>' +
-      '<button class="remover-btn" onclick="removerItem(\'' + item.id + '\')">✕</button></div>';
+  const cfgSnap = await get(ref(db, 'config'));
+  if(!cfgSnap.exists()) {
+    await set(ref(db, 'config'), {aviso:'Prazo mínimo: 1 dia de antecedência', whats:'5554991512886', pix:'04452047025', endereco:'Rua Pinheiro Machado, 514, Bairro Vila Nova, Carlos Barbosa – RS'});
   }
-  html += '<div class="total-bar"><span class="total-label serif">Total do pedido</span><span class="total-valor serif">R$ ' + total.toFixed(2).replace('.',',') + '</span></div>';
-  document.getElementById('carrinho-itens').innerHTML = html;
-  var amanha = new Date(); amanha.setDate(amanha.getDate()+1);
-  var dataMin = amanha.toISOString().split('T')[0];
-  document.getElementById('carrinho-form').innerHTML =
-    '<div class="prazo-aviso">⏱ Prazo mínimo: 1 dia de antecedência. Para produto do dia, consulte no WhatsApp.</div>' +
-    '<div class="form-section"><div class="form-title serif">Seus dados</div><div class="form-grid">' +
-    '<div class="form-group"><label>Nome completo</label><input type="text" id="cli-nome" placeholder="Seu nome"></div>' +
-    '<div class="form-group"><label>WhatsApp</label><input type="text" id="cli-fone" placeholder="(54) 99999-9999"></div>' +
-    '<div class="form-group"><label>Data de retirada</label><input type="date" id="cli-data" min="' + dataMin + '" value="' + dataMin + '"></div>' +
-    '<div class="form-group"><label>Horário preferido</label><select id="cli-hora"><option>Manhã (8h–12h)</option><option>Tarde (13h–18h)</option><option>Combinar via WhatsApp</option></select></div>' +
-    '<div class="form-group full"><label>Observações</label><textarea id="cli-obs" placeholder="Alergias, variações, pedidos especiais..."></textarea></div>' +
-    '</div></div>' +
-    '<div class="form-section"><div class="form-title serif">Forma de pagamento</div>' +
-    '<div class="info-box">💚 <strong>Pix:</strong> Chave 04452047025 · Após pagamento, envie o comprovante no WhatsApp.<br>💵 <strong>Dinheiro:</strong> Pagamento na retirada.</div>' +
-    '<div class="pagamento-opcoes"><div class="pag-opt selected" id="pag-pix" onclick="selPag(\'pix\')">💚 Pix</div><div class="pag-opt" id="pag-dinheiro" onclick="selPag(\'dinheiro\')">💵 Dinheiro</div></div></div>' +
-    '<button class="btn-primary" style="width:100%;padding:16px;font-size:14px;letter-spacing:2px;" onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>' +
-    '<button class="btn-outline" style="width:100%;margin-top:12px;color:var(--marrom);border-color:var(--borda);" onclick="showPage(\'cardapio\')">← Continuar comprando</button>';
 }
 
-function selPag(p) {
-  pagSelecionado = p;
-  var opts = document.querySelectorAll('.pag-opt');
-  for(var i=0;i<opts.length;i++) opts[i].classList.remove('selected');
-  document.getElementById('pag-'+p).classList.add('selected');
-}
-
-function mudarQty(id, d) {
-  for(var i=0;i<carrinho.length;i++) {
-    if(carrinho[i].id == id) { carrinho[i].qty += d; if(carrinho[i].qty <= 0) carrinho.splice(i,1); break; }
+// ── LISTENERS TEMPO REAL ──
+onValue(ref(db, 'categorias'), snap => {
+  if(snap.exists()) {
+    var obj = snap.val();
+    window.categorias = Object.values(obj);
+  } else {
+    window.categorias = [];
   }
-  atualizarFloat(); renderCarrinho();
-}
+  if(document.getElementById('page-cardapio').classList.contains('active')) renderCardapio();
+  if(document.getElementById('admin-categorias') && document.getElementById('admin-categorias').classList.contains('active')) renderCategorias();
+  popularSelects();
+});
 
-function removerItem(id) {
-  carrinho = carrinho.filter(function(c){ return c.id != id; });
-  atualizarFloat(); renderCarrinho();
-}
-
-function finalizarPedido() {
-  var nome = document.getElementById('cli-nome').value.trim();
-  var fone = document.getElementById('cli-fone').value.trim();
-  var data = document.getElementById('cli-data').value;
-  var hora = document.getElementById('cli-hora').value;
-  var obs = document.getElementById('cli-obs').value.trim();
-  if(!nome||!fone||!data) { showToast('Preencha nome, WhatsApp e data!'); return; }
-  var dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
-  var msg = '🌿 *Pedido Ana Chies Confeitaria*\n\n👤 *Cliente:* ' + nome + '\n📱 *WhatsApp:* ' + fone + '\n📅 *Retirada:* ' + dataFmt + ' — ' + hora + '\n💳 *Pagamento:* ' + (pagSelecionado==='pix'?'Pix':'Dinheiro') + '\n\n🛍 *Itens do pedido:*\n';
-  var total = 0;
-  for(var i=0;i<carrinho.length;i++) {
-    var s = carrinho[i].preco * carrinho[i].qty;
-    total += s;
-    msg += '• ' + carrinho[i].nome + ' x' + carrinho[i].qty + ' — R$ ' + s.toFixed(2).replace('.',',') + '\n';
+onValue(ref(db, 'produtos'), snap => {
+  if(snap.exists()) {
+    var obj = snap.val();
+    window.produtos = Object.values(obj);
+  } else {
+    window.produtos = [];
   }
-  msg += '\n💰 *Total: R$ ' + total.toFixed(2).replace('.',',') + '*';
-  if(obs) msg += '\n\n📝 *Obs:* ' + obs;
-  if(pagSelecionado==='pix') msg += '\n\n🔑 Chave Pix: 04452047025\nPor favor, envie o comprovante após o pagamento! 💚';
-  pedidos.push({id:Date.now(),nome:nome,fone:fone,data:data,hora:hora,obs:obs,itens:carrinho.slice(),total:total,pagamento:pagSelecionado,status:'pendente',criado:new Date().toLocaleString('pt-BR')});
-  window.open('https://wa.me/5554991512886?text=' + encodeURIComponent(msg), '_blank');
-  carrinho = []; atualizarFloat(); showPage('home');
-  showToast('Pedido enviado! Aguarde confirmação no WhatsApp 💚');
-}
+  if(document.getElementById('page-cardapio').classList.contains('active')) renderCardapio();
+  if(document.getElementById('admin-produtos') && document.getElementById('admin-produtos').classList.contains('active')) renderAdminProdutos();
+});
 
-function abrirAdmin() { document.getElementById('adminOverlay').classList.add('open'); }
-function fecharAdmin() { document.getElementById('adminOverlay').classList.remove('open'); document.getElementById('adminSenha').value=''; document.getElementById('adminErro').textContent=''; }
-function loginAdmin() {
-  if(document.getElementById('adminSenha').value === ADMIN_SENHA) { fecharAdmin(); showPage('admin'); }
-  else document.getElementById('adminErro').textContent = 'Senha incorreta.';
-}
-function logout() { showPage('home'); }
-
-function adminTab(tab, el) {
-  var tabs = document.querySelectorAll('.admin-tab');
-  var contents = document.querySelectorAll('.admin-content');
-  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
-  for(var i=0;i<contents.length;i++) contents[i].classList.remove('active');
-  el.classList.add('active');
-  document.getElementById('admin-'+tab).classList.add('active');
-}
-
-function previewNovaFoto(e) {
-  var file = e.target.files[0]; if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) { novaFotoBase64 = ev.target.result; var img = document.getElementById('novo-preview'); img.src = novaFotoBase64; img.style.display = 'block'; };
-  reader.readAsDataURL(file);
-}
-
-function previewEditFoto(e) {
-  var file = e.target.files[0]; if(!file) return;
-  var reader = new FileReader();
-  reader.onload = function(ev) { editFotoBase64 = ev.target.result; var img = document.getElementById('edit-preview'); img.src = editFotoBase64; img.style.display = 'block'; };
-  reader.readAsDataURL(file);
-}
-
-function renderAdminProdutos() {
-  var ordem = ['Cookies','Brownie','Muffins','Bolos Tradicionais','Bolos Três Camadas','Matilda no Pote','Especiais'];
-  var html = '';
-  for(var o=0;o<ordem.length;o++) {
-    var cat = ordem[o];
-    var prods = produtos.filter(function(p){ return p.cat===cat; });
-    if(!prods.length) continue;
-    html += '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:var(--marrom);margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--borda);">' + cat + '</div>';
-    for(var j=0;j<prods.length;j++) {
-      var prod = prods[j];
-      html += '<div class="produto-admin-card">' +
-        (prod.foto ? '<img src="' + prod.foto + '" class="produto-admin-foto" alt="">' : '<div class="produto-admin-foto-ph">🍫</div>') +
-        '<div class="produto-admin-info"><div class="produto-admin-nome serif">' + prod.nome + '</div><div class="produto-admin-cat">' + prod.cat + (prod.vegano==='sim'?' · Vegano':'') + '</div><div style="font-size:11px;color:var(--texto-medio);margin-top:3px;">' + prod.desc.substring(0,55) + '...</div></div>' +
-        '<div class="produto-admin-preco serif">R$ ' + prod.preco.toFixed(2).replace('.',',') + '</div>' +
-        '<button class="edit-btn" onclick="abrirEdit(' + prod.id + ')">Editar</button>' +
-        '<button class="del-btn" onclick="deletarProduto(' + prod.id + ')">✕</button></div>';
-    }
+onValue(ref(db, 'config'), snap => {
+  if(snap.exists()) {
+    var cfg = snap.val();
+    if(cfg.aviso) document.getElementById('aviso-texto-pub').textContent = cfg.aviso;
+    if(cfg.whats) window.whatsNum = cfg.whats;
+    if(cfg.pix) { window.pixChave = cfg.pix; document.getElementById('pub-pix').textContent = 'Chave: '+cfg.pix; }
+    if(cfg.endereco) document.getElementById('pub-endereco').innerHTML = cfg.endereco;
   }
-  document.getElementById('lista-admin-produtos').innerHTML = html;
+});
+
+onValue(ref(db, 'pedidos'), snap => {
+  if(snap.exists()) {
+    window.pedidos = Object.values(snap.val());
+  } else {
+    window.pedidos = [];
+  }
+  if(document.getElementById('admin-pedidos') && document.getElementById('admin-pedidos').classList.contains('active')) renderAdminPedidos();
+});
+
+// ── SYNC INDICATOR ──
+function showSync() {
+  var s = document.getElementById('sync');
+  s.classList.add('show');
+  setTimeout(function(){ s.classList.remove('show'); }, 2000);
 }
 
-function adicionarProduto() {
+// ── CATEGORIAS ──
+window.adicionarCategoria = async function() {
+  var nome = document.getElementById('nova-cat-nome').value.trim();
+  var especial = document.getElementById('nova-cat-especial').value;
+  if(!nome){ showToast('Digite o nome da categoria!'); return; }
+  var id = 'cat-' + Date.now();
+  await set(ref(db, 'categorias/'+id), {id:id, nome:nome, especial:especial});
+  document.getElementById('nova-cat-nome').value = '';
+  showSync(); showToast('"'+nome+'" adicionada!');
+};
+
+window.deletarCategoria = async function(id) {
+  var cat = window.categorias.find(function(c){ return c.id===id; });
+  var temProd = window.produtos.filter(function(p){ return p.cat===cat.nome; }).length > 0;
+  if(temProd){ showToast('Mova os produtos desta categoria antes de remover!'); return; }
+  if(confirm('Remover categoria "'+cat.nome+'"?')) {
+    await remove(ref(db, 'categorias/'+id));
+    showSync(); showToast('Categoria removida.');
+  }
+};
+
+window.toggleEspecial = async function(id) {
+  var cat = window.categorias.find(function(c){ return c.id===id; });
+  var novo = cat.especial==='sim' ? 'nao' : 'sim';
+  await update(ref(db, 'categorias/'+id), {especial: novo});
+  showSync(); showToast('Tipo atualizado!');
+};
+
+// ── PRODUTOS ──
+window.adicionarProduto = async function() {
   var nome = document.getElementById('novo-nome').value.trim();
   var preco = parseFloat(document.getElementById('novo-preco').value);
   var cat = document.getElementById('novo-cat').value;
   var desc = document.getElementById('novo-desc').value.trim();
   var vegano = document.getElementById('novo-vegano').value;
-  if(!nome||!preco) { showToast('Preencha nome e preço!'); return; }
-  ultimoId++;
-  produtos.push({id:ultimoId,nome:nome,preco:preco,cat:cat,desc:desc,vegano:vegano,foto:novaFotoBase64,adicionais:[]});
+  if(!nome||!preco){ showToast('Preencha nome e preço!'); return; }
+  var id = 'p' + Date.now();
+  await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:window.novaFoto||'', adicionais:[]});
   document.getElementById('novo-nome').value='';
   document.getElementById('novo-preco').value='';
   document.getElementById('novo-desc').value='';
   document.getElementById('novo-preview').style.display='none';
-  novaFotoBase64 = null;
-  renderAdminProdutos();
-  showToast('"' + nome + '" adicionado ao cardápio!');
+  window.novaFoto=null;
+  showSync(); showToast('"'+nome+'" adicionado!');
+};
+
+window.deletarProduto = async function(id) {
+  if(confirm('Remover este produto?')) {
+    await remove(ref(db, 'produtos/'+id));
+    showSync(); showToast('Produto removido.');
+  }
+};
+
+window.salvarEdicao = async function() {
+  var id = window.editandoId;
+  var dados = {
+    nome: document.getElementById('edit-nome').value.trim(),
+    preco: parseFloat(document.getElementById('edit-preco').value),
+    cat: document.getElementById('edit-cat').value,
+    vegano: document.getElementById('edit-vegano').value,
+    desc: document.getElementById('edit-desc').value.trim(),
+    adicionais: window.adicionaisTemp
+  };
+  if(window.editFoto) dados.foto = window.editFoto;
+  await update(ref(db, 'produtos/'+id), dados);
+  fecharEditModal();
+  showSync(); showToast('Produto atualizado!');
+};
+
+// ── PEDIDOS ──
+window.confirmarPedido = async function(id) {
+  await update(ref(db, 'pedidos/'+id), {status:'confirmado'});
+  showSync(); showToast('Pedido confirmado!');
+};
+
+// ── CONFIG ──
+window.salvarAviso = async function() {
+  var txt = document.getElementById('cfg-aviso').value.trim();
+  if(txt) {
+    await update(ref(db, 'config'), {aviso: txt});
+    showSync(); showToast('Aviso atualizado!');
+  }
+};
+
+window.salvarConfiguracoes = async function() {
+  var whats = document.getElementById('cfg-whats').value.trim();
+  var pix = document.getElementById('cfg-pix').value.trim();
+  var end = document.getElementById('cfg-end').value.trim();
+  await update(ref(db, 'config'), {whats:whats, pix:pix, endereco:end});
+  window.whatsNum = whats;
+  showSync(); showToast('Configurações salvas!');
+};
+
+// ── FINALIZAR PEDIDO (salva no Firebase) ──
+window.finalizarPedido = async function() {
+  var nome = document.getElementById('cli-nome').value.trim();
+  var fone = document.getElementById('cli-fone').value.trim();
+  var data = document.getElementById('cli-data').value;
+  var hora = document.getElementById('cli-hora').value;
+  var obs = document.getElementById('cli-obs').value.trim();
+  if(!nome||!fone||!data){ showToast('Preencha nome, WhatsApp e data!'); return; }
+  var dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
+  var msg = '🌿 *Pedido Ana Chies Confeitaria*\n\n👤 *Cliente:* '+nome+'\n📱 *WhatsApp:* '+fone+'\n📅 *Retirada:* '+dataFmt+' — '+hora+'\n💳 *Pagamento:* '+(window.pagSelecionado==='pix'?'Pix':'Dinheiro')+'\n\n🛍 *Itens do pedido:*\n';
+  var total = 0;
+  for(var i=0;i<window.carrinho.length;i++){
+    var s=window.carrinho[i].preco*window.carrinho[i].qty; total+=s;
+    msg+='• '+window.carrinho[i].nome+' x'+window.carrinho[i].qty+' — R$ '+s.toFixed(2).replace('.',',')+'\n';
+  }
+  msg+='\n💰 *Total: R$ '+total.toFixed(2).replace('.',',')+' *';
+  if(obs) msg+='\n\n📝 *Obs:* '+obs;
+  if(window.pagSelecionado==='pix') msg+='\n\n🔑 Chave Pix: '+window.pixChave+'\nEnvie o comprovante após o pagamento! 💚';
+  var pedidoId = 'ped-' + Date.now();
+  await set(ref(db, 'pedidos/'+pedidoId), {
+    id:pedidoId, nome:nome, fone:fone, data:data, hora:hora, obs:obs,
+    itens:window.carrinho.slice(), total:total, pagamento:window.pagSelecionado,
+    status:'pendente', criado:new Date().toLocaleString('pt-BR')
+  });
+  window.open('https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg),'_blank');
+  window.carrinho=[]; atualizarFloat(); showPage('home');
+  showToast('Pedido enviado! Aguarde confirmação no WhatsApp 💚');
+};
+
+init();
+
+</script>
+
+<script>
+// ── FUNÇÕES DE UI (não precisam do Firebase) ──
+
+function showPage(p) {
+  var pages = document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+  document.getElementById('page-'+p).classList.add('active');
+  if(p==='cardapio') renderCardapio();
+  if(p==='carrinho') renderCarrinho();
+  if(p==='admin'){ renderAdminProdutos(); renderAdminPedidos(); renderCategorias(); popularSelects(); }
+  window.scrollTo(0,0);
 }
 
-function deletarProduto(id) {
-  if(confirm('Remover este produto?')) {
-    produtos = produtos.filter(function(p){ return p.id !== id; });
-    renderAdminProdutos(); showToast('Produto removido.');
+function popularSelects() {
+  var cats = window.categorias || [];
+  var selects = ['novo-cat','edit-cat'];
+  for(var s=0;s<selects.length;s++) {
+    var el = document.getElementById(selects[s]);
+    if(!el) continue;
+    var val = el.value;
+    el.innerHTML = '';
+    for(var i=0;i<cats.length;i++) {
+      var opt = document.createElement('option');
+      opt.value = cats[i].nome;
+      opt.textContent = cats[i].nome;
+      el.appendChild(opt);
+    }
+    if(val) el.value = val;
   }
 }
 
-function abrirEdit(id) {
-  editandoId = id; editFotoBase64 = null;
-  var prod = null;
-  for(var i=0;i<produtos.length;i++) if(produtos[i].id===id) { prod=produtos[i]; break; }
-  document.getElementById('edit-nome').value = prod.nome;
-  document.getElementById('edit-preco').value = prod.preco;
-  document.getElementById('edit-cat').value = prod.cat;
-  document.getElementById('edit-vegano').value = prod.vegano;
-  document.getElementById('edit-desc').value = prod.desc;
-  var prev = document.getElementById('edit-preview');
-  if(prod.foto) { prev.src = prod.foto; prev.style.display = 'block'; } else prev.style.display = 'none';
+function renderCardapio() {
+  var cats = window.categorias || [];
+  var prods = window.produtos || [];
+  var html = '';
+  for(var o=0;o<cats.length;o++) {
+    var cat = cats[o];
+    var catProds = prods.filter(function(p){ return p.cat === cat.nome; });
+    if(!catProds.length) continue;
+    if(cat.especial==='sim') {
+      html += '<div class="categoria-bloco"><div class="especiais-banner"><span style="font-size:20px;">✨</span><div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dourado-claro);margin-bottom:2px;">Edição Limitada</div><div style="font-family:Cormorant Garamond,serif;font-size:24px;color:white;font-weight:300;">'+cat.nome+'</div></div></div><div class="produtos-grid">';
+    } else {
+      html += '<div class="categoria-bloco"><div class="categoria-titulo serif">'+cat.nome+'</div><div class="produtos-grid">';
+    }
+    for(var j=0;j<catProds.length;j++) {
+      var prod = catProds[j];
+      var ads = prod.adicionais || [];
+      var adHtml = '';
+      if(ads.length>0) {
+        adHtml = '<div class="adicional-box">';
+        for(var k=0;k<ads.length;k++) {
+          var ad = ads[k];
+          adHtml += '<div class="adicional-item"><div><div class="adicional-nome">'+ad.nome+'</div></div><button class="adicional-btn" onclick="addAdicional(\''+prod.id+'\',\''+ad.id+'\')">+ R$ '+ad.preco.toFixed(2).replace('.',',')+'</button></div>';
+        }
+        adHtml += '</div>';
+      }
+      html += '<div class="produto-card">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+(prod.foto?'<img src="'+prod.foto+'" class="produto-foto" alt="'+prod.nome+'">':'<div class="produto-foto-ph">🍫</div>')+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div><div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>'+adHtml+'</div></div>';
+    }
+    html += '</div></div>';
+  }
+  document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">Nenhum produto cadastrado ainda.</div>';
+}
+
+function addCarrinho(id) {
+  var prod = (window.produtos||[]).find(function(p){ return p.id==id; });
+  if(!prod) return;
+  var ex = (window.carrinho||[]).find(function(c){ return c.id==id; });
+  if(ex) ex.qty++;
+  else window.carrinho.push({id:prod.id,nome:prod.nome,preco:prod.preco,foto:prod.foto,qty:1});
+  atualizarFloat();
+  showToast('"'+prod.nome+'" adicionado!');
+}
+
+function addAdicional(prodId,adId) {
+  var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
+  if(!prod) return;
+  var ads = prod.adicionais || [];
+  var ad = ads.find(function(a){ return a.id==adId; });
+  if(!ad) return;
+  var key = 'ad-'+prodId+'-'+adId;
+  var ex = (window.carrinho||[]).find(function(c){ return c.id==key; });
+  if(ex) ex.qty++;
+  else window.carrinho.push({id:key,nome:ad.nome+' ('+prod.nome+')',preco:ad.preco,foto:'',qty:1});
+  atualizarFloat();
+  showToast('"'+ad.nome+'" adicionado!');
+}
+
+function atualizarFloat() {
+  var total=0;
+  for(var i=0;i<(window.carrinho||[]).length;i++) total+=window.carrinho[i].qty;
+  document.getElementById('carrinhoCount').textContent=total;
+  document.getElementById('carrinhoFloat').style.display=total>0?'flex':'none';
+}
+
+function renderCarrinho() {
+  var cart = window.carrinho || [];
+  if(!cart.length) {
+    document.getElementById('carrinho-itens').innerHTML='<div style="text-align:center;padding:60px 0;color:var(--texto-medio);"><div style="font-size:40px;margin-bottom:16px;">🛍</div><p style="font-family:Cormorant Garamond,serif;font-size:22px;margin-bottom:16px;">Seu pedido está vazio</p><button class="btn-primary" onclick="showPage(\'cardapio\')">Ver Cardápio</button></div>';
+    document.getElementById('carrinho-form').innerHTML='';
+    return;
+  }
+  var total=0,html='';
+  for(var i=0;i<cart.length;i++){
+    var item=cart[i],sub=item.preco*item.qty; total+=sub;
+    html+='<div class="carrinho-item">'+(item.foto?'<img src="'+item.foto+'" class="carrinho-item-foto" alt="">':'<div class="carrinho-item-foto-ph">🍫</div>')+'<div class="carrinho-item-info"><div class="carrinho-item-nome serif">'+item.nome+'</div><div class="carrinho-item-preco">R$ '+item.preco.toFixed(2).replace('.',',')+'</div></div><div class="qty-controls"><button class="qty-btn" onclick="mudarQty(\''+item.id+'\',-1)">−</button><span style="font-size:15px;min-width:20px;text-align:center;">'+item.qty+'</span><button class="qty-btn" onclick="mudarQty(\''+item.id+'\',1)">+</button></div><div style="font-family:Cormorant Garamond,serif;font-size:17px;color:var(--marrom);min-width:70px;text-align:right;">R$ '+sub.toFixed(2).replace('.',',')+'</div><button class="remover-btn" onclick="removerItem(\''+item.id+'\')">✕</button></div>';
+  }
+  html+='<div class="total-bar"><span class="total-label serif">Total do pedido</span><span class="total-valor serif">R$ '+total.toFixed(2).replace('.',',')+'</span></div>';
+  document.getElementById('carrinho-itens').innerHTML=html;
+  var amanha=new Date(); amanha.setDate(amanha.getDate()+1);
+  var dataMin=amanha.toISOString().split('T')[0];
+  document.getElementById('carrinho-form').innerHTML=
+    '<div class="prazo-aviso">⏱ Prazo mínimo: 1 dia de antecedência. Para produto do dia, consulte no WhatsApp.</div>'+
+    '<div class="form-section"><div class="form-title serif">Seus dados</div><div class="form-grid">'+
+    '<div class="form-group"><label>Nome completo</label><input type="text" id="cli-nome" placeholder="Seu nome"></div>'+
+    '<div class="form-group"><label>WhatsApp</label><input type="text" id="cli-fone" placeholder="(54) 99999-9999"></div>'+
+    '<div class="form-group"><label>Data de retirada</label><input type="date" id="cli-data" min="'+dataMin+'" value="'+dataMin+'"></div>'+
+    '<div class="form-group"><label>Horário preferido</label><select id="cli-hora"><option>Manhã (8h–12h)</option><option>Tarde (13h–18h)</option><option>Combinar via WhatsApp</option></select></div>'+
+    '<div class="form-group full"><label>Observações</label><textarea id="cli-obs" placeholder="Alergias, variações, pedidos especiais..."></textarea></div>'+
+    '</div></div>'+
+    '<div class="form-section"><div class="form-title serif">Forma de pagamento</div>'+
+    '<div class="info-box">💚 <strong>Pix:</strong> Chave '+window.pixChave+' · Após pagamento, envie o comprovante no WhatsApp.<br>💵 <strong>Dinheiro:</strong> Pagamento na retirada.</div>'+
+    '<div class="pagamento-opcoes"><div class="pag-opt selected" id="pag-pix" onclick="selPag(\'pix\')">💚 Pix</div><div class="pag-opt" id="pag-dinheiro" onclick="selPag(\'dinheiro\')">💵 Dinheiro</div></div></div>'+
+    '<button class="btn-primary" style="width:100%;padding:16px;font-size:14px;letter-spacing:2px;" onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>'+
+    '<button style="width:100%;margin-top:12px;background:transparent;border:1px solid var(--borda);color:var(--marrom);padding:14px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;" onclick="showPage(\'cardapio\')">← Continuar comprando</button>';
+}
+
+function selPag(p){ window.pagSelecionado=p; var opts=document.querySelectorAll('.pag-opt'); for(var i=0;i<opts.length;i++) opts[i].classList.remove('selected'); document.getElementById('pag-'+p).classList.add('selected'); }
+function mudarQty(id,d){ for(var i=0;i<window.carrinho.length;i++) if(window.carrinho[i].id==id){ window.carrinho[i].qty+=d; if(window.carrinho[i].qty<=0) window.carrinho.splice(i,1); break; } atualizarFloat(); renderCarrinho(); }
+function removerItem(id){ window.carrinho=window.carrinho.filter(function(c){return c.id!=id;}); atualizarFloat(); renderCarrinho(); }
+
+function abrirAdmin(){document.getElementById('adminOverlay').classList.add('open');}
+function fecharAdmin(){document.getElementById('adminOverlay').classList.remove('open');document.getElementById('adminSenha').value='';document.getElementById('adminErro').textContent='';}
+function loginAdmin(){
+  if(document.getElementById('adminSenha').value===window.ADMIN_SENHA){fecharAdmin();showPage('admin');}
+  else document.getElementById('adminErro').textContent='Senha incorreta.';
+}
+function logout(){showPage('home');}
+
+function adminTab(tab,el){
+  var tabs=document.querySelectorAll('.admin-tab');
+  var contents=document.querySelectorAll('.admin-content');
+  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
+  for(var i=0;i<contents.length;i++) contents[i].classList.remove('active');
+  el.classList.add('active');
+  document.getElementById('admin-'+tab).classList.add('active');
+  if(tab==='categorias') renderCategorias();
+  if(tab==='produtos'){ renderAdminProdutos(); popularSelects(); }
+  if(tab==='pedidos') renderAdminPedidos();
+}
+
+function previewFoto(e,previewId,varName){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    if(varName==='novaFoto') window.novaFoto=ev.target.result;
+    else window.editFoto=ev.target.result;
+    var img=document.getElementById(previewId);img.src=ev.target.result;img.style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderCategorias(){
+  var cats = window.categorias || [];
+  var html='';
+  for(var i=0;i<cats.length;i++){
+    var cat=cats[i];
+    html+='<div style="background:white;border:1px solid var(--borda);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">'+
+      '<span style="font-family:Cormorant Garamond,serif;font-size:16px;flex:1;color:var(--marrom-escuro);">'+cat.nome+'</span>'+
+      (cat.especial==='sim'?'<span style="background:var(--dourado);color:var(--marrom-escuro);font-size:10px;padding:3px 8px;letter-spacing:1px;">ESPECIAL</span>':'<span style="background:var(--offwhite2);color:var(--texto-medio);font-size:10px;padding:3px 8px;letter-spacing:1px;">NORMAL</span>')+
+      '<button onclick="toggleEspecial(\''+cat.id+'\')" style="background:none;border:1px solid var(--borda);padding:5px 10px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;color:var(--texto-medio);">Trocar tipo</button>'+
+      '<button onclick="deletarCategoria(\''+cat.id+'\')" class="del-btn">✕</button>'+
+      '</div>';
+  }
+  if(!html) html='<div style="font-size:13px;color:var(--texto-medio);padding:16px;">Nenhuma categoria ainda.</div>';
+  document.getElementById('lista-categorias').innerHTML=html;
+}
+
+function renderAdminProdutos(){
+  popularSelects();
+  var cats = window.categorias || [];
+  var prods = window.produtos || [];
+  var html='';
+  for(var o=0;o<cats.length;o++){
+    var cat=cats[o];
+    var catProds=prods.filter(function(p){return p.cat===cat.nome;});
+    if(!catProds.length) continue;
+    html+='<div style="font-family:Cormorant Garamond,serif;font-size:18px;color:var(--marrom);margin:24px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--borda);">'+cat.nome+'</div>';
+    for(var j=0;j<catProds.length;j++){
+      var prod=catProds[j];
+      var ads=prod.adicionais||[];
+      html+='<div class="produto-admin-card">'+(prod.foto?'<img src="'+prod.foto+'" class="produto-admin-foto" alt="">':'<div class="produto-admin-foto-ph">🍫</div>')+'<div class="produto-admin-info"><div class="produto-admin-nome serif">'+prod.nome+'</div><div class="produto-admin-cat">'+prod.cat+(prod.vegano==='sim'?' · Vegano':'')+'</div>'+(ads.length>0?'<div style="font-size:11px;color:var(--dourado);margin-top:2px;">'+ads.length+' adicional(is)</div>':'')+'</div><div class="produto-admin-preco serif">R$ '+prod.preco.toFixed(2).replace('.',',')+'</div><button class="edit-btn" onclick="abrirEdit(\''+prod.id+'\')">Editar</button><button class="del-btn" onclick="deletarProduto(\''+prod.id+'\')">✕</button></div>';
+    }
+  }
+  document.getElementById('lista-admin-produtos').innerHTML=html||'<div style="text-align:center;padding:40px;color:var(--texto-medio);">Nenhum produto ainda.</div>';
+}
+
+function abrirEdit(id){
+  window.editandoId=id; window.editFoto=null;
+  var prod=(window.produtos||[]).find(function(p){return p.id==id;});
+  if(!prod) return;
+  document.getElementById('edit-nome').value=prod.nome;
+  document.getElementById('edit-preco').value=prod.preco;
+  popularSelects();
+  document.getElementById('edit-cat').value=prod.cat;
+  document.getElementById('edit-vegano').value=prod.vegano;
+  document.getElementById('edit-desc').value=prod.desc;
+  var prev=document.getElementById('edit-preview');
+  if(prod.foto){prev.src=prod.foto;prev.style.display='block';}else prev.style.display='none';
+  window.adicionaisTemp=JSON.parse(JSON.stringify(prod.adicionais||[]));
+  renderAdicionaisTemp();
   document.getElementById('editOverlay').classList.add('open');
 }
 
-function fecharEditModal() { document.getElementById('editOverlay').classList.remove('open'); }
-
-function salvarEdicao() {
-  var prod = null;
-  for(var i=0;i<produtos.length;i++) if(produtos[i].id===editandoId) { prod=produtos[i]; break; }
-  prod.nome = document.getElementById('edit-nome').value.trim();
-  prod.preco = parseFloat(document.getElementById('edit-preco').value);
-  prod.cat = document.getElementById('edit-cat').value;
-  prod.vegano = document.getElementById('edit-vegano').value;
-  prod.desc = document.getElementById('edit-desc').value.trim();
-  if(editFotoBase64) prod.foto = editFotoBase64;
-  fecharEditModal(); renderAdminProdutos();
-  showToast('Produto atualizado!');
-}
-
-function renderAdminPedidos() {
-  if(!pedidos.length) { document.getElementById('lista-pedidos').innerHTML = '<div style="text-align:center;padding:40px;color:var(--texto-medio);font-family:\'Cormorant Garamond\',serif;font-size:20px;">Nenhum pedido ainda.</div>'; return; }
-  var html = '';
-  for(var i=pedidos.length-1;i>=0;i--) {
-    var p = pedidos[i];
-    var itensStr = p.itens.map(function(it){ return it.nome + ' x' + it.qty; }).join(', ');
-    var dataFmt = new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR');
-    html += '<div class="pedido-card"><div class="pedido-header"><div><div class="pedido-nome serif">' + p.nome + '</div><div style="font-size:12px;color:var(--texto-medio);">' + p.fone + '</div></div><span class="pedido-status ' + (p.status==='confirmado'?'status-confirmado':'status-pendente') + '">' + p.status + '</span></div>' +
-      '<div style="font-size:13px;color:var(--texto-medio);margin-bottom:8px;line-height:1.8;">' + itensStr + '</div>' +
-      '<div style="font-size:12px;color:var(--dourado);margin-bottom:12px;">📅 ' + dataFmt + ' — ' + p.hora + ' · 💳 ' + (p.pagamento==='pix'?'Pix':'Dinheiro') + '</div>' +
-      '<div style="font-weight:500;color:var(--marrom);margin-bottom:12px;">Total: R$ ' + p.total.toFixed(2).replace('.',',') + ' · ' + p.criado + '</div>' +
-      (p.status!=='confirmado' ? '<button class="confirmar-btn" onclick="confirmarPedido(' + p.id + ')">✓ Confirmar Pedido</button>' : '') +
-      '<button onclick="abrirWhats(\'Olá ' + p.nome + '! Seu pedido foi confirmado para ' + dataFmt + ' 💚\')" style="background:var(--dourado);border:none;color:var(--marrom-escuro);padding:8px 16px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:1px;text-transform:uppercase;">Avisar Cliente</button></div>';
+function renderAdicionaisTemp(){
+  var html='';
+  for(var i=0;i<window.adicionaisTemp.length;i++){
+    var ad=window.adicionaisTemp[i];
+    html+='<div class="adicional-admin-item"><div class="adicional-admin-info"><strong>'+ad.nome+'</strong> · R$ '+ad.preco.toFixed(2).replace('.',',')+'</div><button onclick="removerAdicionalTemp(\''+ad.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
   }
-  document.getElementById('lista-pedidos').innerHTML = html;
+  document.getElementById('edit-adicionais-lista').innerHTML=html||'<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhum adicional.</div>';
 }
 
-function confirmarPedido(id) {
-  for(var i=0;i<pedidos.length;i++) if(pedidos[i].id===id) { pedidos[i].status='confirmado'; break; }
-  renderAdminPedidos(); showToast('Pedido confirmado!');
+function adicionarAdicionalTemp(){
+  var nome=document.getElementById('ad-nome').value.trim();
+  var preco=parseFloat(document.getElementById('ad-preco').value);
+  if(!nome||!preco){showToast('Preencha nome e preço do adicional!');return;}
+  window.adicionaisTemp.push({id:'ad-'+Date.now(),nome:nome,preco:preco,vegano:'nao'});
+  document.getElementById('ad-nome').value='';
+  document.getElementById('ad-preco').value='';
+  renderAdicionaisTemp();
 }
 
-function salvarAviso() {
-  var txt = document.getElementById('aviso-texto').value.trim();
-  if(txt) { document.getElementById('aviso-bar').innerHTML = '✦ <span>' + txt + '</span> ✦'; showToast('Aviso atualizado!'); }
+function removerAdicionalTemp(id){
+  window.adicionaisTemp=window.adicionaisTemp.filter(function(a){return a.id!==id;});
+  renderAdicionaisTemp();
 }
 
-function abrirWhats(msg) { window.open('https://wa.me/5554991512886?text=' + encodeURIComponent(msg), '_blank'); }
+function fecharEditModal(){document.getElementById('editOverlay').classList.remove('open');}
 
-function showToast(msg) {
-  var t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+function renderAdminPedidos(){
+  var peds = window.pedidos || [];
+  if(!peds.length){document.getElementById('lista-pedidos').innerHTML='<div style="text-align:center;padding:40px;color:var(--texto-medio);font-family:Cormorant Garamond,serif;font-size:20px;">Nenhum pedido ainda.</div>';return;}
+  var html='';
+  var sorted = peds.slice().sort(function(a,b){ return b.id > a.id ? 1 : -1; });
+  for(var i=0;i<sorted.length;i++){
+    var p=sorted[i];
+    var itensStr=(p.itens||[]).map(function(it){return it.nome+' x'+it.qty;}).join(', ');
+    var dataFmt=new Date(p.data+'T12:00:00').toLocaleDateString('pt-BR');
+    html+='<div class="pedido-card"><div class="pedido-header"><div><div class="pedido-nome serif">'+p.nome+'</div><div style="font-size:12px;color:var(--texto-medio);">'+p.fone+'</div></div><span class="pedido-status '+(p.status==='confirmado'?'status-confirmado':'status-pendente')+'">'+p.status+'</span></div>'+
+      '<div style="font-size:13px;color:var(--texto-medio);margin-bottom:8px;line-height:1.8;">'+itensStr+'</div>'+
+      '<div style="font-size:12px;color:var(--dourado);margin-bottom:12px;">📅 '+dataFmt+' — '+p.hora+' · '+(p.pagamento==='pix'?'Pix':'Dinheiro')+'</div>'+
+      '<div style="font-weight:500;color:var(--marrom);margin-bottom:12px;">Total: R$ '+p.total.toFixed(2).replace('.',',')+' · '+p.criado+'</div>'+
+      (p.status!=='confirmado'?'<button class="btn-sm" style="margin-right:8px;" onclick="confirmarPedido(\''+p.id+'\')">✓ Confirmar</button>':'')+
+      '<button onclick="abrirWhats(\'Olá '+p.nome+'! Seu pedido foi confirmado para '+dataFmt+' 💚\')" style="background:var(--dourado);border:none;color:var(--marrom-escuro);padding:8px 16px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:1px;text-transform:uppercase;">Avisar Cliente</button></div>';
+  }
+  document.getElementById('lista-pedidos').innerHTML=html;
 }
 
-renderCardapio();
+function alterarSenha(){
+  var nova=document.getElementById('cfg-senha-nova').value;
+  var conf=document.getElementById('cfg-senha-conf').value;
+  if(!nova){showToast('Digite a nova senha!');return;}
+  if(nova!==conf){showToast('As senhas não coincidem!');return;}
+  if(nova.length<6){showToast('A senha precisa ter ao menos 6 caracteres!');return;}
+  window.ADMIN_SENHA=nova;
+  document.getElementById('cfg-senha-nova').value='';
+  document.getElementById('cfg-senha-conf').value='';
+  showToast('Senha alterada com sucesso!');
+}
+
+function abrirWhats(msg){window.open('https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg),'_blank');}
+
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
 </script>
 </body>
 </html>
