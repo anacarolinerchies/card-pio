@@ -421,6 +421,7 @@ const ADMIN_EMAIL = 'admin@anachies.com';
 window.novaFoto = null;
 window.editFoto = null;
 window.editandoId = null;
+window.editandoCatId = null;
 window.adicionaisTemp = [];
 window.carrinho = [];
 window.pedidos = [];
@@ -554,6 +555,24 @@ window.toggleEspecial = async function(id) {
   showSync(); showToast('Tipo atualizado!');
 };
 
+window.salvarNomeCategoria = async function(id) {
+  var input = document.getElementById('edit-cat-nome-'+id);
+  var novoNome = input.value.trim();
+  if(!novoNome){ showToast('Digite um nome para a categoria!'); return; }
+  var cat = window.categorias.find(function(c){ return c.id===id; });
+  var nomeAntigo = cat.nome;
+  if(novoNome === nomeAntigo){ window.editandoCatId = null; renderCategorias(); return; }
+  var jaExiste = window.categorias.some(function(c){ return c.id!==id && c.nome===novoNome; });
+  if(jaExiste){ showToast('Já existe uma categoria com esse nome!'); return; }
+  await update(ref(db, 'categorias/'+id), {nome: novoNome});
+  var produtosDaCategoria = window.produtos.filter(function(p){ return p.cat === nomeAntigo; });
+  await Promise.all(produtosDaCategoria.map(function(p){
+    return update(ref(db, 'produtos/'+p.id), {cat: novoNome});
+  }));
+  window.editandoCatId = null;
+  showSync(); showToast('Categoria renomeada!');
+};
+
 // ── PRODUTOS ──
 window.adicionarProduto = async function() {
   var nome = document.getElementById('novo-nome').value.trim();
@@ -664,15 +683,15 @@ window.finalizarPedido = async function() {
   if(!nome||!fone||!data){ showToast('Preencha nome, WhatsApp e data!'); return; }
   var whatsWindow = window.open('', '_blank');
   var dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
-  var msg = '🌿 *Pedido Ana Chies Confeitaria*\n\n👤 *Cliente:* '+nome+'\n📱 *WhatsApp:* '+fone+'\n📅 *Retirada:* '+dataFmt+' — '+hora+'\n💳 *Pagamento:* '+(window.pagSelecionado==='pix'?'Pix':'Dinheiro')+'\n\n🛍 *Itens do pedido:*\n';
+  var msg = '*Pedido Ana Chies Confeitaria*\n\n*Cliente:* '+nome+'\n*WhatsApp:* '+fone+'\n*Retirada:* '+dataFmt+' — '+hora+'\n*Pagamento:* '+(window.pagSelecionado==='pix'?'Pix':'Dinheiro')+'\n\n*Itens do pedido:*\n';
   var total = 0;
   for(var i=0;i<window.carrinho.length;i++){
     var s=window.carrinho[i].preco*window.carrinho[i].qty; total+=s;
-    msg+='• '+window.carrinho[i].nome+' x'+window.carrinho[i].qty+' — R$ '+s.toFixed(2).replace('.',',')+'\n';
+    msg+='- '+window.carrinho[i].nome+' x'+window.carrinho[i].qty+' — R$ '+s.toFixed(2).replace('.',',')+'\n';
   }
-  msg+='\n💰 *Total: R$ '+total.toFixed(2).replace('.',',')+' *';
-  if(obs) msg+='\n\n📝 *Obs:* '+obs;
-  if(window.pagSelecionado==='pix') msg+='\n\n🔑 Chave Pix: '+window.pixChave+'\nEnvie o comprovante após o pagamento! 💚';
+  msg+='\n*Total: R$ '+total.toFixed(2).replace('.',',')+' *';
+  if(obs) msg+='\n\n*Obs:* '+obs;
+  if(window.pagSelecionado==='pix') msg+='\n\nChave Pix: '+window.pixChave+'\nEnvie o comprovante após o pagamento!';
   var pedidoId = 'ped-' + Date.now();
   await set(ref(db, 'pedidos/'+pedidoId), {
     id:pedidoId, nome:nome, fone:fone, data:data, hora:hora, obs:obs,
@@ -765,6 +784,11 @@ function addCarrinho(id) {
 function addAdicional(prodId,adId) {
   var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
   if(!prod) return;
+  var baseNoCarrinho = (window.carrinho||[]).find(function(c){ return c.id==prodId; });
+  if(!baseNoCarrinho){
+    showToast('Adicione "'+prod.nome+'" ao pedido antes de escolher o adicional!');
+    return;
+  }
   var ads = prod.adicionais || [];
   var ad = ads.find(function(a){ return a.id==adId; });
   if(!ad) return;
@@ -816,8 +840,24 @@ function renderCarrinho() {
 }
 
 function selPag(p){ window.pagSelecionado=p; var opts=document.querySelectorAll('.pag-opt'); for(var i=0;i<opts.length;i++) opts[i].classList.remove('selected'); document.getElementById('pag-'+p).classList.add('selected'); }
-function mudarQty(id,d){ for(var i=0;i<window.carrinho.length;i++) if(window.carrinho[i].id==id){ window.carrinho[i].qty+=d; if(window.carrinho[i].qty<=0) window.carrinho.splice(i,1); break; } atualizarFloat(); renderCarrinho(); }
-function removerItem(id){ window.carrinho=window.carrinho.filter(function(c){return c.id!=id;}); atualizarFloat(); renderCarrinho(); }
+function removerAdicionaisOrfaos(){
+  var idsPresentes = window.carrinho.map(function(c){ return c.id; });
+  window.carrinho = window.carrinho.filter(function(c){
+    if(c.id.indexOf('ad-')!==0) return true;
+    var baseId = c.id.split('-')[1];
+    return idsPresentes.indexOf(baseId)!==-1;
+  });
+}
+function mudarQty(id,d){
+  for(var i=0;i<window.carrinho.length;i++) if(window.carrinho[i].id==id){ window.carrinho[i].qty+=d; if(window.carrinho[i].qty<=0) window.carrinho.splice(i,1); break; }
+  removerAdicionaisOrfaos();
+  atualizarFloat(); renderCarrinho();
+}
+function removerItem(id){
+  window.carrinho=window.carrinho.filter(function(c){return c.id!=id;});
+  removerAdicionaisOrfaos();
+  atualizarFloat(); renderCarrinho();
+}
 
 function abrirAdmin(){document.getElementById('adminOverlay').classList.add('open');}
 function fecharAdmin(){document.getElementById('adminOverlay').classList.remove('open');document.getElementById('adminSenha').value='';document.getElementById('adminErro').textContent='';}
@@ -845,17 +885,29 @@ function previewFoto(e,previewId,varName){
   reader.readAsDataURL(file);
 }
 
+function iniciarEdicaoCategoria(id){ window.editandoCatId = id; renderCategorias(); }
+function cancelarEdicaoCategoria(){ window.editandoCatId = null; renderCategorias(); }
+
 function renderCategorias(){
   var cats = window.categorias || [];
   var html='';
   for(var i=0;i<cats.length;i++){
     var cat=cats[i];
-    html+='<div style="background:white;border:1px solid var(--borda);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">'+
-      '<span style="font-family:Cormorant Garamond,serif;font-size:16px;flex:1;color:var(--marrom-escuro);">'+cat.nome+'</span>'+
-      (cat.especial==='sim'?'<span style="background:var(--dourado);color:var(--marrom-escuro);font-size:10px;padding:3px 8px;letter-spacing:1px;">ESPECIAL</span>':'<span style="background:var(--offwhite2);color:var(--texto-medio);font-size:10px;padding:3px 8px;letter-spacing:1px;">NORMAL</span>')+
-      '<button onclick="toggleEspecial(\''+cat.id+'\')" style="background:none;border:1px solid var(--borda);padding:5px 10px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;color:var(--texto-medio);">Trocar tipo</button>'+
-      '<button onclick="deletarCategoria(\''+cat.id+'\')" class="del-btn">✕</button>'+
-      '</div>';
+    if(window.editandoCatId === cat.id){
+      html+='<div style="background:white;border:1px solid var(--borda);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">'+
+        '<input type="text" id="edit-cat-nome-'+cat.id+'" value="'+cat.nome+'" style="flex:1;border:1px solid var(--borda);padding:8px 10px;font-family:Jost,sans-serif;font-size:14px;background:var(--offwhite);outline:none;">'+
+        '<button onclick="salvarNomeCategoria(\''+cat.id+'\')" class="btn-sm">Salvar</button>'+
+        '<button onclick="cancelarEdicaoCategoria()" style="background:none;border:1px solid var(--borda);padding:7px 14px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;color:var(--texto-medio);">Cancelar</button>'+
+        '</div>';
+    } else {
+      html+='<div style="background:white;border:1px solid var(--borda);padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;">'+
+        '<span style="font-family:Cormorant Garamond,serif;font-size:16px;flex:1;color:var(--marrom-escuro);">'+cat.nome+'</span>'+
+        (cat.especial==='sim'?'<span style="background:var(--dourado);color:var(--marrom-escuro);font-size:10px;padding:3px 8px;letter-spacing:1px;">ESPECIAL</span>':'<span style="background:var(--offwhite2);color:var(--texto-medio);font-size:10px;padding:3px 8px;letter-spacing:1px;">NORMAL</span>')+
+        '<button onclick="iniciarEdicaoCategoria(\''+cat.id+'\')" class="edit-btn">Editar</button>'+
+        '<button onclick="toggleEspecial(\''+cat.id+'\')" style="background:none;border:1px solid var(--borda);padding:5px 10px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;color:var(--texto-medio);">Trocar tipo</button>'+
+        '<button onclick="deletarCategoria(\''+cat.id+'\')" class="del-btn">✕</button>'+
+        '</div>';
+    }
   }
   if(!html) html='<div style="font-size:13px;color:var(--texto-medio);padding:16px;">Nenhuma categoria ainda.</div>';
   document.getElementById('lista-categorias').innerHTML=html;
@@ -937,7 +989,7 @@ function renderAdminPedidos(){
       '<div style="font-size:12px;color:var(--dourado);margin-bottom:12px;">📅 '+dataFmt+' — '+p.hora+' · '+(p.pagamento==='pix'?'Pix':'Dinheiro')+'</div>'+
       '<div style="font-weight:500;color:var(--marrom);margin-bottom:12px;">Total: R$ '+p.total.toFixed(2).replace('.',',')+' · '+p.criado+'</div>'+
       (p.status!=='confirmado'?'<button class="btn-sm" style="margin-right:8px;" onclick="confirmarPedido(\''+p.id+'\')">✓ Confirmar</button>':'')+
-      '<button onclick="abrirWhats(\'Olá '+p.nome+'! Seu pedido foi confirmado para '+dataFmt+' 💚\')" style="background:var(--dourado);border:none;color:var(--marrom-escuro);padding:8px 16px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:1px;text-transform:uppercase;">Avisar Cliente</button></div>';
+      '<button onclick="abrirWhats(\'Olá '+p.nome+'! Seu pedido foi confirmado para '+dataFmt+'.\')" style="background:var(--dourado);border:none;color:var(--marrom-escuro);padding:8px 16px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:1px;text-transform:uppercase;">Avisar Cliente</button></div>';
   }
   document.getElementById('lista-pedidos').innerHTML=html;
 }
