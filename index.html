@@ -42,6 +42,9 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .categoria-titulo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--marrom);margin-bottom:4px;display:flex;align-items:center;gap:12px;}
 .categoria-titulo::after{content:'';flex:1;height:1px;background:var(--borda);}
 .categoria-bloco{margin-bottom:48px;}
+.busca-box{margin-bottom:24px;}
+.busca-box input{width:100%;border:1px solid var(--borda);padding:12px 16px;font-family:'Jost',sans-serif;font-size:14px;color:var(--texto);background:white;outline:none;}
+.busca-box input:focus{border-color:var(--dourado);}
 .especiais-banner{background:linear-gradient(135deg,var(--marrom-escuro),var(--verde));padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
 .produtos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px;}
 .produto-card{background:white;border:1px solid var(--borda);transition:all 0.25s;position:relative;overflow:hidden;}
@@ -205,6 +208,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <h2 class="section-title serif">Cardápio</h2>
     <div class="section-line"></div>
     <button class="voltar-btn" onclick="showPage('home')">← Voltar</button>
+    <div class="busca-box"><input type="text" id="busca-cardapio" placeholder="🔎 Buscar no cardápio... (ex: cookies)" oninput="renderCardapio()"></div>
     <div id="produtos-lista"><div style="text-align:center;padding:40px;color:var(--texto-medio);">Carregando cardápio... ☁️</div></div>
   </div>
 </div>
@@ -743,10 +747,17 @@ function popularSelects() {
 function renderCardapio() {
   var cats = window.categorias || [];
   var prods = window.produtos || [];
+  var buscaEl = document.getElementById('busca-cardapio');
+  var busca = buscaEl ? buscaEl.value.toLowerCase().trim() : '';
   var html = '';
   for(var o=0;o<cats.length;o++) {
     var cat = cats[o];
-    var catProds = prods.filter(function(p){ return p.cat === cat.nome; });
+    var catNomeLower = cat.nome.toLowerCase();
+    var catProds = prods.filter(function(p){
+      if(p.cat !== cat.nome) return false;
+      if(!busca) return true;
+      return p.nome.toLowerCase().indexOf(busca)!==-1 || (p.desc||'').toLowerCase().indexOf(busca)!==-1 || catNomeLower.indexOf(busca)!==-1;
+    });
     if(!catProds.length) continue;
     if(cat.especial==='sim') {
       html += '<div class="categoria-bloco"><div class="especiais-banner"><span style="font-size:20px;">✨</span><div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dourado-claro);margin-bottom:2px;">Edição Limitada</div><div style="font-family:Cormorant Garamond,serif;font-size:24px;color:white;font-weight:300;">'+cat.nome+'</div></div></div><div class="produtos-grid">';
@@ -769,7 +780,8 @@ function renderCardapio() {
     }
     html += '</div></div>';
   }
-  document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">Nenhum produto cadastrado ainda.</div>';
+  var msgVazio = busca ? 'Nenhum produto encontrado para "'+busca+'".' : 'Nenhum produto cadastrado ainda.';
+  document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+msgVazio+'</div>';
 }
 
 function addCarrinho(id) {
