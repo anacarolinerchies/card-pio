@@ -314,6 +314,15 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
             <div class="upload-area"><input type="file" accept="image/*" multiple onchange="previewFotos(event,'novo-preview-lista','novasFotos')"><div style="font-size:28px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para escolher uma ou mais fotos</div></div>
             <div id="novo-preview-lista" style="margin-top:10px;"></div>
           </div>
+          <div class="form-group full">
+            <label>Adicionais (opcional)</label>
+            <div id="novo-adicionais-lista"></div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+              <input type="text" id="novo-ad-nome" placeholder="Nome do adicional" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:140px;">
+              <input type="number" id="novo-ad-preco" placeholder="R$" step="0.01" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:80px;background:var(--offwhite);outline:none;">
+              <button type="button" class="btn-sm" onclick="adicionarAdicionalNovo()">+</button>
+            </div>
+          </div>
         </div>
         <button class="btn-primary" style="margin-top:16px;" onclick="adicionarProduto()">+ Adicionar ao Cardápio</button>
       </div>
@@ -445,6 +454,7 @@ window.editFotos = [];
 window.editandoId = null;
 window.editandoCatId = null;
 window.adicionaisTemp = [];
+window.novosAdicionaisTemp = [];
 window.carrinho = [];
 window.pedidos = [];
 window.pagSelecionado = 'pix';
@@ -605,12 +615,20 @@ window.adicionarProduto = async function() {
   if(!nome||!preco){ showToast('Preencha nome e preço!'); return; }
   var id = 'p' + Date.now();
   var fotos = window.novasFotos || [];
-  await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]||'', fotos:fotos, adicionais:[]});
+  var adicionais = window.novosAdicionaisTemp || [];
+  try {
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]||'', fotos:fotos, adicionais:adicionais});
+  } catch(e) {
+    showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
+    return;
+  }
   document.getElementById('novo-nome').value='';
   document.getElementById('novo-preco').value='';
   document.getElementById('novo-desc').value='';
   document.getElementById('novo-preview-lista').innerHTML='';
   window.novasFotos=[];
+  window.novosAdicionaisTemp=[];
+  renderAdicionaisNovoTemp();
   showSync(); showToast('"'+nome+'" adicionado!');
 };
 
@@ -634,7 +652,12 @@ window.salvarEdicao = async function() {
     fotos: fotos,
     foto: fotos[0] || ''
   };
-  await update(ref(db, 'produtos/'+id), dados);
+  try {
+    await update(ref(db, 'produtos/'+id), dados);
+  } catch(e) {
+    showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
+    return;
+  }
   fecharEditModal();
   showSync(); showToast('Produto atualizado!');
 };
@@ -1106,6 +1129,30 @@ function adicionarAdicionalTemp(){
 function removerAdicionalTemp(id){
   window.adicionaisTemp=window.adicionaisTemp.filter(function(a){return a.id!==id;});
   renderAdicionaisTemp();
+}
+
+function renderAdicionaisNovoTemp(){
+  var html='';
+  for(var i=0;i<window.novosAdicionaisTemp.length;i++){
+    var ad=window.novosAdicionaisTemp[i];
+    html+='<div class="adicional-admin-item"><div class="adicional-admin-info"><strong>'+ad.nome+'</strong> · R$ '+ad.preco.toFixed(2).replace('.',',')+'</div><button onclick="removerAdicionalNovo(\''+ad.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
+  }
+  document.getElementById('novo-adicionais-lista').innerHTML=html||'<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhum adicional.</div>';
+}
+
+function adicionarAdicionalNovo(){
+  var nome=document.getElementById('novo-ad-nome').value.trim();
+  var preco=parseFloat(document.getElementById('novo-ad-preco').value);
+  if(!nome||!preco){showToast('Preencha nome e preço do adicional!');return;}
+  window.novosAdicionaisTemp.push({id:'ad-'+Date.now(),nome:nome,preco:preco,vegano:'nao'});
+  document.getElementById('novo-ad-nome').value='';
+  document.getElementById('novo-ad-preco').value='';
+  renderAdicionaisNovoTemp();
+}
+
+function removerAdicionalNovo(id){
+  window.novosAdicionaisTemp=window.novosAdicionaisTemp.filter(function(a){return a.id!==id;});
+  renderAdicionaisNovoTemp();
 }
 
 function fecharEditModal(){document.getElementById('editOverlay').classList.remove('open');}
