@@ -31,7 +31,14 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .hero-sub{font-size:14px;color:var(--dourado-claro);letter-spacing:2px;margin-bottom:32px;font-weight:300;}
 .hero-pills{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;}
 .pill{background:rgba(184,151,106,0.15);border:1px solid rgba(184,151,106,0.4);color:var(--dourado-claro);padding:6px 16px;font-size:11px;letter-spacing:1px;}
-.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:flex-end;}
+.cta-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.cta-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;animation:ctaBounce 1.4s ease-in-out infinite;}
+.cta-label-claro{color:var(--dourado-claro);}
+.cta-label-escuro{color:var(--marrom);}
+.btn-destaque{animation:ctaPulse 2s infinite;}
+@keyframes ctaBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+@keyframes ctaPulse{0%,100%{box-shadow:0 0 0 0 rgba(184,151,106,0.5);}50%{box-shadow:0 0 0 10px rgba(184,151,106,0);}}
 .btn-primary{background:var(--dourado);color:var(--marrom-escuro);border:none;padding:14px 32px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:500;transition:all 0.2s;}
 .btn-primary:hover{background:var(--dourado-claro);}
 .btn-sm{background:var(--dourado);color:var(--marrom-escuro);border:none;padding:8px 16px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
@@ -209,7 +216,10 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
       <span class="pill">Produção artesanal</span>
     </div>
     <div class="hero-actions">
-      <button class="btn-primary" onclick="showPage('cardapio')">Ver Cardápio</button>
+      <div class="cta-wrap">
+        <span class="cta-label cta-label-claro">👉 Encomende aqui</span>
+        <button class="btn-primary btn-destaque" onclick="showPage('cardapio')">Ver Cardápio</button>
+      </div>
       <button class="btn-outline" onclick="showPage('cuidados')">Nossos Cuidados</button>
     </div>
   </div>
@@ -217,7 +227,10 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <h2 class="section-title serif">Uma confeitaria com propósito</h2>
     <div class="section-line"></div>
     <p style="text-align:center;color:var(--texto-medio);line-height:1.9;max-width:600px;margin:0 auto;font-size:15px;">Na Ana Chies, cada receita é preparada com cuidado e consciência. Priorizamos ingredientes naturais, produção artesanal e sabores que respeitam o verdadeiro potencial dos alimentos — porque doce de verdade une sabor, qualidade e propósito.</p>
-    <div style="text-align:center;margin-top:32px;"><button class="btn-primary" onclick="showPage('cardapio')">Fazer Meu Pedido</button></div>
+    <div class="cta-wrap" style="margin-top:32px;">
+      <span class="cta-label cta-label-escuro">👉 Encomende aqui</span>
+      <button class="btn-primary btn-destaque" onclick="showPage('cardapio')">Fazer Meu Pedido</button>
+    </div>
   </div>
 </div>
 
