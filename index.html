@@ -618,7 +618,7 @@ window.adicionarProduto = async function() {
   var fotos = window.novasFotos || [];
   var adicionais = window.novosAdicionaisTemp || [];
   try {
-    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]||'', fotos:fotos, adicionais:adicionais});
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais});
   } catch(e) {
     showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
     return;
@@ -651,7 +651,7 @@ window.salvarEdicao = async function() {
     desc: document.getElementById('edit-desc').value.trim(),
     adicionais: window.adicionaisTemp,
     fotos: fotos,
-    foto: fotos[0] || ''
+    foto: fotos[0] ? fotos[0].src : ''
   };
   try {
     await update(ref(db, 'produtos/'+id), dados);
@@ -816,18 +816,27 @@ function renderCookiePrecosBanner() {
   return html;
 }
 
+function normalizarFoto(f){
+  return (typeof f === 'string') ? {src:f, pos:'center'} : {src:f.src, pos:f.pos||'center'};
+}
+
 function fotosDoProduto(prod){
-  return (prod.fotos && prod.fotos.length) ? prod.fotos : (prod.foto ? [prod.foto] : []);
+  var lista = (prod.fotos && prod.fotos.length) ? prod.fotos : (prod.foto ? [prod.foto] : []);
+  return lista.map(normalizarFoto);
+}
+
+function posicaoCss(pos){
+  return pos==='top' ? 'center 0%' : (pos==='bottom' ? 'center 100%' : 'center 50%');
 }
 
 function fotoCardHtml(prod){
   var fotos = fotosDoProduto(prod);
   if(!fotos.length) return '<div class="produto-foto-ph">🍫</div>';
-  if(fotos.length===1) return '<img src="'+fotos[0]+'" class="produto-foto" alt="'+prod.nome+'">';
+  if(fotos.length===1) return '<img src="'+fotos[0].src+'" class="produto-foto" style="object-position:'+posicaoCss(fotos[0].pos)+'" alt="'+prod.nome+'">';
   var dotsHtml='';
   for(var d=0;d<fotos.length;d++) dotsHtml += '<span class="foto-dot" data-prod-dot="'+prod.id+'" style="opacity:'+(d===0?'1':'0.4')+'"></span>';
   return '<div class="produto-foto-carrossel">'+
-    '<img id="foto-'+prod.id+'" src="'+fotos[0]+'" class="produto-foto" alt="'+prod.nome+'">'+
+    '<img id="foto-'+prod.id+'" src="'+fotos[0].src+'" class="produto-foto" style="object-position:'+posicaoCss(fotos[0].pos)+'" alt="'+prod.nome+'">'+
     '<button type="button" class="foto-nav foto-nav-prev" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',-1)">‹</button>'+
     '<button type="button" class="foto-nav foto-nav-next" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',1)">›</button>'+
     '<div class="foto-dots">'+dotsHtml+'</div>'+
@@ -844,9 +853,19 @@ function mudarFotoProduto(prodId, dir){
   atual = (atual + dir + fotos.length) % fotos.length;
   window.fotoIndex[prodId]=atual;
   var img = document.getElementById('foto-'+prodId);
-  if(img) img.src = fotos[atual];
+  if(img){ img.src = fotos[atual].src; img.style.objectPosition = posicaoCss(fotos[atual].pos); }
   var dots = document.querySelectorAll('[data-prod-dot="'+prodId+'"]');
   for(var i=0;i<dots.length;i++) dots[i].style.opacity = (i===atual?'1':'0.4');
+}
+
+function iniciarAutoPlayFotos(){
+  if(window.autoPlayFotosInterval) clearInterval(window.autoPlayFotosInterval);
+  window.autoPlayFotosInterval = setInterval(function(){
+    var prods = window.produtos || [];
+    for(var i=0;i<prods.length;i++){
+      if(document.getElementById('foto-'+prods[i].id)) mudarFotoProduto(prods[i].id, 1);
+    }
+  }, 3500);
 }
 
 function renderCardapio() {
@@ -889,6 +908,7 @@ function renderCardapio() {
   }
   var msgVazio = busca ? 'Nenhum produto encontrado para "'+busca+'".' : 'Nenhum produto cadastrado ainda.';
   document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+msgVazio+'</div>';
+  iniciarAutoPlayFotos();
 }
 
 function addCarrinho(id) {
@@ -1061,19 +1081,26 @@ function previewFotos(e, listaId, varName){
   showToast('Processando fotos...');
   Promise.all(files.map(function(f){ return comprimirImagem(f, 1000, 0.72); })).then(function(resultados){
     if(!window[varName]) window[varName] = [];
-    window[varName] = window[varName].concat(resultados);
+    window[varName] = window[varName].concat(resultados.map(function(src){ return {src:src, pos:'center'}; }));
     renderPreviewFotos(listaId, varName);
   });
   e.target.value = '';
 }
 
 function renderPreviewFotos(listaId, varName){
-  var fotos = window[varName] || [];
+  var fotos = (window[varName] || []).map(normalizarFoto);
+  window[varName] = fotos;
   var html = '';
   for(var i=0;i<fotos.length;i++){
-    html += '<div style="position:relative;display:inline-block;margin:0 8px 8px 0;">'+
-      '<img src="'+fotos[i]+'" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--borda);display:block;">'+
+    var pos = fotos[i].pos;
+    html += '<div style="position:relative;display:inline-block;margin:0 8px 10px 0;vertical-align:top;text-align:center;">'+
+      '<img src="'+fotos[i].src+'" style="width:70px;height:70px;object-fit:cover;object-position:'+posicaoCss(pos)+';border:1px solid var(--borda);display:block;">'+
       '<button type="button" onclick="removerFotoPreview(\''+varName+'\','+i+',\''+listaId+'\')" style="position:absolute;top:-6px;right:-6px;background:#c0392b;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1;">✕</button>'+
+      '<div style="display:flex;gap:2px;margin-top:4px;width:70px;">'+
+      '<button type="button" onclick="mudarPosicaoPreview(\''+varName+'\','+i+',\'top\',\''+listaId+'\')" style="flex:1;font-size:9px;padding:2px 0;cursor:pointer;background:'+(pos==='top'?'var(--dourado)':'white')+';border:1px solid var(--borda);">Topo</button>'+
+      '<button type="button" onclick="mudarPosicaoPreview(\''+varName+'\','+i+',\'center\',\''+listaId+'\')" style="flex:1;font-size:9px;padding:2px 0;cursor:pointer;background:'+(pos==='center'?'var(--dourado)':'white')+';border:1px solid var(--borda);">Centro</button>'+
+      '<button type="button" onclick="mudarPosicaoPreview(\''+varName+'\','+i+',\'bottom\',\''+listaId+'\')" style="flex:1;font-size:9px;padding:2px 0;cursor:pointer;background:'+(pos==='bottom'?'var(--dourado)':'white')+';border:1px solid var(--borda);">Base</button>'+
+      '</div>'+
       '</div>';
   }
   document.getElementById(listaId).innerHTML = html;
@@ -1081,6 +1108,11 @@ function renderPreviewFotos(listaId, varName){
 
 function removerFotoPreview(varName, idx, listaId){
   window[varName].splice(idx,1);
+  renderPreviewFotos(listaId, varName);
+}
+
+function mudarPosicaoPreview(varName, idx, pos, listaId){
+  window[varName][idx].pos = pos;
   renderPreviewFotos(listaId, varName);
 }
 
@@ -1141,7 +1173,7 @@ function abrirEdit(id){
   document.getElementById('edit-cat').value=prod.cat;
   document.getElementById('edit-vegano').value=prod.vegano;
   document.getElementById('edit-desc').value=prod.desc;
-  window.editFotos = (prod.fotos && prod.fotos.length) ? prod.fotos.slice() : (prod.foto ? [prod.foto] : []);
+  window.editFotos = fotosDoProduto(prod);
   renderPreviewFotos('edit-preview-lista', 'editFotos');
   window.adicionaisTemp=JSON.parse(JSON.stringify(prod.adicionais||[]));
   renderAdicionaisTemp();
