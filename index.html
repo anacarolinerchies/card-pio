@@ -45,6 +45,17 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .busca-box{margin-bottom:24px;}
 .busca-box input{width:100%;border:1px solid var(--borda);padding:12px 16px;font-family:'Jost',sans-serif;font-size:14px;color:var(--texto);background:white;outline:none;}
 .busca-box input:focus{border-color:var(--dourado);}
+.cookie-precos-banner{background:var(--offwhite2);border:1px solid var(--borda);padding:20px;margin-bottom:20px;}
+.cookie-precos-titulo{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--marrom-escuro);text-align:center;margin-bottom:16px;}
+.cookie-precos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;}
+.cookie-preco-item{background:white;border:1px solid var(--borda);padding:14px 10px;text-align:center;}
+.cookie-preco-item.destaque{border-color:var(--dourado);background:linear-gradient(180deg,#fff,var(--offwhite));}
+.cp-qtd{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--texto-medio);margin-bottom:6px;}
+.cp-preco{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--marrom-escuro);}
+.cp-unit{font-size:11px;color:var(--texto-medio);margin-top:2px;}
+.cp-economia{font-size:11px;color:var(--verde);font-weight:500;margin-top:6px;}
+.cp-obs{font-size:10px;color:var(--dourado);letter-spacing:0.5px;text-transform:uppercase;margin-top:4px;}
+.cookie-precos-nota{font-size:12px;color:var(--texto-medio);text-align:center;margin-top:14px;line-height:1.6;}
 .especiais-banner{background:linear-gradient(135deg,var(--marrom-escuro),var(--verde));padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
 .produtos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:20px;}
 .produto-card{background:white;border:1px solid var(--borda);transition:all 0.25s;position:relative;overflow:hidden;}
@@ -744,6 +755,32 @@ function popularSelects() {
   }
 }
 
+function renderCookiePrecosBanner() {
+  var tiers = [
+    {qtd:1, preco:6.00, caixinha:false},
+    {qtd:2, preco:11.50, caixinha:false},
+    {qtd:4, preco:21.00, caixinha:true},
+    {qtd:6, preco:30.00, caixinha:true}
+  ];
+  var html = '<div class="cookie-precos-banner">'+
+    '<div class="cookie-precos-titulo">🍪 Quanto mais cookies, menor o preço por unidade!</div>'+
+    '<div class="cookie-precos-grid">';
+  for(var i=0;i<tiers.length;i++){
+    var t = tiers[i];
+    var unit = t.preco/t.qtd;
+    var economia = (6.00*t.qtd) - t.preco;
+    html += '<div class="cookie-preco-item'+(t.caixinha?' destaque':'')+'">'+
+      '<div class="cp-qtd">'+t.qtd+' cookie'+(t.qtd>1?'s':'')+'</div>'+
+      '<div class="cp-preco">R$ '+t.preco.toFixed(2).replace('.',',')+'</div>'+
+      '<div class="cp-unit">R$ '+unit.toFixed(2).replace('.',',')+' / un</div>'+
+      (economia>0?'<div class="cp-economia">Economize R$ '+economia.toFixed(2).replace('.',',')+'</div>':'')+
+      (t.caixinha?'<div class="cp-obs">Enviado na caixinha</div>':'')+
+      '</div>';
+  }
+  html += '</div><div class="cookie-precos-nota">Misture os sabores que quiser — é só escolher a quantidade desejada e informar nas observações do pedido.</div></div>';
+  return html;
+}
+
 function renderCardapio() {
   var cats = window.categorias || [];
   var prods = window.produtos || [];
@@ -762,7 +799,9 @@ function renderCardapio() {
     if(cat.especial==='sim') {
       html += '<div class="categoria-bloco"><div class="especiais-banner"><span style="font-size:20px;">✨</span><div><div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dourado-claro);margin-bottom:2px;">Edição Limitada</div><div style="font-family:Cormorant Garamond,serif;font-size:24px;color:white;font-weight:300;">'+cat.nome+'</div></div></div><div class="produtos-grid">';
     } else {
-      html += '<div class="categoria-bloco"><div class="categoria-titulo serif">'+cat.nome+'</div><div class="produtos-grid">';
+      html += '<div class="categoria-bloco"><div class="categoria-titulo serif">'+cat.nome+'</div>';
+      if(catNomeLower==='cookies') html += renderCookiePrecosBanner();
+      html += '<div class="produtos-grid">';
     }
     for(var j=0;j<catProds.length;j++) {
       var prod = catProds[j];
