@@ -61,6 +61,13 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .produto-card{background:white;border:1px solid var(--borda);transition:all 0.25s;position:relative;overflow:hidden;}
 .produto-card:hover{border-color:var(--dourado);transform:translateY(-2px);}
 .produto-foto{width:100%;height:180px;object-fit:cover;display:block;}
+.produto-foto-carrossel{position:relative;width:100%;height:180px;}
+.produto-foto-carrossel .produto-foto{height:180px;}
+.foto-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:white;border:none;width:26px;height:26px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.foto-nav-prev{left:8px;}
+.foto-nav-next{right:8px;}
+.foto-dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:5px;}
+.foto-dots .foto-dot{width:6px;height:6px;border-radius:50%;background:white;display:inline-block;}
 .produto-foto-ph{width:100%;height:180px;background:var(--offwhite2);display:flex;align-items:center;justify-content:center;font-size:36px;}
 .produto-info{padding:16px;}
 .produto-nome{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;color:var(--marrom-escuro);margin-bottom:4px;}
@@ -303,9 +310,9 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
           <div class="form-group"><label>Vegano?</label><select id="novo-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
           <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva o produto..."></textarea></div>
           <div class="form-group full">
-            <label>Foto do produto</label>
-            <div class="upload-area"><input type="file" accept="image/*" onchange="previewFoto(event,'novo-preview','novaFoto')"><div style="font-size:28px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para escolher uma foto</div></div>
-            <img id="novo-preview" class="upload-preview" style="display:none;">
+            <label>Fotos do produto (pode escolher várias)</label>
+            <div class="upload-area"><input type="file" accept="image/*" multiple onchange="previewFotos(event,'novo-preview-lista','novasFotos')"><div style="font-size:28px;margin-bottom:8px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para escolher uma ou mais fotos</div></div>
+            <div id="novo-preview-lista" style="margin-top:10px;"></div>
           </div>
         </div>
         <button class="btn-primary" style="margin-top:16px;" onclick="adicionarProduto()">+ Adicionar ao Cardápio</button>
@@ -385,9 +392,9 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="edit-modal-grupo"><label>Vegano?</label><select id="edit-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
     <div class="edit-modal-grupo"><label>Descrição</label><textarea id="edit-desc"></textarea></div>
     <div class="edit-modal-grupo">
-      <label>Foto</label>
-      <div class="upload-area"><input type="file" accept="image/*" onchange="previewFoto(event,'edit-preview','editFoto')"><div style="font-size:24px;margin-bottom:6px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para trocar</div></div>
-      <img id="edit-preview" class="upload-preview" style="display:none;">
+      <label>Fotos (pode escolher várias)</label>
+      <div class="upload-area"><input type="file" accept="image/*" multiple onchange="previewFotos(event,'edit-preview-lista','editFotos')"><div style="font-size:24px;margin-bottom:6px;">📷</div><div style="font-size:12px;color:var(--texto-medio);">Clique para adicionar fotos</div></div>
+      <div id="edit-preview-lista" style="margin-top:10px;"></div>
     </div>
     <div class="edit-modal-grupo">
       <label>Adicionais</label>
@@ -433,8 +440,8 @@ const auth = getAuth(app);
 const ADMIN_EMAIL = 'admin@anachies.com';
 
 // ── ESTADO LOCAL ──
-window.novaFoto = null;
-window.editFoto = null;
+window.novasFotos = [];
+window.editFotos = [];
 window.editandoId = null;
 window.editandoCatId = null;
 window.adicionaisTemp = [];
@@ -597,12 +604,13 @@ window.adicionarProduto = async function() {
   var vegano = document.getElementById('novo-vegano').value;
   if(!nome||!preco){ showToast('Preencha nome e preço!'); return; }
   var id = 'p' + Date.now();
-  await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:window.novaFoto||'', adicionais:[]});
+  var fotos = window.novasFotos || [];
+  await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]||'', fotos:fotos, adicionais:[]});
   document.getElementById('novo-nome').value='';
   document.getElementById('novo-preco').value='';
   document.getElementById('novo-desc').value='';
-  document.getElementById('novo-preview').style.display='none';
-  window.novaFoto=null;
+  document.getElementById('novo-preview-lista').innerHTML='';
+  window.novasFotos=[];
   showSync(); showToast('"'+nome+'" adicionado!');
 };
 
@@ -615,15 +623,17 @@ window.deletarProduto = async function(id) {
 
 window.salvarEdicao = async function() {
   var id = window.editandoId;
+  var fotos = window.editFotos || [];
   var dados = {
     nome: document.getElementById('edit-nome').value.trim(),
     preco: parseFloat(document.getElementById('edit-preco').value),
     cat: document.getElementById('edit-cat').value,
     vegano: document.getElementById('edit-vegano').value,
     desc: document.getElementById('edit-desc').value.trim(),
-    adicionais: window.adicionaisTemp
+    adicionais: window.adicionaisTemp,
+    fotos: fotos,
+    foto: fotos[0] || ''
   };
-  if(window.editFoto) dados.foto = window.editFoto;
   await update(ref(db, 'produtos/'+id), dados);
   fecharEditModal();
   showSync(); showToast('Produto atualizado!');
@@ -781,6 +791,39 @@ function renderCookiePrecosBanner() {
   return html;
 }
 
+function fotosDoProduto(prod){
+  return (prod.fotos && prod.fotos.length) ? prod.fotos : (prod.foto ? [prod.foto] : []);
+}
+
+function fotoCardHtml(prod){
+  var fotos = fotosDoProduto(prod);
+  if(!fotos.length) return '<div class="produto-foto-ph">🍫</div>';
+  if(fotos.length===1) return '<img src="'+fotos[0]+'" class="produto-foto" alt="'+prod.nome+'">';
+  var dotsHtml='';
+  for(var d=0;d<fotos.length;d++) dotsHtml += '<span class="foto-dot" data-prod-dot="'+prod.id+'" style="opacity:'+(d===0?'1':'0.4')+'"></span>';
+  return '<div class="produto-foto-carrossel">'+
+    '<img id="foto-'+prod.id+'" src="'+fotos[0]+'" class="produto-foto" alt="'+prod.nome+'">'+
+    '<button type="button" class="foto-nav foto-nav-prev" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',-1)">‹</button>'+
+    '<button type="button" class="foto-nav foto-nav-next" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',1)">›</button>'+
+    '<div class="foto-dots">'+dotsHtml+'</div>'+
+    '</div>';
+}
+
+function mudarFotoProduto(prodId, dir){
+  var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
+  if(!prod) return;
+  var fotos = fotosDoProduto(prod);
+  if(fotos.length<2) return;
+  if(!window.fotoIndex) window.fotoIndex={};
+  var atual = window.fotoIndex[prodId]||0;
+  atual = (atual + dir + fotos.length) % fotos.length;
+  window.fotoIndex[prodId]=atual;
+  var img = document.getElementById('foto-'+prodId);
+  if(img) img.src = fotos[atual];
+  var dots = document.querySelectorAll('[data-prod-dot="'+prodId+'"]');
+  for(var i=0;i<dots.length;i++) dots[i].style.opacity = (i===atual?'1':'0.4');
+}
+
 function renderCardapio() {
   var cats = window.categorias || [];
   var prods = window.produtos || [];
@@ -815,7 +858,7 @@ function renderCardapio() {
         }
         adHtml += '</div>';
       }
-      html += '<div class="produto-card">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+(prod.foto?'<img src="'+prod.foto+'" class="produto-foto" alt="'+prod.nome+'">':'<div class="produto-foto-ph">🍫</div>')+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div><div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>'+adHtml+'</div></div>';
+      html += '<div class="produto-card">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div><div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>'+adHtml+'</div></div>';
     }
     html += '</div></div>';
   }
@@ -928,15 +971,53 @@ function adminTab(tab,el){
   if(tab==='pedidos') renderAdminPedidos();
 }
 
-function previewFoto(e,previewId,varName){
-  var file=e.target.files[0];if(!file)return;
-  var reader=new FileReader();
-  reader.onload=function(ev){
-    if(varName==='novaFoto') window.novaFoto=ev.target.result;
-    else window.editFoto=ev.target.result;
-    var img=document.getElementById(previewId);img.src=ev.target.result;img.style.display='block';
-  };
-  reader.readAsDataURL(file);
+function comprimirImagem(file, maxLado, qualidade){
+  return new Promise(function(resolve){
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){
+        var w = img.width, h = img.height;
+        if(w > h && w > maxLado){ h = Math.round(h*maxLado/w); w = maxLado; }
+        else if(h >= w && h > maxLado){ w = Math.round(w*maxLado/h); h = maxLado; }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', qualidade));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function previewFotos(e, listaId, varName){
+  var files = Array.prototype.slice.call(e.target.files);
+  if(!files.length) return;
+  showToast('Processando fotos...');
+  Promise.all(files.map(function(f){ return comprimirImagem(f, 1000, 0.72); })).then(function(resultados){
+    if(!window[varName]) window[varName] = [];
+    window[varName] = window[varName].concat(resultados);
+    renderPreviewFotos(listaId, varName);
+  });
+  e.target.value = '';
+}
+
+function renderPreviewFotos(listaId, varName){
+  var fotos = window[varName] || [];
+  var html = '';
+  for(var i=0;i<fotos.length;i++){
+    html += '<div style="position:relative;display:inline-block;margin:0 8px 8px 0;">'+
+      '<img src="'+fotos[i]+'" style="width:70px;height:70px;object-fit:cover;border:1px solid var(--borda);display:block;">'+
+      '<button type="button" onclick="removerFotoPreview(\''+varName+'\','+i+',\''+listaId+'\')" style="position:absolute;top:-6px;right:-6px;background:#c0392b;color:white;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1;">✕</button>'+
+      '</div>';
+  }
+  document.getElementById(listaId).innerHTML = html;
+}
+
+function removerFotoPreview(varName, idx, listaId){
+  window[varName].splice(idx,1);
+  renderPreviewFotos(listaId, varName);
 }
 
 function iniciarEdicaoCategoria(id){ window.editandoCatId = id; renderCategorias(); }
@@ -987,7 +1068,7 @@ function renderAdminProdutos(){
 }
 
 function abrirEdit(id){
-  window.editandoId=id; window.editFoto=null;
+  window.editandoId=id;
   var prod=(window.produtos||[]).find(function(p){return p.id==id;});
   if(!prod) return;
   document.getElementById('edit-nome').value=prod.nome;
@@ -996,8 +1077,8 @@ function abrirEdit(id){
   document.getElementById('edit-cat').value=prod.cat;
   document.getElementById('edit-vegano').value=prod.vegano;
   document.getElementById('edit-desc').value=prod.desc;
-  var prev=document.getElementById('edit-preview');
-  if(prod.foto){prev.src=prod.foto;prev.style.display='block';}else prev.style.display='none';
+  window.editFotos = (prod.fotos && prod.fotos.length) ? prod.fotos.slice() : (prod.foto ? [prod.foto] : []);
+  renderPreviewFotos('edit-preview-lista', 'editFotos');
   window.adicionaisTemp=JSON.parse(JSON.stringify(prod.adicionais||[]));
   renderAdicionaisTemp();
   document.getElementById('editOverlay').classList.add('open');
