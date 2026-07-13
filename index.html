@@ -95,6 +95,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .qty-btn:hover{background:var(--marrom);color:white;}
 .remover-btn{background:none;border:none;color:#999;cursor:pointer;font-size:18px;padding:4px;}
 .remover-btn:hover{color:#c0392b;}
+.economia-bar{background:var(--verde);color:white;padding:14px 20px;font-size:13px;text-align:center;margin-top:16px;}
 .total-bar{background:var(--offwhite2);border:1px solid var(--borda);padding:20px 24px;margin:24px 0;display:flex;justify-content:space-between;align-items:center;}
 .total-label{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--marrom);}
 .total-valor{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--marrom-escuro);}
@@ -733,18 +734,19 @@ window.finalizarPedido = async function() {
   var whatsWindow = window.open('', '_blank');
   var dataFmt = new Date(data+'T12:00:00').toLocaleDateString('pt-BR');
   var msg = '*Pedido Ana Chies Confeitaria*\n\n*Cliente:* '+nome+'\n*WhatsApp:* '+fone+'\n*Retirada:* '+dataFmt+' — '+hora+'\n*Pagamento:* '+(window.pagSelecionado==='pix'?'Pix':'Dinheiro')+'\n\n*Itens do pedido:*\n';
-  var total = 0;
   for(var i=0;i<window.carrinho.length;i++){
-    var s=window.carrinho[i].preco*window.carrinho[i].qty; total+=s;
+    var s=window.carrinho[i].preco*window.carrinho[i].qty;
     msg+='- '+window.carrinho[i].nome+' x'+window.carrinho[i].qty+' — R$ '+s.toFixed(2).replace('.',',')+'\n';
   }
-  msg+='\n*Total: R$ '+total.toFixed(2).replace('.',',')+' *';
+  var totais = calcularTotais();
+  if(totais.economia>0) msg+='\nVocê economizou R$ '+totais.economia.toFixed(2).replace('.',',')+' comprando cookies em quantidade!';
+  msg+='\n*Total: R$ '+totais.total.toFixed(2).replace('.',',')+' *';
   if(obs) msg+='\n\n*Obs:* '+obs;
   if(window.pagSelecionado==='pix') msg+='\n\nChave Pix: '+window.pixChave+'\nEnvie o comprovante após o pagamento!';
   var pedidoId = 'ped-' + Date.now();
   await set(ref(db, 'pedidos/'+pedidoId), {
     id:pedidoId, nome:nome, fone:fone, data:data, hora:hora, obs:obs,
-    itens:window.carrinho.slice(), total:total, pagamento:window.pagSelecionado,
+    itens:window.carrinho.slice(), total:totais.total, economia:totais.economia, pagamento:window.pagSelecionado,
     status:'pendente', criado:new Date().toLocaleString('pt-BR')
   });
   if(whatsWindow) whatsWindow.location = 'https://wa.me/'+window.whatsNum+'?text='+encodeURIComponent(msg);
@@ -925,6 +927,41 @@ function atualizarFloat() {
   document.getElementById('carrinhoFloat').style.display=total>0?'flex':'none';
 }
 
+var COOKIE_TIERS = [{q:1,p:6.00},{q:2,p:11.50},{q:4,p:21.00},{q:6,p:30.00}];
+
+function precoCookies(qtd){
+  if(qtd<=0) return 0;
+  var dp=[0];
+  for(var i=1;i<=qtd;i++){
+    var melhor=Infinity;
+    for(var t=0;t<COOKIE_TIERS.length;t++){
+      if(COOKIE_TIERS[t].q<=i) melhor=Math.min(melhor, dp[i-COOKIE_TIERS[t].q]+COOKIE_TIERS[t].p);
+    }
+    dp[i]=melhor;
+  }
+  return dp[qtd];
+}
+
+function ehItemCookie(item){
+  if(item.id.indexOf('ad-')===0) return false;
+  var prod=(window.produtos||[]).find(function(p){return p.id==item.id;});
+  return !!(prod && prod.cat && prod.cat.toLowerCase()==='cookies');
+}
+
+function calcularTotais(){
+  var cart = window.carrinho || [];
+  var qtdCookies=0, totalOutros=0;
+  for(var i=0;i<cart.length;i++){
+    var item=cart[i];
+    if(ehItemCookie(item)) qtdCookies+=item.qty;
+    else totalOutros+=item.preco*item.qty;
+  }
+  var totalCookies = precoCookies(qtdCookies);
+  var precoCheioCookies = qtdCookies*6.00;
+  var economia = precoCheioCookies-totalCookies;
+  return {total: totalOutros+totalCookies, qtdCookies:qtdCookies, totalCookies:totalCookies, economia: economia>0.001?economia:0};
+}
+
 function renderCarrinho() {
   var cart = window.carrinho || [];
   if(!cart.length) {
@@ -932,12 +969,16 @@ function renderCarrinho() {
     document.getElementById('carrinho-form').innerHTML='';
     return;
   }
-  var total=0,html='';
+  var html='';
   for(var i=0;i<cart.length;i++){
-    var item=cart[i],sub=item.preco*item.qty; total+=sub;
+    var item=cart[i],sub=item.preco*item.qty;
     html+='<div class="carrinho-item">'+(item.foto?'<img src="'+item.foto+'" class="carrinho-item-foto" alt="">':'<div class="carrinho-item-foto-ph">🍫</div>')+'<div class="carrinho-item-info"><div class="carrinho-item-nome serif">'+item.nome+'</div><div class="carrinho-item-preco">R$ '+item.preco.toFixed(2).replace('.',',')+'</div></div><div class="qty-controls"><button class="qty-btn" onclick="mudarQty(\''+item.id+'\',-1)">−</button><span style="font-size:15px;min-width:20px;text-align:center;">'+item.qty+'</span><button class="qty-btn" onclick="mudarQty(\''+item.id+'\',1)">+</button></div><div style="font-family:Cormorant Garamond,serif;font-size:17px;color:var(--marrom);min-width:70px;text-align:right;">R$ '+sub.toFixed(2).replace('.',',')+'</div><button class="remover-btn" onclick="removerItem(\''+item.id+'\')">✕</button></div>';
   }
-  html+='<div class="total-bar"><span class="total-label serif">Total do pedido</span><span class="total-valor serif">R$ '+total.toFixed(2).replace('.',',')+'</span></div>';
+  var totais = calcularTotais();
+  if(totais.economia>0){
+    html+='<div class="economia-bar">🎉 Você economizou <strong>R$ '+totais.economia.toFixed(2).replace('.',',')+'</strong> comprando cookies em quantidade!</div>';
+  }
+  html+='<div class="total-bar"><span class="total-label serif">Total do pedido</span><span class="total-valor serif">R$ '+totais.total.toFixed(2).replace('.',',')+'</span></div>';
   document.getElementById('carrinho-itens').innerHTML=html;
   var amanha=new Date(); amanha.setDate(amanha.getDate()+1);
   var dataMin=amanha.toISOString().split('T')[0];
@@ -1169,7 +1210,7 @@ function renderAdminPedidos(){
     html+='<div class="pedido-card"><div class="pedido-header"><div><div class="pedido-nome serif">'+p.nome+'</div><div style="font-size:12px;color:var(--texto-medio);">'+p.fone+'</div></div><span class="pedido-status '+(p.status==='confirmado'?'status-confirmado':'status-pendente')+'">'+p.status+'</span></div>'+
       '<div style="font-size:13px;color:var(--texto-medio);margin-bottom:8px;line-height:1.8;">'+itensStr+'</div>'+
       '<div style="font-size:12px;color:var(--dourado);margin-bottom:12px;">📅 '+dataFmt+' — '+p.hora+' · '+(p.pagamento==='pix'?'Pix':'Dinheiro')+'</div>'+
-      '<div style="font-weight:500;color:var(--marrom);margin-bottom:12px;">Total: R$ '+p.total.toFixed(2).replace('.',',')+' · '+p.criado+'</div>'+
+      '<div style="font-weight:500;color:var(--marrom);margin-bottom:12px;">Total: R$ '+p.total.toFixed(2).replace('.',',')+(p.economia>0?' <span style="color:var(--verde);font-weight:400;font-size:12px;">(cliente economizou R$ '+p.economia.toFixed(2).replace('.',',')+')</span>':'')+' · '+p.criado+'</div>'+
       (p.status!=='confirmado'?'<button class="btn-sm" style="margin-right:8px;" onclick="confirmarPedido(\''+p.id+'\')">✓ Confirmar</button>':'')+
       '<button onclick="abrirWhats(\'Olá '+p.nome+'! Seu pedido foi confirmado para '+dataFmt+'.\')" style="background:var(--dourado);border:none;color:var(--marrom-escuro);padding:8px 16px;font-size:11px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:1px;text-transform:uppercase;">Avisar Cliente</button></div>';
   }
