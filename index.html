@@ -320,7 +320,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
         <div class="form-grid">
           <div class="form-group"><label>Nome do produto</label><input type="text" id="novo-nome" placeholder="Ex: Cheesecake Vegano"></div>
           <div class="form-group"><label>Preço (R$)</label><input type="number" id="novo-preco" placeholder="0.00" step="0.01"></div>
-          <div class="form-group"><label>Categoria</label><select id="novo-cat"></select></div>
+          <div class="form-group"><label>Categoria</label><select id="novo-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
           <div class="form-group"><label>Vegano?</label><select id="novo-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
           <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva o produto..."></textarea></div>
           <div class="form-group full">
@@ -411,7 +411,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <h3 class="serif">Editar Produto</h3>
     <div class="edit-modal-grupo"><label>Nome</label><input type="text" id="edit-nome"></div>
     <div class="edit-modal-grupo"><label>Preço (R$)</label><input type="number" id="edit-preco" step="0.01"></div>
-    <div class="edit-modal-grupo"><label>Categoria</label><select id="edit-cat"></select></div>
+    <div class="edit-modal-grupo"><label>Categoria</label><select id="edit-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
     <div class="edit-modal-grupo"><label>Vegano?</label><select id="edit-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
     <div class="edit-modal-grupo"><label>Descrição</label><textarea id="edit-desc"></textarea></div>
     <div class="edit-modal-grupo">
@@ -476,6 +476,8 @@ window.whatsNum = '5554991512886';
 window.pixChave = '04452047025';
 window.categorias = [];
 window.produtos = [];
+window.categoriasCarregadas = false;
+window.produtosCarregados = false;
 
 // ── DADOS PADRÃO (primeira vez) ──
 const categoriasDefault = [
@@ -531,6 +533,7 @@ onValue(ref(db, 'categorias'), snap => {
   } else {
     window.categorias = [];
   }
+  window.categoriasCarregadas = true;
   if(document.getElementById('page-cardapio').classList.contains('active')) renderCardapio();
   if(document.getElementById('admin-categorias') && document.getElementById('admin-categorias').classList.contains('active')) renderCategorias();
   popularSelects();
@@ -543,6 +546,7 @@ onValue(ref(db, 'produtos'), snap => {
   } else {
     window.produtos = [];
   }
+  window.produtosCarregados = true;
   if(document.getElementById('page-cardapio').classList.contains('active')) renderCardapio();
   if(document.getElementById('admin-produtos') && document.getElementById('admin-produtos').classList.contains('active')) renderAdminProdutos();
 });
@@ -582,6 +586,32 @@ window.adicionarCategoria = async function() {
   await set(ref(db, 'categorias/'+id), {id:id, nome:nome, especial:especial});
   document.getElementById('nova-cat-nome').value = '';
   showSync(); showToast('"'+nome+'" adicionada!');
+};
+
+window.criarCategoriaRapida = async function(selectId){
+  var el = document.getElementById(selectId);
+  var nome = prompt('Nome da nova categoria:');
+  if(!nome || !nome.trim()){ el.value=''; return; }
+  nome = nome.trim();
+  var jaExiste = (window.categorias||[]).some(function(c){ return c.nome.toLowerCase()===nome.toLowerCase(); });
+  if(jaExiste){
+    showToast('Essa categoria já existe!');
+    el.value = nome;
+    return;
+  }
+  var id = 'cat-' + Date.now();
+  try{
+    await set(ref(db, 'categorias/'+id), {id:id, nome:nome, especial:'nao'});
+  }catch(e){
+    showToast('Não foi possível criar. Verifique se você ainda está logada como admin.');
+    el.value='';
+    return;
+  }
+  showSync(); showToast('"'+nome+'" adicionada!');
+  setTimeout(function(){
+    var elAtualizado = document.getElementById(selectId);
+    if(elAtualizado) elAtualizado.value = nome;
+  }, 400);
 };
 
 window.deletarCategoria = async function(id) {
@@ -799,8 +829,17 @@ function popularSelects() {
       opt.textContent = cats[i].nome;
       el.appendChild(opt);
     }
+    var optNova = document.createElement('option');
+    optNova.value = '__nova__';
+    optNova.textContent = '+ Nova categoria...';
+    el.appendChild(optNova);
     if(val) el.value = val;
   }
+}
+
+function onSelectCategoriaMudou(selectId){
+  var el = document.getElementById(selectId);
+  if(el.value === '__nova__') criarCategoriaRapida(selectId);
 }
 
 function renderCookiePrecosBanner() {
@@ -943,7 +982,12 @@ function renderCardapio() {
     }
     html += '</div></div>';
   }
-  var msgVazio = busca ? 'Nenhum produto encontrado para "'+busca+'".' : 'Nenhum produto cadastrado ainda.';
+  var msgVazio;
+  if(!window.categoriasCarregadas || !window.produtosCarregados){
+    msgVazio = 'Carregando cardápio... ☁️';
+  } else {
+    msgVazio = busca ? 'Nenhum produto encontrado para "'+busca+'".' : 'Nenhum produto cadastrado ainda.';
+  }
   document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+msgVazio+'</div>';
   iniciarAutoPlayFotos();
 }
