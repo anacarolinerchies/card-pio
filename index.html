@@ -798,6 +798,28 @@ window.finalizarPedido = async function() {
   showToast('Pedido enviado! Aguarde confirmação no WhatsApp 💚');
 };
 
+window.tentarRecarregarCardapio = async function(){
+  var lista = document.getElementById('produtos-lista');
+  if(lista) lista.innerHTML = '<div style="text-align:center;padding:40px;color:var(--texto-medio);">Carregando cardápio... ☁️</div>';
+  try{
+    var catSnap = await get(ref(db, 'categorias'));
+    window.categorias = catSnap.exists() ? Object.values(catSnap.val()) : [];
+    window.categoriasCarregadas = true;
+    var prodSnap = await get(ref(db, 'produtos'));
+    window.produtos = prodSnap.exists() ? Object.values(prodSnap.val()) : [];
+    window.produtosCarregados = true;
+    popularSelects();
+    renderCardapio();
+    verificarCarregamentoCardapio();
+  }catch(e){
+    if(lista) lista.innerHTML =
+      '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+
+      '⚠️ Ainda não foi possível carregar. Tente novamente em instantes.<br><br>'+
+      '<button class="btn-primary" onclick="tentarRecarregarCardapio()">Tentar novamente</button>'+
+      '</div>';
+  }
+};
+
 init();
 
 </script>
@@ -809,10 +831,24 @@ function showPage(p) {
   var pages = document.querySelectorAll('.page');
   for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
   document.getElementById('page-'+p).classList.add('active');
-  if(p==='cardapio') renderCardapio();
+  if(p==='cardapio'){ renderCardapio(); verificarCarregamentoCardapio(); }
   if(p==='carrinho') renderCarrinho();
   if(p==='admin'){ renderAdminProdutos(); renderAdminPedidos(); renderCategorias(); popularSelects(); }
   window.scrollTo(0,0);
+}
+
+function verificarCarregamentoCardapio(){
+  if(window._checkCardapioTimeout) clearTimeout(window._checkCardapioTimeout);
+  window._checkCardapioTimeout = setTimeout(function(){
+    if(!window.categoriasCarregadas || !window.produtosCarregados){
+      var lista = document.getElementById('produtos-lista');
+      if(lista) lista.innerHTML =
+        '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+
+        '⚠️ O cardápio está demorando para carregar. Verifique sua internet e tente de novo.<br><br>'+
+        '<button class="btn-primary" onclick="tentarRecarregarCardapio()">Tentar novamente</button>'+
+        '</div>';
+    }
+  }, 7000);
 }
 
 function popularSelects() {
