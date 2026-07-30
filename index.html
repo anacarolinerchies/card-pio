@@ -445,7 +445,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue, push, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, signOut, updatePassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBFduCEVYccHrARoCURil42qvYq5RHXhLo",
@@ -561,13 +561,18 @@ onValue(ref(db, 'config'), snap => {
   }
 });
 
-onValue(ref(db, 'pedidos'), snap => {
-  if(snap.exists()) {
-    window.pedidos = Object.values(snap.val());
-  } else {
+var pedidosUnsubscribe = null;
+onAuthStateChanged(auth, function(user){
+  if(user && !pedidosUnsubscribe){
+    pedidosUnsubscribe = onValue(ref(db, 'pedidos'), function(snap){
+      window.pedidos = snap.exists() ? Object.values(snap.val()) : [];
+      if(document.getElementById('admin-pedidos') && document.getElementById('admin-pedidos').classList.contains('active')) renderAdminPedidos();
+    });
+  } else if(!user && pedidosUnsubscribe){
+    pedidosUnsubscribe();
+    pedidosUnsubscribe = null;
     window.pedidos = [];
   }
-  if(document.getElementById('admin-pedidos') && document.getElementById('admin-pedidos').classList.contains('active')) renderAdminPedidos();
 });
 
 // ── SYNC INDICATOR ──
@@ -1214,7 +1219,7 @@ function previewFotos(e, listaId, varName){
   var files = Array.prototype.slice.call(e.target.files);
   if(!files.length) return;
   showToast('Processando fotos...');
-  Promise.all(files.map(function(f){ return comprimirImagem(f, 1000, 0.72); })).then(function(resultados){
+  Promise.all(files.map(function(f){ return comprimirImagem(f, 640, 0.65); })).then(function(resultados){
     if(!window[varName]) window[varName] = [];
     window[varName] = window[varName].concat(resultados.map(function(src){ return {src:src, pos:'center'}; }));
     renderPreviewFotos(listaId, varName);
