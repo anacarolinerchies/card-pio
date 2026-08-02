@@ -89,6 +89,12 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .adicional-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .adicional-nome{font-size:12px;font-weight:500;color:var(--marrom);}
 .adicional-btn{background:var(--verde);color:white;border:none;padding:5px 10px;font-size:10px;letter-spacing:1px;cursor:pointer;font-family:'Jost',sans-serif;white-space:nowrap;margin-left:8px;}
+.variante-box{margin-top:4px;}
+.variante-titulo{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--texto-medio);font-weight:500;margin-bottom:8px;}
+.variante-opcoes{display:flex;flex-wrap:wrap;gap:8px;}
+.variante-pill{background:var(--offwhite2);border:1.5px solid var(--dourado);color:var(--marrom-escuro);padding:8px 14px;border-radius:20px;font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;}
+.variante-pill:hover{background:var(--dourado);color:white;}
+.variante-preco{font-weight:600;}
 .carrinho-float{position:fixed;bottom:24px;right:24px;background:var(--marrom-escuro);color:white;border:1px solid var(--dourado);padding:14px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;z-index:200;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:1px;}
 .carrinho-count{background:var(--dourado);color:var(--marrom-escuro);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
 .carrinho-item{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--borda);}
@@ -337,6 +343,15 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
               <button type="button" class="btn-sm" onclick="adicionarAdicionalNovo()">+</button>
             </div>
           </div>
+          <div class="form-group full">
+            <label>Versões do produto (opcional) — ex: Tradicional, Vegano, Sem Açúcar</label>
+            <div id="novo-variantes-lista"></div>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+              <input type="text" id="novo-var-nome" placeholder="Nome da versão" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:140px;">
+              <input type="number" id="novo-var-preco" placeholder="R$" step="0.01" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:80px;background:var(--offwhite);outline:none;">
+              <button type="button" class="btn-sm" onclick="adicionarVarianteNovo()">+</button>
+            </div>
+          </div>
         </div>
         <button class="btn-primary" style="margin-top:16px;" onclick="adicionarProduto()">+ Adicionar ao Cardápio</button>
       </div>
@@ -428,6 +443,15 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
         <button class="btn-sm" onclick="adicionarAdicionalTemp()">+</button>
       </div>
     </div>
+    <div class="edit-modal-grupo">
+      <label>Versões do produto — ex: Tradicional, Vegano, Sem Açúcar</label>
+      <div id="edit-variantes-lista"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <input type="text" id="var-nome" placeholder="Nome da versão" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:140px;">
+        <input type="number" id="var-preco" placeholder="R$" step="0.01" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:80px;background:var(--offwhite);outline:none;">
+        <button class="btn-sm" onclick="adicionarVarianteTemp()">+</button>
+      </div>
+    </div>
     <div class="edit-modal-actions">
       <button class="btn-primary" onclick="salvarEdicao()">Salvar</button>
       <button style="background:transparent;border:1px solid var(--borda);color:var(--marrom);padding:14px 24px;cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;" onclick="fecharEditModal()">Cancelar</button>
@@ -469,6 +493,8 @@ window.editandoId = null;
 window.editandoCatId = null;
 window.adicionaisTemp = [];
 window.novosAdicionaisTemp = [];
+window.variantesTemp = [];
+window.novasVariantesTemp = [];
 window.carrinho = [];
 window.pedidos = [];
 window.pagSelecionado = 'pix';
@@ -665,8 +691,9 @@ window.adicionarProduto = async function() {
   var id = 'p' + Date.now();
   var fotos = window.novasFotos || [];
   var adicionais = window.novosAdicionaisTemp || [];
+  var variantes = window.novasVariantesTemp || [];
   try {
-    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais});
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes});
   } catch(e) {
     showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
     return;
@@ -678,6 +705,8 @@ window.adicionarProduto = async function() {
   window.novasFotos=[];
   window.novosAdicionaisTemp=[];
   renderAdicionaisNovoTemp();
+  window.novasVariantesTemp=[];
+  renderVariantesNovoTemp();
   showSync(); showToast('"'+nome+'" adicionado!');
 };
 
@@ -698,6 +727,7 @@ window.salvarEdicao = async function() {
     vegano: document.getElementById('edit-vegano').value,
     desc: document.getElementById('edit-desc').value.trim(),
     adicionais: window.adicionaisTemp,
+    variantes: window.variantesTemp,
     fotos: fotos,
     foto: fotos[0] ? fotos[0].src : ''
   };
@@ -1019,7 +1049,20 @@ function renderCardapio() {
         }
         adHtml += '</div>';
       }
-      html += '<div class="produto-card">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div><div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>'+adHtml+'</div></div>';
+      var variantes = prod.variantes || [];
+      var precoOuVariantesHtml;
+      if(variantes.length>0){
+        var pillsHtml = '<div class="variante-box"><div class="variante-titulo">Escolha a versão:</div><div class="variante-opcoes">';
+        for(var vv=0; vv<variantes.length; vv++){
+          var variante = variantes[vv];
+          pillsHtml += '<button type="button" class="variante-pill" onclick="addCarrinhoVariante(\''+prod.id+'\',\''+variante.id+'\')">'+variante.nome+' <span class="variante-preco">R$ '+variante.preco.toFixed(2).replace('.',',')+'</span></button>';
+        }
+        pillsHtml += '</div></div>';
+        precoOuVariantesHtml = pillsHtml;
+      } else {
+        precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>';
+      }
+      html += '<div class="produto-card">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+adHtml+'</div></div>';
     }
     html += '</div></div>';
   }
@@ -1041,6 +1084,19 @@ function addCarrinho(id) {
   else window.carrinho.push({id:prod.id,nome:prod.nome,preco:prod.preco,foto:prod.foto,qty:1});
   atualizarFloat();
   showToast('"'+prod.nome+'" adicionado!');
+}
+
+function addCarrinhoVariante(prodId, varId){
+  var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
+  if(!prod) return;
+  var variante = (prod.variantes||[]).find(function(v){ return v.id==varId; });
+  if(!variante) return;
+  var key = prodId+'-var-'+varId;
+  var ex = (window.carrinho||[]).find(function(c){ return c.id==key; });
+  if(ex) ex.qty++;
+  else window.carrinho.push({id:key, nome:prod.nome+' — '+variante.nome, preco:variante.preco, foto:prod.foto, qty:1});
+  atualizarFloat();
+  showToast('"'+prod.nome+' — '+variante.nome+'" adicionado!');
 }
 
 function addAdicional(prodId,adId) {
@@ -1317,6 +1373,8 @@ function abrirEdit(id){
   renderPreviewFotos('edit-preview-lista', 'editFotos');
   window.adicionaisTemp=JSON.parse(JSON.stringify(prod.adicionais||[]));
   renderAdicionaisTemp();
+  window.variantesTemp=JSON.parse(JSON.stringify(prod.variantes||[]));
+  renderVariantesTemp();
   document.getElementById('editOverlay').classList.add('open');
 }
 
@@ -1366,6 +1424,54 @@ function adicionarAdicionalNovo(){
 function removerAdicionalNovo(id){
   window.novosAdicionaisTemp=window.novosAdicionaisTemp.filter(function(a){return a.id!==id;});
   renderAdicionaisNovoTemp();
+}
+
+function renderVariantesTemp(){
+  var html='';
+  for(var i=0;i<window.variantesTemp.length;i++){
+    var v=window.variantesTemp[i];
+    html+='<div class="adicional-admin-item"><div class="adicional-admin-info"><strong>'+v.nome+'</strong> · R$ '+v.preco.toFixed(2).replace('.',',')+'</div><button onclick="removerVarianteTemp(\''+v.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
+  }
+  document.getElementById('edit-variantes-lista').innerHTML=html||'<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhuma versão cadastrada.</div>';
+}
+
+function adicionarVarianteTemp(){
+  var nome=document.getElementById('var-nome').value.trim();
+  var preco=parseFloat(document.getElementById('var-preco').value);
+  if(!nome||!preco){showToast('Preencha nome e preço da versão!');return;}
+  window.variantesTemp.push({id:'var-'+Date.now(),nome:nome,preco:preco});
+  document.getElementById('var-nome').value='';
+  document.getElementById('var-preco').value='';
+  renderVariantesTemp();
+}
+
+function removerVarianteTemp(id){
+  window.variantesTemp=window.variantesTemp.filter(function(v){return v.id!==id;});
+  renderVariantesTemp();
+}
+
+function renderVariantesNovoTemp(){
+  var html='';
+  for(var i=0;i<window.novasVariantesTemp.length;i++){
+    var v=window.novasVariantesTemp[i];
+    html+='<div class="adicional-admin-item"><div class="adicional-admin-info"><strong>'+v.nome+'</strong> · R$ '+v.preco.toFixed(2).replace('.',',')+'</div><button onclick="removerVarianteNovo(\''+v.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
+  }
+  document.getElementById('novo-variantes-lista').innerHTML=html||'<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhuma versão cadastrada.</div>';
+}
+
+function adicionarVarianteNovo(){
+  var nome=document.getElementById('novo-var-nome').value.trim();
+  var preco=parseFloat(document.getElementById('novo-var-preco').value);
+  if(!nome||!preco){showToast('Preencha nome e preço da versão!');return;}
+  window.novasVariantesTemp.push({id:'var-'+Date.now(),nome:nome,preco:preco});
+  document.getElementById('novo-var-nome').value='';
+  document.getElementById('novo-var-preco').value='';
+  renderVariantesNovoTemp();
+}
+
+function removerVarianteNovo(id){
+  window.novasVariantesTemp=window.novasVariantesTemp.filter(function(v){return v.id!==id;});
+  renderVariantesNovoTemp();
 }
 
 function fecharEditModal(){document.getElementById('editOverlay').classList.remove('open');}
