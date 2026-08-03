@@ -95,21 +95,30 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .variante-pill{background:var(--offwhite2);border:1.5px solid var(--dourado);color:var(--marrom-escuro);padding:8px 14px;border-radius:20px;font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;}
 .variante-pill:hover{background:var(--dourado);color:white;}
 .variante-preco{font-weight:600;}
-.config-box{margin-top:4px;}
-.config-svg{width:150px;height:118px;display:block;margin:0 auto 10px;}
-.config-shape{opacity:0;transform:scale(0.85);transform-origin:70px 70px;transition:opacity 0.4s ease, transform 0.4s ease;}
-.config-shape.ativo{opacity:1;transform:scale(1);}
-.config-topping{opacity:0;transform:scaleY(0);transform-origin:70px 42px;fill:var(--marrom-escuro);transition:opacity 0.35s ease, transform 0.45s cubic-bezier(.34,1.56,.64,1), fill 0.3s ease;}
-.config-topping.ativo{opacity:1;transform:scaleY(1);}
-.config-grupo{margin-bottom:12px;}
-.config-grupo-titulo{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--texto-medio);font-weight:500;margin-bottom:8px;}
-.config-opcoes{display:flex;flex-wrap:wrap;gap:8px;}
-.config-pill{background:var(--offwhite2);border:1.5px solid var(--borda);color:var(--marrom-escuro);padding:7px 13px;border-radius:20px;font-family:'Jost',sans-serif;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;}
-.config-pill:hover{border-color:var(--dourado);}
-.config-pill.selecionada{background:var(--dourado);border-color:var(--dourado);color:white;}
-.config-extra{font-weight:600;opacity:0.85;}
-.config-total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--borda);font-size:13px;color:var(--texto-medio);}
-.config-total span:last-child{font-size:19px;color:var(--marrom-escuro);}
+.montar-btn{background:var(--verde);color:white;border:none;padding:8px 16px;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
+.montar-btn:hover{background:var(--marrom);}
+.produto-card.clicavel{cursor:pointer;}
+.wizard-overlay{position:fixed;inset:0;background:rgba(44,24,16,0.75);z-index:800;display:none;align-items:center;justify-content:center;padding:16px;}
+.wizard-overlay.open{display:flex;}
+.wizard-modal{background:white;width:480px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;border-top:3px solid var(--dourado);}
+.wizard-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 0;}
+.wizard-titulo-produto{font-size:22px;color:var(--marrom-escuro);}
+.wizard-fechar{background:none;border:none;font-size:18px;color:var(--texto-medio);cursor:pointer;padding:4px 8px;}
+.wizard-passo-indicador{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dourado);padding:6px 24px 0;}
+.wizard-conteudo{padding:16px 24px 24px;overflow-y:auto;transition:opacity 0.18s ease, transform 0.18s ease;}
+.wizard-conteudo.wizard-fade{opacity:0;transform:translateX(-10px);}
+.wizard-etapa-titulo{font-size:24px;color:var(--marrom);margin-bottom:16px;}
+.wizard-opcoes{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;}
+.wizard-opcao-card{border:1.5px solid var(--borda);cursor:pointer;overflow:hidden;transition:all 0.2s;background:white;}
+.wizard-opcao-card:hover{border-color:var(--dourado);transform:translateY(-2px);}
+.wizard-opcao-card.selecionada{border-color:var(--dourado);box-shadow:0 0 0 2px var(--dourado);}
+.wizard-opcao-foto{width:100%;height:110px;object-fit:cover;display:block;background:var(--offwhite2);}
+.wizard-opcao-foto-ph{width:100%;height:110px;background:var(--offwhite2);display:flex;align-items:center;justify-content:center;font-size:30px;}
+.wizard-opcao-info{padding:10px;text-align:center;}
+.wizard-opcao-nome{font-size:15px;color:var(--marrom-escuro);line-height:1.3;}
+.wizard-opcao-preco{font-size:11px;color:var(--dourado);margin-top:3px;}
+.wizard-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 24px;border-top:1px solid var(--borda);}
+.wizard-btn-voltar{background:none;border:none;color:var(--texto-medio);cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;padding:10px 4px;}
 .carrinho-float{position:fixed;bottom:24px;right:24px;background:var(--marrom-escuro);color:white;border:1px solid var(--dourado);padding:14px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;z-index:200;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:1px;}
 .carrinho-count{background:var(--dourado);color:var(--marrom-escuro);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;}
 .carrinho-item{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--borda);}
@@ -368,20 +377,15 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
             </div>
           </div>
           <div class="form-group full">
-            <label>Configurador Visual (opcional) — cliente monta o produto (formato/cobertura) com ilustração animada</label>
+            <label>Etapas de Montagem (opcional) — cliente escolhe passo a passo (ex: Formato, Receita, Cobertura)</label>
             <div id="novo-config-lista"></div>
             <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;">
               <input type="text" id="novo-cfg-nome" placeholder="Nome da opção" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoNovo()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:110px;">
-              <input type="text" id="novo-cfg-grupo" placeholder="Grupo (ex: Formato)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:120px;background:var(--offwhite);outline:none;">
+              <input type="text" id="novo-cfg-grupo" placeholder="Etapa (ex: Formato)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:110px;background:var(--offwhite);outline:none;">
               <input type="number" id="novo-cfg-preco" placeholder="+R$" step="0.01" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoNovo()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:70px;background:var(--offwhite);outline:none;">
-              <select id="novo-cfg-efeito" onchange="toggleConfigCor('novo-cfg-cor', this.value)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:12px;background:var(--offwhite);outline:none;">
-                <option value="">Sem efeito visual</option>
-                <option value="formato-redondo">Formato: Redondo</option>
-                <option value="formato-duasCamadas">Formato: Duas Camadas</option>
-                <option value="formato-quadrado">Formato: Quadrado</option>
-                <option value="cobertura">Cor de Cobertura</option>
-              </select>
-              <input type="color" id="novo-cfg-cor" value="#6B3A2A" style="display:none;width:36px;height:34px;padding:2px;border:1px solid var(--borda);cursor:pointer;">
+              <input type="file" id="novo-cfg-foto" accept="image/*" style="font-size:11px;width:150px;">
+              <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-forca-cobertura"> Exige cobertura</label>
+              <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-sem-cobertura"> É "sem cobertura"</label>
               <button type="button" class="btn-sm" onclick="adicionarConfigOpcaoNovo()">+</button>
             </div>
           </div>
@@ -454,6 +458,24 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   </div>
 </div>
 
+<div class="wizard-overlay" id="wizardOverlay">
+  <div class="wizard-modal">
+    <div class="wizard-header">
+      <div class="wizard-titulo-produto serif" id="wizard-titulo-produto"></div>
+      <button type="button" class="wizard-fechar" onclick="fecharConfiguradorModal()">✕</button>
+    </div>
+    <div class="wizard-passo-indicador" id="wizard-passo-indicador"></div>
+    <div class="wizard-conteudo" id="wizard-conteudo">
+      <div class="wizard-etapa-titulo serif" id="wizard-etapa-titulo"></div>
+      <div class="wizard-opcoes" id="wizard-opcoes"></div>
+    </div>
+    <div class="wizard-footer">
+      <button type="button" class="wizard-btn-voltar" id="wizard-btn-voltar" onclick="wizardVoltar()">← Voltar</button>
+      <button type="button" class="btn-primary" id="wizard-btn-proximo" onclick="wizardProximo()">Próximo →</button>
+    </div>
+  </div>
+</div>
+
 <div class="edit-modal-overlay" id="editOverlay">
   <div class="edit-modal">
     <h3 class="serif">Editar Produto</h3>
@@ -486,20 +508,15 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
       </div>
     </div>
     <div class="edit-modal-grupo">
-      <label>Configurador Visual — cliente monta o produto com ilustração animada</label>
+      <label>Etapas de Montagem — cliente escolhe passo a passo (ex: Formato, Receita, Cobertura)</label>
       <div id="edit-config-lista"></div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;">
         <input type="text" id="cfg-nome" placeholder="Nome da opção" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoTemp()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:110px;">
-        <input type="text" id="cfg-grupo" placeholder="Grupo (ex: Formato)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:120px;background:var(--offwhite);outline:none;">
+        <input type="text" id="cfg-grupo" placeholder="Etapa (ex: Formato)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:110px;background:var(--offwhite);outline:none;">
         <input type="number" id="cfg-preco" placeholder="+R$" step="0.01" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoTemp()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:70px;background:var(--offwhite);outline:none;">
-        <select id="cfg-efeito" onchange="toggleConfigCor('cfg-cor', this.value)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:12px;background:var(--offwhite);outline:none;">
-          <option value="">Sem efeito visual</option>
-          <option value="formato-redondo">Formato: Redondo</option>
-          <option value="formato-duasCamadas">Formato: Duas Camadas</option>
-          <option value="formato-quadrado">Formato: Quadrado</option>
-          <option value="cobertura">Cor de Cobertura</option>
-        </select>
-        <input type="color" id="cfg-cor" value="#6B3A2A" style="display:none;width:36px;height:34px;padding:2px;border:1px solid var(--borda);cursor:pointer;">
+        <input type="file" id="cfg-foto" accept="image/*" style="font-size:11px;width:150px;">
+        <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-forca-cobertura"> Exige cobertura</label>
+        <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-sem-cobertura"> É "sem cobertura"</label>
         <button type="button" class="btn-sm" onclick="adicionarConfigOpcaoTemp()">+</button>
       </div>
     </div>
@@ -745,9 +762,9 @@ window.adicionarProduto = async function() {
   var fotos = window.novasFotos || [];
   var adicionais = window.novosAdicionaisTemp || [];
   var variantes = window.novasVariantesTemp || [];
-  var configurador = window.novoConfiguradorTemp || [];
+  var etapas = window.novoConfiguradorTemp || [];
   try {
-    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, configurador:configurador});
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
   } catch(e) {
     showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
     return;
@@ -784,7 +801,7 @@ window.salvarEdicao = async function() {
     desc: document.getElementById('edit-desc').value.trim(),
     adicionais: window.adicionaisTemp,
     variantes: window.variantesTemp,
-    configurador: window.configuradorTemp,
+    etapas: window.configuradorTemp,
     fotos: fotos,
     foto: fotos[0] ? fotos[0].src : ''
   };
@@ -1107,10 +1124,10 @@ function renderCardapio() {
         adHtml += '</div>';
       }
       var variantes = prod.variantes || [];
-      var configOpcoes = prod.configurador || [];
+      var temEtapas = (prod.etapas || []).length > 0;
       var precoOuVariantesHtml;
-      if(configOpcoes.length>0){
-        precoOuVariantesHtml = renderConfiguradorHtml(prod);
+      if(temEtapas){
+        precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>A partir de R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="montar-btn" onclick="event.stopPropagation();abrirConfiguradorModal(\''+prod.id+'\')">Montar Meu Bolo</button></div>';
       } else if(variantes.length>0){
         var pillsHtml = '<div class="variante-box"><div class="variante-titulo">Escolha a versão:</div><div class="variante-opcoes">';
         for(var vv=0; vv<variantes.length; vv++){
@@ -1122,7 +1139,7 @@ function renderCardapio() {
       } else {
         precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>';
       }
-      html += '<div class="produto-card">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+(configOpcoes.length>0?'':adHtml)+'</div></div>';
+      html += '<div class="produto-card'+(temEtapas?' clicavel':'')+'"'+(temEtapas?' onclick="abrirConfiguradorModal(\''+prod.id+'\')"':'')+'>'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+(temEtapas?'':adHtml)+'</div></div>';
     }
     html += '</div></div>';
   }
@@ -1134,7 +1151,6 @@ function renderCardapio() {
   }
   document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+msgVazio+'</div>';
   iniciarAutoPlayFotos();
-  inicializarConfiguradores();
 }
 
 function addCarrinho(id) {
@@ -1160,7 +1176,7 @@ function addCarrinhoVariante(prodId, varId){
   showToast('"'+prod.nome+' — '+variante.nome+'" adicionado!');
 }
 
-// ── CONFIGURADOR VISUAL ──
+// ── ETAPAS DE MONTAGEM (WIZARD) ──
 function agruparConfigOpcoes(opcoes){
   var grupos = [], mapa = {};
   for(var i=0;i<opcoes.length;i++){
@@ -1172,135 +1188,115 @@ function agruparConfigOpcoes(opcoes){
   return grupos;
 }
 
-function ilustracaoConfiguradorSvg(prodId){
-  return '<svg viewBox="0 0 140 110" class="config-svg" id="config-svg-'+prodId+'">'+
-    '<ellipse cx="70" cy="96" rx="46" ry="8" fill="var(--dourado-claro)" opacity="0.35"></ellipse>'+
-    '<g class="config-shape" data-shape="redondo">'+
-      '<ellipse cx="70" cy="66" rx="42" ry="24" fill="var(--marrom-claro)"></ellipse>'+
-      '<ellipse cx="70" cy="58" rx="42" ry="22" fill="#EAD2B0"></ellipse>'+
-    '</g>'+
-    '<g class="config-shape" data-shape="duasCamadas">'+
-      '<ellipse cx="70" cy="80" rx="46" ry="20" fill="var(--marrom-claro)"></ellipse>'+
-      '<ellipse cx="70" cy="72" rx="46" ry="18" fill="#EAD2B0"></ellipse>'+
-      '<ellipse cx="70" cy="46" rx="28" ry="16" fill="var(--marrom-claro)"></ellipse>'+
-      '<ellipse cx="70" cy="40" rx="28" ry="14" fill="#EAD2B0"></ellipse>'+
-    '</g>'+
-    '<g class="config-shape" data-shape="quadrado">'+
-      '<rect x="30" y="42" width="80" height="44" rx="10" fill="var(--marrom-claro)"></rect>'+
-      '<rect x="30" y="36" width="80" height="16" rx="8" fill="#EAD2B0"></rect>'+
-    '</g>'+
-    '<path class="config-topping" id="config-topping-'+prodId+'" d="M26,52 Q42,68 58,52 Q74,68 90,52 Q106,68 114,52 L114,40 L26,40 Z"></path>'+
-  '</svg>';
-}
-
-function renderConfiguradorHtml(prod){
-  var opcoes = prod.configurador || [];
-  var grupos = agruparConfigOpcoes(opcoes);
-  var html = '<div class="config-box" data-config-prod="'+prod.id+'">';
-  html += ilustracaoConfiguradorSvg(prod.id);
-  for(var gi=0; gi<grupos.length; gi++){
-    var grupo = grupos[gi];
-    html += '<div class="config-grupo"><div class="config-grupo-titulo">'+grupo.nome+'</div><div class="config-opcoes">';
-    for(var oi=0; oi<grupo.opcoes.length; oi++){
-      var opt = grupo.opcoes[oi];
-      html += '<button type="button" class="config-pill" data-grupo="'+grupo.nome+'" data-opt="'+opt.id+'" onclick="selecionarConfigOpcao(\''+prod.id+'\',\''+grupo.nome+'\',\''+opt.id+'\')">'+opt.nome+(opt.precoExtra>0?' <span class="config-extra">+R$ '+opt.precoExtra.toFixed(2).replace('.',',')+'</span>':'')+'</button>';
-    }
-    html += '</div></div>';
-  }
-  html += '<div class="config-total"><span>Total</span><span id="config-total-'+prod.id+'" class="serif">R$ '+prod.preco.toFixed(2).replace('.',',')+'</span></div>';
-  html += '<button type="button" class="btn-primary" style="width:100%;margin-top:10px;" onclick="addCarrinhoConfigurado(\''+prod.id+'\')">+ Adicionar ao Pedido</button>';
-  html += '</div>';
-  return html;
-}
-
-function selecionarConfigOpcao(prodId, grupoNome, optId){
-  if(!window.configSelecoes) window.configSelecoes = {};
-  if(!window.configSelecoes[prodId]) window.configSelecoes[prodId] = {};
-  window.configSelecoes[prodId][grupoNome] = optId;
-  atualizarVisualConfigurador(prodId);
-}
-
-function atualizarVisualConfigurador(prodId){
+function abrirConfiguradorModal(prodId){
   var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
-  if(!prod) return;
-  var opcoes = prod.configurador || [];
-  var selecoes = (window.configSelecoes && window.configSelecoes[prodId]) || {};
+  if(!prod || !prod.etapas || !prod.etapas.length) return;
+  window.wizardState = {prodId:prodId, etapaIndex:0, selecoes:{}};
+  document.getElementById('wizard-titulo-produto').textContent = prod.nome;
+  document.getElementById('wizardOverlay').classList.add('open');
+  renderWizardStep(true);
+}
+
+function fecharConfiguradorModal(){
+  document.getElementById('wizardOverlay').classList.remove('open');
+  window.wizardState = null;
+}
+
+function opcoesVisiveisNaEtapa(prod, etapa, selecoes){
+  var algumaForcaCobertura = false;
+  for(var g in selecoes){
+    var opt = prod.etapas.find(function(o){ return o.id===selecoes[g]; });
+    if(opt && opt.forcaCobertura) algumaForcaCobertura = true;
+  }
+  return etapa.opcoes.filter(function(o){
+    return !(algumaForcaCobertura && o.ehSemCobertura);
+  });
+}
+
+function calcularTotalWizard(prod, selecoes){
   var total = prod.preco;
-  var shapeAtivo = null, corAtiva = null;
-  for(var grupoNome in selecoes){
-    var opt = opcoes.find(function(o){ return o.id===selecoes[grupoNome]; });
-    if(!opt) continue;
-    total += (opt.precoExtra||0);
-    if(opt.visual==='formato') shapeAtivo = opt.shape;
-    if(opt.visual==='cobertura') corAtiva = opt.cor;
+  for(var g in selecoes){
+    var opt = prod.etapas.find(function(o){ return o.id===selecoes[g]; });
+    if(opt) total += (opt.precoExtra||0);
   }
-  var svg = document.getElementById('config-svg-'+prodId);
-  if(svg){
-    var shapes = svg.querySelectorAll('.config-shape');
-    for(var i=0;i<shapes.length;i++){
-      if(shapes[i].getAttribute('data-shape')===shapeAtivo) shapes[i].classList.add('ativo');
-      else shapes[i].classList.remove('ativo');
-    }
-  }
-  var topping = document.getElementById('config-topping-'+prodId);
-  if(topping){
-    if(corAtiva){ topping.style.fill = corAtiva; topping.classList.add('ativo'); }
-    else { topping.classList.remove('ativo'); }
-  }
-  var caixa = document.querySelector('[data-config-prod="'+prodId+'"]');
-  if(caixa){
-    var pills = caixa.querySelectorAll('.config-pill');
-    for(var p=0;p<pills.length;p++){
-      var g = pills[p].getAttribute('data-grupo'), o = pills[p].getAttribute('data-opt');
-      if(selecoes[g]===o) pills[p].classList.add('selecionada');
-      else pills[p].classList.remove('selecionada');
-    }
-  }
-  var totalEl = document.getElementById('config-total-'+prodId);
-  if(totalEl) totalEl.textContent = 'R$ '+total.toFixed(2).replace('.',',');
+  return total;
 }
 
-function inicializarConfiguradores(){
-  var prods = window.produtos || [];
-  if(!window.configSelecoes) window.configSelecoes = {};
-  for(var i=0;i<prods.length;i++){
-    var prod = prods[i];
-    var opcoes = prod.configurador || [];
-    if(!opcoes.length || !document.getElementById('config-svg-'+prod.id)) continue;
-    if(!window.configSelecoes[prod.id]) window.configSelecoes[prod.id] = {};
-    var grupos = agruparConfigOpcoes(opcoes);
-    for(var gi=0; gi<grupos.length; gi++){
-      var g = grupos[gi];
-      if(!window.configSelecoes[prod.id][g.nome]) window.configSelecoes[prod.id][g.nome] = g.opcoes[0].id;
-    }
-    atualizarVisualConfigurador(prod.id);
-  }
-}
-
-function addCarrinhoConfigurado(prodId){
-  var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
+function renderWizardStep(semAnimacao){
+  var ws = window.wizardState;
+  if(!ws) return;
+  var prod = (window.produtos||[]).find(function(p){ return p.id==ws.prodId; });
   if(!prod) return;
-  var opcoes = prod.configurador || [];
-  var grupos = agruparConfigOpcoes(opcoes);
-  var selecoes = (window.configSelecoes && window.configSelecoes[prodId]) || {};
-  for(var gi=0; gi<grupos.length; gi++){
-    if(!selecoes[grupos[gi].nome]){ showToast('Escolha uma opção de "'+grupos[gi].nome+'"!'); return; }
+  var etapas = agruparConfigOpcoes(prod.etapas);
+  var etapa = etapas[ws.etapaIndex];
+  var opcoesVis = opcoesVisiveisNaEtapa(prod, etapa, ws.selecoes);
+
+  var montar = function(){
+    document.getElementById('wizard-passo-indicador').textContent = 'Passo '+(ws.etapaIndex+1)+' de '+etapas.length;
+    document.getElementById('wizard-etapa-titulo').textContent = etapa.nome;
+    var html = '';
+    for(var i=0;i<opcoesVis.length;i++){
+      var opt = opcoesVis[i];
+      var selecionada = ws.selecoes[etapa.nome]===opt.id;
+      html += '<div class="wizard-opcao-card'+(selecionada?' selecionada':'')+'" onclick="wizardSelecionar(\''+etapa.nome+'\',\''+opt.id+'\')">'+
+        (opt.foto ? '<img src="'+opt.foto+'" class="wizard-opcao-foto" alt="'+opt.nome+'">' : '<div class="wizard-opcao-foto-ph">🍰</div>')+
+        '<div class="wizard-opcao-info"><div class="wizard-opcao-nome">'+opt.nome+'</div>'+(opt.precoExtra>0?'<div class="wizard-opcao-preco">+R$ '+opt.precoExtra.toFixed(2).replace('.',',')+'</div>':'')+'</div>'+
+        '</div>';
+    }
+    document.getElementById('wizard-opcoes').innerHTML = html;
+    document.getElementById('wizard-btn-voltar').style.visibility = ws.etapaIndex===0 ? 'hidden' : 'visible';
+    var ehUltima = ws.etapaIndex === etapas.length-1;
+    var btnProx = document.getElementById('wizard-btn-proximo');
+    btnProx.textContent = ehUltima ? ('+ Adicionar — R$ '+calcularTotalWizard(prod, ws.selecoes).toFixed(2).replace('.',',')) : 'Próximo →';
+  };
+
+  var conteudo = document.getElementById('wizard-conteudo');
+  if(semAnimacao){ montar(); return; }
+  conteudo.classList.add('wizard-fade');
+  setTimeout(function(){ montar(); conteudo.classList.remove('wizard-fade'); }, 180);
+}
+
+function wizardSelecionar(etapaNome, optId){
+  window.wizardState.selecoes[etapaNome] = optId;
+  renderWizardStep(true);
+}
+
+function wizardProximo(){
+  var ws = window.wizardState;
+  var prod = (window.produtos||[]).find(function(p){ return p.id==ws.prodId; });
+  var etapas = agruparConfigOpcoes(prod.etapas);
+  var etapa = etapas[ws.etapaIndex];
+  if(!ws.selecoes[etapa.nome]){ showToast('Escolha uma opção de "'+etapa.nome+'"!'); return; }
+  if(ws.etapaIndex < etapas.length-1){
+    ws.etapaIndex++;
+    renderWizardStep();
+  } else {
+    wizardFinalizar();
   }
-  var total = prod.preco, nomes = [], idsOrdenados = [];
-  for(var grupoNome in selecoes){
-    var opt = opcoes.find(function(o){ return o.id===selecoes[grupoNome]; });
-    if(!opt) continue;
-    total += (opt.precoExtra||0);
-    nomes.push(opt.nome);
-    idsOrdenados.push(opt.id);
+}
+
+function wizardVoltar(){
+  var ws = window.wizardState;
+  if(ws.etapaIndex>0){ ws.etapaIndex--; renderWizardStep(); }
+}
+
+function wizardFinalizar(){
+  var ws = window.wizardState;
+  var prod = (window.produtos||[]).find(function(p){ return p.id==ws.prodId; });
+  var nomes = [], ids = [];
+  for(var g in ws.selecoes){
+    var opt = prod.etapas.find(function(o){ return o.id===ws.selecoes[g]; });
+    if(opt){ nomes.push(opt.nome); ids.push(opt.id); }
   }
-  idsOrdenados.sort();
-  var key = prodId+'-cfg-'+idsOrdenados.join('-');
+  var total = calcularTotalWizard(prod, ws.selecoes);
+  ids.sort();
+  var key = prod.id+'-cfg-'+ids.join('-');
   var ex = (window.carrinho||[]).find(function(c){ return c.id==key; });
   if(ex) ex.qty++;
   else window.carrinho.push({id:key, nome:prod.nome+' ('+nomes.join(', ')+')', preco:total, foto:prod.foto, qty:1});
   atualizarFloat();
   showToast('"'+prod.nome+'" adicionado!');
+  fecharConfiguradorModal();
 }
 
 function addAdicional(prodId,adId) {
@@ -1579,7 +1575,7 @@ function abrirEdit(id){
   renderAdicionaisTemp();
   window.variantesTemp=JSON.parse(JSON.stringify(prod.variantes||[]));
   renderVariantesTemp();
-  window.configuradorTemp=JSON.parse(JSON.stringify(prod.configurador||[]));
+  window.configuradorTemp=JSON.parse(JSON.stringify(prod.etapas||[]));
   renderConfiguradorTemp();
   document.getElementById('editOverlay').classList.add('open');
 }
@@ -1680,18 +1676,15 @@ function removerVarianteNovo(id){
   renderVariantesNovoTemp();
 }
 
-function toggleConfigCor(corInputId, valor){
-  document.getElementById(corInputId).style.display = (valor==='cobertura') ? 'inline-block' : 'none';
-}
-
-function descricaoEfeitoConfig(opt){
-  if(opt.visual==='formato') return 'Formato: '+opt.shape;
-  if(opt.visual==='cobertura') return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+opt.cor+';vertical-align:middle;margin-right:4px;"></span>Cor de cobertura';
-  return 'Sem efeito visual';
+function descricaoRegraConfig(opt){
+  var tags = '';
+  if(opt.forcaCobertura) tags += ' <span style="color:var(--verde);">🔒 Exige cobertura</span>';
+  if(opt.ehSemCobertura) tags += ' <span style="color:var(--texto-medio);">🚫 Sem cobertura</span>';
+  return tags;
 }
 
 function htmlListaConfig(lista, removerFnNome){
-  if(!lista.length) return '<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhuma opção cadastrada.</div>';
+  if(!lista.length) return '<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhuma etapa cadastrada.</div>';
   var grupos = agruparConfigOpcoes(lista);
   var html = '';
   for(var gi=0; gi<grupos.length; gi++){
@@ -1699,7 +1692,10 @@ function htmlListaConfig(lista, removerFnNome){
     html += '<div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dourado);margin:8px 0 4px;">'+g.nome+'</div>';
     for(var oi=0; oi<g.opcoes.length; oi++){
       var opt = g.opcoes[oi];
-      html += '<div class="adicional-admin-item"><div class="adicional-admin-info"><strong>'+opt.nome+'</strong>'+(opt.precoExtra>0?' · +R$ '+opt.precoExtra.toFixed(2).replace('.',','):'')+' · <span style="font-size:11px;color:var(--texto-medio);">'+descricaoEfeitoConfig(opt)+'</span></div><button onclick="'+removerFnNome+'(\''+opt.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
+      html += '<div class="adicional-admin-item">'+
+        (opt.foto ? '<img src="'+opt.foto+'" style="width:36px;height:36px;object-fit:cover;border:1px solid var(--borda);">' : '')+
+        '<div class="adicional-admin-info"><strong>'+opt.nome+'</strong>'+(opt.precoExtra>0?' · +R$ '+opt.precoExtra.toFixed(2).replace('.',','):'')+'<span style="font-size:11px;">'+descricaoRegraConfig(opt)+'</span></div>'+
+        '<button onclick="'+removerFnNome+'(\''+opt.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
     }
   }
   return html;
@@ -1709,26 +1705,32 @@ function renderConfiguradorTemp(){
   document.getElementById('edit-config-lista').innerHTML = htmlListaConfig(window.configuradorTemp, 'removerConfigOpcaoTemp');
 }
 
-function lerFormularioConfig(prefixo){
+async function lerFormularioConfig(prefixo){
   var nome = document.getElementById(prefixo+'-nome').value.trim();
-  var grupo = document.getElementById(prefixo+'-grupo').value.trim() || 'Opções';
+  var grupo = document.getElementById(prefixo+'-grupo').value.trim() || 'Etapa';
   var preco = parseFloat(document.getElementById(prefixo+'-preco').value) || 0;
-  var efeito = document.getElementById(prefixo+'-efeito').value;
+  var forcaCobertura = document.getElementById(prefixo+'-forca-cobertura').checked;
+  var ehSemCobertura = document.getElementById(prefixo+'-sem-cobertura').checked;
   if(!nome){ showToast('Digite o nome da opção!'); return null; }
-  var opt = {id:'cfg-'+Date.now(), nome:nome, grupo:grupo, precoExtra:preco, visual:null, shape:null, cor:null};
-  if(efeito.indexOf('formato-')===0){ opt.visual='formato'; opt.shape=efeito.split('-')[1]; }
-  else if(efeito==='cobertura'){ opt.visual='cobertura'; opt.cor=document.getElementById(prefixo+'-cor').value; }
+  var fotoInput = document.getElementById(prefixo+'-foto');
+  var foto = null;
+  if(fotoInput.files && fotoInput.files[0]){
+    showToast('Processando foto...');
+    foto = await comprimirImagem(fotoInput.files[0], 640, 0.7);
+  }
+  var opt = {id:'cfg-'+Date.now(), nome:nome, grupo:grupo, precoExtra:preco, foto:foto, forcaCobertura:forcaCobertura, ehSemCobertura:ehSemCobertura};
   document.getElementById(prefixo+'-nome').value='';
   document.getElementById(prefixo+'-preco').value='';
-  document.getElementById(prefixo+'-efeito').value='';
-  document.getElementById(prefixo+'-cor').style.display='none';
+  document.getElementById(prefixo+'-foto').value='';
+  document.getElementById(prefixo+'-forca-cobertura').checked=false;
+  document.getElementById(prefixo+'-sem-cobertura').checked=false;
   document.getElementById(prefixo+'-nome').focus();
   showToast('"'+nome+'" adicionada em "'+grupo+'"!');
   return opt;
 }
 
-function adicionarConfigOpcaoTemp(){
-  var opt = lerFormularioConfig('cfg');
+async function adicionarConfigOpcaoTemp(){
+  var opt = await lerFormularioConfig('cfg');
   if(!opt) return;
   window.configuradorTemp.push(opt);
   renderConfiguradorTemp();
@@ -1743,8 +1745,8 @@ function renderConfiguradorNovoTemp(){
   document.getElementById('novo-config-lista').innerHTML = htmlListaConfig(window.novoConfiguradorTemp, 'removerConfigOpcaoNovo');
 }
 
-function adicionarConfigOpcaoNovo(){
-  var opt = lerFormularioConfig('novo-cfg');
+async function adicionarConfigOpcaoNovo(){
+  var opt = await lerFormularioConfig('novo-cfg');
   if(!opt) return;
   window.novoConfiguradorTemp.push(opt);
   renderConfiguradorNovoTemp();
