@@ -390,7 +390,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
               <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-forca-cobertura"> Exige cobertura</label>
               <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-sem-cobertura"> É "sem cobertura"</label>
               <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-baby"> Baby Friendly</label>
-              <button type="button" class="btn-sm" onclick="adicionarConfigOpcaoNovo()">+</button>
+              <button type="button" class="btn-sm" id="novo-cfg-btn-add" onclick="adicionarConfigOpcaoNovo()">+</button>
             </div>
           </div>
         </div>
@@ -523,7 +523,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
         <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-forca-cobertura"> Exige cobertura</label>
         <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-sem-cobertura"> É "sem cobertura"</label>
         <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-baby"> Baby Friendly</label>
-        <button type="button" class="btn-sm" onclick="adicionarConfigOpcaoTemp()">+</button>
+        <button type="button" class="btn-sm" id="cfg-btn-add" onclick="adicionarConfigOpcaoTemp()">+</button>
       </div>
     </div>
     <div class="edit-modal-actions">
@@ -571,6 +571,8 @@ window.variantesTemp = [];
 window.novasVariantesTemp = [];
 window.configuradorTemp = [];
 window.novoConfiguradorTemp = [];
+window.editandoOpcaoTempId = null;
+window.editandoOpcaoNovoId = null;
 window.carrinho = [];
 window.pedidos = [];
 window.pagSelecionado = 'pix';
@@ -786,6 +788,8 @@ window.adicionarProduto = async function() {
   window.novasVariantesTemp=[];
   renderVariantesNovoTemp();
   window.novoConfiguradorTemp=[];
+  window.editandoOpcaoNovoId=null;
+  document.getElementById('novo-cfg-btn-add').textContent='+';
   renderConfiguradorNovoTemp();
   showSync(); showToast('"'+nome+'" adicionado!');
 };
@@ -1585,6 +1589,9 @@ function abrirEdit(id){
   window.variantesTemp=JSON.parse(JSON.stringify(prod.variantes||[]));
   renderVariantesTemp();
   window.configuradorTemp=JSON.parse(JSON.stringify(prod.etapas||[]));
+  window.editandoOpcaoTempId=null;
+  document.getElementById('cfg-btn-add').textContent='+';
+  limparFormularioConfig('cfg');
   renderConfiguradorTemp();
   document.getElementById('editOverlay').classList.add('open');
 }
@@ -1693,7 +1700,7 @@ function descricaoRegraConfig(opt){
   return tags;
 }
 
-function htmlListaConfig(lista, removerFnNome){
+function htmlListaConfig(lista, removerFnNome, editarFnNome){
   if(!lista.length) return '<div style="font-size:12px;color:var(--texto-medio);margin-bottom:8px;">Nenhuma etapa cadastrada.</div>';
   var grupos = agruparConfigOpcoes(lista);
   var html = '';
@@ -1705,6 +1712,7 @@ function htmlListaConfig(lista, removerFnNome){
       html += '<div class="adicional-admin-item">'+
         (opt.foto ? '<img src="'+opt.foto+'" style="width:36px;height:36px;object-fit:cover;border:1px solid var(--borda);">' : '')+
         '<div class="adicional-admin-info"><strong>'+opt.nome+'</strong>'+(opt.precoExtra>0?' · +R$ '+opt.precoExtra.toFixed(2).replace('.',','):'')+'<span style="font-size:11px;">'+descricaoRegraConfig(opt)+'</span></div>'+
+        '<button onclick="'+editarFnNome+'(\''+opt.id+'\')" class="edit-btn" style="padding:4px 8px;font-size:11px;">Editar</button>'+
         '<button onclick="'+removerFnNome+'(\''+opt.id+'\')" class="del-btn" style="padding:4px 8px;font-size:11px;">✕</button></div>';
     }
   }
@@ -1712,10 +1720,29 @@ function htmlListaConfig(lista, removerFnNome){
 }
 
 function renderConfiguradorTemp(){
-  document.getElementById('edit-config-lista').innerHTML = htmlListaConfig(window.configuradorTemp, 'removerConfigOpcaoTemp');
+  document.getElementById('edit-config-lista').innerHTML = htmlListaConfig(window.configuradorTemp, 'removerConfigOpcaoTemp', 'editarConfigOpcaoTemp');
 }
 
-async function lerFormularioConfig(prefixo){
+function preencherFormularioConfig(prefixo, opt){
+  document.getElementById(prefixo+'-nome').value = opt.nome;
+  document.getElementById(prefixo+'-grupo').value = opt.grupo;
+  document.getElementById(prefixo+'-preco').value = opt.precoExtra || '';
+  document.getElementById(prefixo+'-forca-cobertura').checked = !!opt.forcaCobertura;
+  document.getElementById(prefixo+'-sem-cobertura').checked = !!opt.ehSemCobertura;
+  document.getElementById(prefixo+'-baby').checked = !!opt.babyFriendly;
+  document.getElementById(prefixo+'-nome').focus();
+}
+
+function limparFormularioConfig(prefixo){
+  document.getElementById(prefixo+'-nome').value='';
+  document.getElementById(prefixo+'-preco').value='';
+  document.getElementById(prefixo+'-foto').value='';
+  document.getElementById(prefixo+'-forca-cobertura').checked=false;
+  document.getElementById(prefixo+'-sem-cobertura').checked=false;
+  document.getElementById(prefixo+'-baby').checked=false;
+}
+
+async function lerFormularioConfig(prefixo, idEditando, fotoAtual){
   var nome = document.getElementById(prefixo+'-nome').value.trim();
   var grupo = document.getElementById(prefixo+'-grupo').value.trim() || 'Etapa';
   var preco = parseFloat(document.getElementById(prefixo+'-preco').value) || 0;
@@ -1724,48 +1751,89 @@ async function lerFormularioConfig(prefixo){
   var babyFriendly = document.getElementById(prefixo+'-baby').checked;
   if(!nome){ showToast('Digite o nome da opção!'); return null; }
   var fotoInput = document.getElementById(prefixo+'-foto');
-  var foto = null;
+  var foto = fotoAtual || null;
   if(fotoInput.files && fotoInput.files[0]){
     showToast('Processando foto...');
     foto = await comprimirImagem(fotoInput.files[0], 640, 0.7);
   }
-  var opt = {id:'cfg-'+Date.now(), nome:nome, grupo:grupo, precoExtra:preco, foto:foto, forcaCobertura:forcaCobertura, ehSemCobertura:ehSemCobertura, babyFriendly:babyFriendly};
-  document.getElementById(prefixo+'-nome').value='';
-  document.getElementById(prefixo+'-preco').value='';
-  document.getElementById(prefixo+'-foto').value='';
-  document.getElementById(prefixo+'-forca-cobertura').checked=false;
-  document.getElementById(prefixo+'-sem-cobertura').checked=false;
-  document.getElementById(prefixo+'-baby').checked=false;
+  var opt = {id:idEditando || ('cfg-'+Date.now()), nome:nome, grupo:grupo, precoExtra:preco, foto:foto, forcaCobertura:forcaCobertura, ehSemCobertura:ehSemCobertura, babyFriendly:babyFriendly};
+  limparFormularioConfig(prefixo);
   document.getElementById(prefixo+'-nome').focus();
-  showToast('"'+nome+'" adicionada em "'+grupo+'"!');
+  showToast('"'+nome+'" '+(idEditando?'atualizada':'adicionada')+' em "'+grupo+'"!');
   return opt;
 }
 
 async function adicionarConfigOpcaoTemp(){
-  var opt = await lerFormularioConfig('cfg');
+  var idEditando = window.editandoOpcaoTempId;
+  var fotoAtual = null;
+  if(idEditando){
+    var existente = window.configuradorTemp.find(function(o){ return o.id===idEditando; });
+    if(existente) fotoAtual = existente.foto;
+  }
+  var opt = await lerFormularioConfig('cfg', idEditando, fotoAtual);
   if(!opt) return;
-  window.configuradorTemp.push(opt);
+  if(idEditando){
+    var idx = window.configuradorTemp.findIndex(function(o){ return o.id===idEditando; });
+    if(idx>-1) window.configuradorTemp[idx] = opt;
+    window.editandoOpcaoTempId = null;
+    document.getElementById('cfg-btn-add').textContent = '+';
+  } else {
+    window.configuradorTemp.push(opt);
+  }
   renderConfiguradorTemp();
+}
+
+function editarConfigOpcaoTemp(id){
+  var opt = window.configuradorTemp.find(function(o){ return o.id===id; });
+  if(!opt) return;
+  preencherFormularioConfig('cfg', opt);
+  window.editandoOpcaoTempId = id;
+  document.getElementById('cfg-btn-add').textContent = '✓ Salvar edição';
+  showToast('Editando "'+opt.nome+'". Pra trocar a foto, escolha uma nova — senão a atual é mantida.');
 }
 
 function removerConfigOpcaoTemp(id){
   window.configuradorTemp=window.configuradorTemp.filter(function(o){return o.id!==id;});
+  if(window.editandoOpcaoTempId===id){ window.editandoOpcaoTempId=null; limparFormularioConfig('cfg'); document.getElementById('cfg-btn-add').textContent='+'; }
   renderConfiguradorTemp();
 }
 
 function renderConfiguradorNovoTemp(){
-  document.getElementById('novo-config-lista').innerHTML = htmlListaConfig(window.novoConfiguradorTemp, 'removerConfigOpcaoNovo');
+  document.getElementById('novo-config-lista').innerHTML = htmlListaConfig(window.novoConfiguradorTemp, 'removerConfigOpcaoNovo', 'editarConfigOpcaoNovo');
 }
 
 async function adicionarConfigOpcaoNovo(){
-  var opt = await lerFormularioConfig('novo-cfg');
+  var idEditando = window.editandoOpcaoNovoId;
+  var fotoAtual = null;
+  if(idEditando){
+    var existente = window.novoConfiguradorTemp.find(function(o){ return o.id===idEditando; });
+    if(existente) fotoAtual = existente.foto;
+  }
+  var opt = await lerFormularioConfig('novo-cfg', idEditando, fotoAtual);
   if(!opt) return;
-  window.novoConfiguradorTemp.push(opt);
+  if(idEditando){
+    var idx = window.novoConfiguradorTemp.findIndex(function(o){ return o.id===idEditando; });
+    if(idx>-1) window.novoConfiguradorTemp[idx] = opt;
+    window.editandoOpcaoNovoId = null;
+    document.getElementById('novo-cfg-btn-add').textContent = '+';
+  } else {
+    window.novoConfiguradorTemp.push(opt);
+  }
   renderConfiguradorNovoTemp();
+}
+
+function editarConfigOpcaoNovo(id){
+  var opt = window.novoConfiguradorTemp.find(function(o){ return o.id===id; });
+  if(!opt) return;
+  preencherFormularioConfig('novo-cfg', opt);
+  window.editandoOpcaoNovoId = id;
+  document.getElementById('novo-cfg-btn-add').textContent = '✓ Salvar edição';
+  showToast('Editando "'+opt.nome+'". Pra trocar a foto, escolha uma nova — senão a atual é mantida.');
 }
 
 function removerConfigOpcaoNovo(id){
   window.novoConfiguradorTemp=window.novoConfiguradorTemp.filter(function(o){return o.id!==id;});
+  if(window.editandoOpcaoNovoId===id){ window.editandoOpcaoNovoId=null; limparFormularioConfig('novo-cfg'); document.getElementById('novo-cfg-btn-add').textContent='+'; }
   renderConfiguradorNovoTemp();
 }
 
