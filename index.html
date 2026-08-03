@@ -1720,7 +1720,10 @@ function lerFormularioConfig(prefixo){
   else if(efeito==='cobertura'){ opt.visual='cobertura'; opt.cor=document.getElementById(prefixo+'-cor').value; }
   document.getElementById(prefixo+'-nome').value='';
   document.getElementById(prefixo+'-preco').value='';
+  document.getElementById(prefixo+'-efeito').value='';
+  document.getElementById(prefixo+'-cor').style.display='none';
   document.getElementById(prefixo+'-nome').focus();
+  showToast('"'+nome+'" adicionada em "'+grupo+'"!');
   return opt;
 }
 
