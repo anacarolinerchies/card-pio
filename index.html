@@ -85,6 +85,8 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .adicionar-btn{background:var(--marrom-escuro);color:white;border:none;padding:8px 16px;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
 .adicionar-btn:hover{background:var(--verde);}
 .vegano-badge{position:absolute;top:12px;right:12px;background:var(--verde);color:white;font-size:9px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;}
+.baby-badge{position:absolute;top:12px;left:12px;background:var(--dourado);color:var(--marrom-escuro);font-size:9px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;}
+.wizard-opcao-baby{display:inline-block;background:var(--dourado);color:var(--marrom-escuro);font-size:9px;letter-spacing:0.5px;padding:2px 6px;text-transform:uppercase;margin-top:4px;}
 .adicional-box{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
 .adicional-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .adicional-nome{font-size:12px;font-weight:500;color:var(--marrom);}
@@ -352,6 +354,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
           <div class="form-group"><label>Preço (R$)</label><input type="number" id="novo-preco" placeholder="0.00" step="0.01"></div>
           <div class="form-group"><label>Categoria</label><select id="novo-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
           <div class="form-group"><label>Vegano?</label><select id="novo-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+          <div class="form-group"><label>Baby Friendly?</label><select id="novo-baby"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
           <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva o produto..."></textarea></div>
           <div class="form-group full">
             <label>Fotos do produto (pode escolher várias)</label>
@@ -386,6 +389,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
               <input type="file" id="novo-cfg-foto" accept="image/*" style="font-size:11px;width:150px;">
               <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-forca-cobertura"> Exige cobertura</label>
               <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-sem-cobertura"> É "sem cobertura"</label>
+              <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="novo-cfg-baby"> Baby Friendly</label>
               <button type="button" class="btn-sm" onclick="adicionarConfigOpcaoNovo()">+</button>
             </div>
           </div>
@@ -483,6 +487,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="edit-modal-grupo"><label>Preço (R$)</label><input type="number" id="edit-preco" step="0.01"></div>
     <div class="edit-modal-grupo"><label>Categoria</label><select id="edit-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
     <div class="edit-modal-grupo"><label>Vegano?</label><select id="edit-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+    <div class="edit-modal-grupo"><label>Baby Friendly?</label><select id="edit-baby"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
     <div class="edit-modal-grupo"><label>Descrição</label><textarea id="edit-desc"></textarea></div>
     <div class="edit-modal-grupo">
       <label>Fotos (pode escolher várias)</label>
@@ -517,6 +522,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
         <input type="file" id="cfg-foto" accept="image/*" style="font-size:11px;width:150px;">
         <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-forca-cobertura"> Exige cobertura</label>
         <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-sem-cobertura"> É "sem cobertura"</label>
+        <label style="font-size:11px;color:var(--texto-medio);display:flex;align-items:center;gap:4px;"><input type="checkbox" id="cfg-baby"> Baby Friendly</label>
         <button type="button" class="btn-sm" onclick="adicionarConfigOpcaoTemp()">+</button>
       </div>
     </div>
@@ -757,6 +763,7 @@ window.adicionarProduto = async function() {
   var cat = document.getElementById('novo-cat').value;
   var desc = document.getElementById('novo-desc').value.trim();
   var vegano = document.getElementById('novo-vegano').value;
+  var babyFriendly = document.getElementById('novo-baby').value;
   if(!nome||!preco){ showToast('Preencha nome e preço!'); return; }
   var id = 'p' + Date.now();
   var fotos = window.novasFotos || [];
@@ -764,7 +771,7 @@ window.adicionarProduto = async function() {
   var variantes = window.novasVariantesTemp || [];
   var etapas = window.novoConfiguradorTemp || [];
   try {
-    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, babyFriendly:babyFriendly, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
   } catch(e) {
     showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
     return;
@@ -798,6 +805,7 @@ window.salvarEdicao = async function() {
     preco: parseFloat(document.getElementById('edit-preco').value),
     cat: document.getElementById('edit-cat').value,
     vegano: document.getElementById('edit-vegano').value,
+    babyFriendly: document.getElementById('edit-baby').value,
     desc: document.getElementById('edit-desc').value.trim(),
     adicionais: window.adicionaisTemp,
     variantes: window.variantesTemp,
@@ -1139,7 +1147,7 @@ function renderCardapio() {
       } else {
         precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>';
       }
-      html += '<div class="produto-card'+(temEtapas?' clicavel':'')+'"'+(temEtapas?' onclick="abrirConfiguradorModal(\''+prod.id+'\')"':'')+'>'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+(temEtapas?'':adHtml)+'</div></div>';
+      html += '<div class="produto-card'+(temEtapas?' clicavel':'')+'"'+(temEtapas?' onclick="abrirConfiguradorModal(\''+prod.id+'\')"':'')+'>'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+(prod.babyFriendly==='sim'?'<span class="baby-badge">🍼 Baby Friendly</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+(temEtapas?'':adHtml)+'</div></div>';
     }
     html += '</div></div>';
   }
@@ -1240,7 +1248,7 @@ function renderWizardStep(semAnimacao){
       var selecionada = ws.selecoes[etapa.nome]===opt.id;
       html += '<div class="wizard-opcao-card'+(selecionada?' selecionada':'')+'" onclick="wizardSelecionar(\''+etapa.nome+'\',\''+opt.id+'\')">'+
         (opt.foto ? '<img src="'+opt.foto+'" class="wizard-opcao-foto" alt="'+opt.nome+'">' : '<div class="wizard-opcao-foto-ph">🍰</div>')+
-        '<div class="wizard-opcao-info"><div class="wizard-opcao-nome">'+opt.nome+'</div>'+(opt.precoExtra>0?'<div class="wizard-opcao-preco">+R$ '+opt.precoExtra.toFixed(2).replace('.',',')+'</div>':'')+'</div>'+
+        '<div class="wizard-opcao-info"><div class="wizard-opcao-nome">'+opt.nome+'</div>'+(opt.precoExtra>0?'<div class="wizard-opcao-preco">+R$ '+opt.precoExtra.toFixed(2).replace('.',',')+'</div>':'')+(opt.babyFriendly?'<div class="wizard-opcao-baby">🍼 Baby Friendly</div>':'')+'</div>'+
         '</div>';
     }
     document.getElementById('wizard-opcoes').innerHTML = html;
@@ -1568,6 +1576,7 @@ function abrirEdit(id){
   popularSelects();
   document.getElementById('edit-cat').value=prod.cat;
   document.getElementById('edit-vegano').value=prod.vegano;
+  document.getElementById('edit-baby').value=prod.babyFriendly||'nao';
   document.getElementById('edit-desc').value=prod.desc;
   window.editFotos = fotosDoProduto(prod);
   renderPreviewFotos('edit-preview-lista', 'editFotos');
@@ -1680,6 +1689,7 @@ function descricaoRegraConfig(opt){
   var tags = '';
   if(opt.forcaCobertura) tags += ' <span style="color:var(--verde);">🔒 Exige cobertura</span>';
   if(opt.ehSemCobertura) tags += ' <span style="color:var(--texto-medio);">🚫 Sem cobertura</span>';
+  if(opt.babyFriendly) tags += ' <span style="color:var(--dourado);">🍼 Baby Friendly</span>';
   return tags;
 }
 
@@ -1711,6 +1721,7 @@ async function lerFormularioConfig(prefixo){
   var preco = parseFloat(document.getElementById(prefixo+'-preco').value) || 0;
   var forcaCobertura = document.getElementById(prefixo+'-forca-cobertura').checked;
   var ehSemCobertura = document.getElementById(prefixo+'-sem-cobertura').checked;
+  var babyFriendly = document.getElementById(prefixo+'-baby').checked;
   if(!nome){ showToast('Digite o nome da opção!'); return null; }
   var fotoInput = document.getElementById(prefixo+'-foto');
   var foto = null;
@@ -1718,12 +1729,13 @@ async function lerFormularioConfig(prefixo){
     showToast('Processando foto...');
     foto = await comprimirImagem(fotoInput.files[0], 640, 0.7);
   }
-  var opt = {id:'cfg-'+Date.now(), nome:nome, grupo:grupo, precoExtra:preco, foto:foto, forcaCobertura:forcaCobertura, ehSemCobertura:ehSemCobertura};
+  var opt = {id:'cfg-'+Date.now(), nome:nome, grupo:grupo, precoExtra:preco, foto:foto, forcaCobertura:forcaCobertura, ehSemCobertura:ehSemCobertura, babyFriendly:babyFriendly};
   document.getElementById(prefixo+'-nome').value='';
   document.getElementById(prefixo+'-preco').value='';
   document.getElementById(prefixo+'-foto').value='';
   document.getElementById(prefixo+'-forca-cobertura').checked=false;
   document.getElementById(prefixo+'-sem-cobertura').checked=false;
+  document.getElementById(prefixo+'-baby').checked=false;
   document.getElementById(prefixo+'-nome').focus();
   showToast('"'+nome+'" adicionada em "'+grupo+'"!');
   return opt;
