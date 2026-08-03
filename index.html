@@ -221,7 +221,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   </ul>
   <button class="admin-btn" onclick="abrirAdmin()">Admin ⚙</button>
 </nav>
-<div class="aviso-bar" id="aviso-bar">✦ <span id="aviso-texto-pub">Prazo mínimo: 1 dia de antecedência</span> · Para pronta entrega disponível hoje, consulte no WhatsApp ✦</div>
+<div class="aviso-bar" id="aviso-bar">✦ <span id="aviso-texto-pub">Prazo mínimo: 1 dia de antecedência</span> · Para pronta entrega disponível hoje, consulte no <a onclick="abrirWhats('Olá! Gostaria de saber sobre a disponibilidade de pronta entrega hoje.')" style="color:var(--dourado-claro);text-decoration:underline;cursor:pointer;">WhatsApp</a> ✦</div>
 
 <!-- HOME -->
 <div id="page-home" class="page active">
@@ -314,7 +314,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
         <div class="contato-linha"><span class="contato-icon">💚</span><span>Pix · <small style="color:var(--dourado)" id="pub-pix">Chave: 04452047025</small></span></div>
         <div class="contato-linha"><span class="contato-icon">💵</span><span>Dinheiro</span></div>
         <div style="background:var(--offwhite2);border-left:3px solid var(--dourado);padding:12px 14px;margin-top:16px;font-size:12px;color:var(--texto-medio);line-height:1.7;">Após o pagamento via Pix, envie o comprovante no WhatsApp para confirmação do pedido.</div>
-        <div style="margin-top:16px;background:var(--verde);color:white;padding:12px 14px;font-size:12px;line-height:1.7;"><strong>Pedidos sob encomenda</strong><br>Prazo mínimo: 1 dia de antecedência.<br>Para pronta entrega, consulte no WhatsApp.</div>
+        <div style="margin-top:16px;background:var(--verde);color:white;padding:12px 14px;font-size:12px;line-height:1.7;"><strong>Pedidos sob encomenda</strong><br>Prazo mínimo: 1 dia de antecedência.<br>Para pronta entrega, consulte no <a onclick="abrirWhats('Olá! Gostaria de saber sobre a disponibilidade de pronta entrega hoje.')" style="color:var(--dourado-claro);text-decoration:underline;cursor:pointer;">WhatsApp</a>.</div>
       </div>
     </div>
   </div>
@@ -1405,7 +1405,7 @@ function renderCarrinho() {
   var clienteSalvo={};
   try{ clienteSalvo=JSON.parse(localStorage.getItem('anachies_cliente')||'{}'); }catch(e){}
   document.getElementById('carrinho-form').innerHTML=
-    '<div class="prazo-aviso">⏱ Prazo mínimo: 1 dia de antecedência. Para produto do dia, consulte no WhatsApp.</div>'+
+    '<div class="prazo-aviso">⏱ Prazo mínimo: 1 dia de antecedência. Para produto do dia, consulte no <a onclick="abrirWhats(\'Olá! Gostaria de saber sobre a disponibilidade de pronta entrega hoje.\')" style="color:var(--dourado-claro);text-decoration:underline;cursor:pointer;">WhatsApp</a>.</div>'+
     '<div class="form-section"><div class="form-title serif">Seus dados</div><div class="form-grid">'+
     '<div class="form-group"><label>Nome completo</label><input type="text" id="cli-nome" placeholder="Seu nome" value="'+(clienteSalvo.nome||'')+'"></div>'+
     '<div class="form-group"><label>WhatsApp</label><input type="text" id="cli-fone" placeholder="(54) 99999-9999" value="'+(clienteSalvo.fone||'')+'"></div>'+
