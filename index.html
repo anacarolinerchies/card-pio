@@ -371,9 +371,9 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
             <label>Configurador Visual (opcional) — cliente monta o produto (formato/cobertura) com ilustração animada</label>
             <div id="novo-config-lista"></div>
             <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;">
-              <input type="text" id="novo-cfg-nome" placeholder="Nome da opção" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:110px;">
+              <input type="text" id="novo-cfg-nome" placeholder="Nome da opção" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoNovo()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:110px;">
               <input type="text" id="novo-cfg-grupo" placeholder="Grupo (ex: Formato)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:120px;background:var(--offwhite);outline:none;">
-              <input type="number" id="novo-cfg-preco" placeholder="+R$" step="0.01" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:70px;background:var(--offwhite);outline:none;">
+              <input type="number" id="novo-cfg-preco" placeholder="+R$" step="0.01" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoNovo()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:70px;background:var(--offwhite);outline:none;">
               <select id="novo-cfg-efeito" onchange="toggleConfigCor('novo-cfg-cor', this.value)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:12px;background:var(--offwhite);outline:none;">
                 <option value="">Sem efeito visual</option>
                 <option value="formato-redondo">Formato: Redondo</option>
@@ -489,9 +489,9 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
       <label>Configurador Visual — cliente monta o produto com ilustração animada</label>
       <div id="edit-config-lista"></div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center;">
-        <input type="text" id="cfg-nome" placeholder="Nome da opção" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:110px;">
+        <input type="text" id="cfg-nome" placeholder="Nome da opção" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoTemp()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;flex:1;background:var(--offwhite);outline:none;min-width:110px;">
         <input type="text" id="cfg-grupo" placeholder="Grupo (ex: Formato)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:120px;background:var(--offwhite);outline:none;">
-        <input type="number" id="cfg-preco" placeholder="+R$" step="0.01" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:70px;background:var(--offwhite);outline:none;">
+        <input type="number" id="cfg-preco" placeholder="+R$" step="0.01" onkeypress="if(event.key==='Enter')adicionarConfigOpcaoTemp()" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:13px;width:70px;background:var(--offwhite);outline:none;">
         <select id="cfg-efeito" onchange="toggleConfigCor('cfg-cor', this.value)" style="border:1px solid var(--borda);padding:8px 10px;font-family:'Jost',sans-serif;font-size:12px;background:var(--offwhite);outline:none;">
           <option value="">Sem efeito visual</option>
           <option value="formato-redondo">Formato: Redondo</option>
@@ -1719,10 +1719,8 @@ function lerFormularioConfig(prefixo){
   if(efeito.indexOf('formato-')===0){ opt.visual='formato'; opt.shape=efeito.split('-')[1]; }
   else if(efeito==='cobertura'){ opt.visual='cobertura'; opt.cor=document.getElementById(prefixo+'-cor').value; }
   document.getElementById(prefixo+'-nome').value='';
-  document.getElementById(prefixo+'-grupo').value='';
   document.getElementById(prefixo+'-preco').value='';
-  document.getElementById(prefixo+'-efeito').value='';
-  document.getElementById(prefixo+'-cor').style.display='none';
+  document.getElementById(prefixo+'-nome').focus();
   return opt;
 }
 
