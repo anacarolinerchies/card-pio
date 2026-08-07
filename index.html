@@ -1026,25 +1026,26 @@ function renderCookiePrecosBanner() {
 }
 
 function renderTrufaPrecosBanner() {
-  var faixas = [
-    {label:'1 a 2 unidades', preco:8.00, destaque:false},
-    {label:'3 a 5 unidades', preco:7.50, destaque:false},
-    {label:'6 unidades ou mais', preco:7.00, destaque:true}
-  ];
+  var tabelas = REGRAS_QUANTIDADE.trufas.tabelas;
+  var labels = {1:'1 a 2 unidades', 3:'3 a 5 unidades', 6:'6 unidades ou mais'};
   var html = '<div class="cookie-precos-banner">'+
-    '<div class="cookie-precos-titulo">🍫 Quanto mais trufas, menor o preço por unidade!</div>'+
-    '<div class="cookie-precos-grid">';
-  for(var i=0;i<faixas.length;i++){
-    var f = faixas[i];
-    var economiaUnit = 8.00 - f.preco;
-    html += '<div class="cookie-preco-item'+(f.destaque?' destaque':'')+'">'+
-      '<div class="cp-qtd">'+f.label+'</div>'+
-      '<div class="cp-preco">R$ '+f.preco.toFixed(2).replace('.',',')+'</div>'+
-      '<div class="cp-unit">por unidade</div>'+
-      (economiaUnit>0?'<div class="cp-economia">Economize R$ '+economiaUnit.toFixed(2).replace('.',',')+' por trufa</div>':'')+
-      '</div>';
+    '<div class="cookie-precos-titulo">🍫 Quanto mais trufas do mesmo sabor, menor o preço por unidade!</div>';
+  for(var precoBase in tabelas){
+    var tabela = tabelas[precoBase];
+    html += '<div style="font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--dourado);margin:12px 0 8px;">Trufas de R$ '+parseFloat(precoBase).toFixed(2).replace('.',',')+'</div><div class="cookie-precos-grid">';
+    for(var i=0;i<tabela.length;i++){
+      var f = tabela[i];
+      var economiaUnit = tabela[0].preco - f.preco;
+      html += '<div class="cookie-preco-item'+(i===tabela.length-1?' destaque':'')+'">'+
+        '<div class="cp-qtd">'+(labels[f.min]||(f.min+'+ unidades'))+'</div>'+
+        '<div class="cp-preco">R$ '+f.preco.toFixed(2).replace('.',',')+'</div>'+
+        '<div class="cp-unit">por unidade</div>'+
+        (economiaUnit>0?'<div class="cp-economia">Economize R$ '+economiaUnit.toFixed(2).replace('.',',')+' por trufa</div>':'')+
+        '</div>';
+    }
+    html += '</div>';
   }
-  html += '</div><div class="cookie-precos-nota">O desconto é calculado automaticamente pela quantidade total de trufas no carrinho.</div></div>';
+  html += '<div class="cookie-precos-nota">O desconto é calculado automaticamente pela quantidade de trufas do mesmo preço no carrinho.</div></div>';
   return html;
 }
 
@@ -1350,44 +1351,67 @@ function precoPorPacotes(qtd, tiers){
   return dp[qtd];
 }
 
+function precoPorFaixa(tabela, qtd){
+  var unit = tabela[0].preco;
+  for(var i=0;i<tabela.length;i++){ if(qtd>=tabela[i].min) unit = tabela[i].preco; }
+  return unit*qtd;
+}
+
 var REGRAS_QUANTIDADE = {
   'cookies': {
+    modo: 'pacote',
     precoBase: 6.00,
     calcular: function(qtd){ return precoPorPacotes(qtd, [{q:1,p:6.00},{q:2,p:11.50},{q:4,p:21.00},{q:6,p:30.00}]); }
   },
   'trufas': {
-    precoBase: 8.00,
-    calcular: function(qtd){
-      var unit = qtd>=6 ? 7.00 : (qtd>=3 ? 7.50 : 8.00);
-      return qtd*unit;
+    modo: 'faixaPorPreco',
+    tabelas: {
+      8: [{min:1,preco:8.00},{min:3,preco:7.50},{min:6,preco:7.00}],
+      10: [{min:1,preco:10.00},{min:3,preco:9.40},{min:6,preco:8.75}]
     }
   }
 };
 
 function calcularTotais(){
   var cart = window.carrinho || [];
-  var qtdPorCategoria = {};
   var totalOutros = 0;
+  var porCategoriaPacote = {};
+  var porCategoriaFaixa = {};
   for(var i=0;i<cart.length;i++){
     var item = cart[i];
     if(item.id.indexOf('ad-')===0){ totalOutros += item.preco*item.qty; continue; }
     var prod = (window.produtos||[]).find(function(p){ return p.id==item.id; });
     var catKey = prod && prod.cat ? prod.cat.toLowerCase() : null;
-    if(catKey && REGRAS_QUANTIDADE[catKey]){
-      qtdPorCategoria[catKey] = (qtdPorCategoria[catKey]||0) + item.qty;
+    var regra = catKey ? REGRAS_QUANTIDADE[catKey] : null;
+    if(!regra){ totalOutros += item.preco*item.qty; continue; }
+    if(regra.modo==='pacote'){
+      porCategoriaPacote[catKey] = (porCategoriaPacote[catKey]||0) + item.qty;
     } else {
-      totalOutros += item.preco*item.qty;
+      if(!porCategoriaFaixa[catKey]) porCategoriaFaixa[catKey] = {};
+      porCategoriaFaixa[catKey][item.preco] = (porCategoriaFaixa[catKey][item.preco]||0) + item.qty;
     }
   }
-  var totalCategorias = 0, economia = 0;
-  for(var cat in qtdPorCategoria){
-    var qtd = qtdPorCategoria[cat];
+  var totalRegras = 0, economia = 0;
+  for(var cat in porCategoriaPacote){
+    var qtd = porCategoriaPacote[cat];
     var regra = REGRAS_QUANTIDADE[cat];
     var totalCat = regra.calcular(qtd);
-    totalCategorias += totalCat;
+    totalRegras += totalCat;
     economia += (qtd*regra.precoBase) - totalCat;
   }
-  return {total: totalOutros+totalCategorias, economia: economia>0.001?economia:0};
+  for(var cat2 in porCategoriaFaixa){
+    var regra2 = REGRAS_QUANTIDADE[cat2];
+    var precos = porCategoriaFaixa[cat2];
+    for(var precoStr in precos){
+      var qtd2 = precos[precoStr];
+      var precoNum = parseFloat(precoStr);
+      var tabela = regra2.tabelas[precoNum];
+      var totalGrupo = tabela ? precoPorFaixa(tabela, qtd2) : precoNum*qtd2;
+      totalRegras += totalGrupo;
+      economia += (qtd2*precoNum) - totalGrupo;
+    }
+  }
+  return {total: totalOutros+totalRegras, economia: economia>0.001?economia:0};
 }
 
 function renderCarrinho() {
