@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ana Chies · Confeitaria Saudável</title>
+<meta name="description" content="Ana Chies · Confeitaria Saudável em Carlos Barbosa, RS. Bolos, cookies, brownies, trufas e doces artesanais sem açúcar branco, sem leite animal e sem farinha de trigo. Veja o cardápio e peça pelo WhatsApp.">
+<meta property="og:title" content="Ana Chies · Confeitaria Saudável">
+<meta property="og:description" content="Doces artesanais e saudáveis em Carlos Barbosa, RS — onde o amor vira receita. Veja o cardápio e faça seu pedido.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -46,12 +51,21 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .section{max-width:900px;margin:0 auto;padding:60px 2rem;}
 .section-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--marrom);text-align:center;margin-bottom:8px;}
 .section-line{width:60px;height:1px;background:var(--dourado);margin:0 auto 40px;}
+.intencao-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;max-width:820px;margin:0 auto;}
+.intencao-card{background:white;border:1px solid var(--borda);padding:24px 16px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.intencao-card:hover{border-color:var(--dourado);transform:translateY(-3px);}
+.intencao-icon{font-size:30px;margin-bottom:10px;}
+.intencao-titulo{font-size:17px;color:var(--marrom-escuro);margin-bottom:4px;}
+.intencao-desc{font-size:12px;color:var(--texto-medio);}
 .categoria-titulo{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--marrom);margin-bottom:4px;display:flex;align-items:center;gap:12px;}
 .categoria-titulo::after{content:'';flex:1;height:1px;background:var(--borda);}
 .categoria-bloco{margin-bottom:48px;}
 .busca-box{margin-bottom:24px;}
 .busca-box input{width:100%;border:1px solid var(--borda);padding:12px 16px;font-family:'Jost',sans-serif;font-size:14px;color:var(--texto);background:white;outline:none;}
 .busca-box input:focus{border-color:var(--dourado);}
+.filtro-ativo{background:var(--offwhite2);border:1px solid var(--borda);padding:10px 16px;margin-bottom:20px;font-size:13px;color:var(--texto-medio);}
+.filtro-ativo strong{color:var(--marrom-escuro);}
+.filtro-ativo a{color:var(--dourado);text-decoration:underline;cursor:pointer;margin-left:4px;}
 .cookie-precos-banner{background:var(--offwhite2);border:1px solid var(--borda);padding:20px;margin-bottom:20px;}
 .cookie-precos-titulo{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--marrom-escuro);text-align:center;margin-bottom:16px;}
 .cookie-precos-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;}
@@ -86,6 +100,8 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .adicionar-btn:hover{background:var(--verde);}
 .vegano-badge{position:absolute;top:12px;right:12px;background:var(--verde);color:white;font-size:9px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;}
 .baby-badge{position:absolute;top:12px;left:12px;background:var(--dourado);color:var(--marrom-escuro);font-size:9px;letter-spacing:1px;padding:3px 8px;text-transform:uppercase;}
+.tags-produto-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.tag-check{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--texto-medio);background:var(--offwhite2);padding:6px 10px;border:1px solid var(--borda);cursor:pointer;}
 .wizard-opcao-baby{display:inline-block;background:var(--dourado);color:var(--marrom-escuro);font-size:9px;letter-spacing:0.5px;padding:2px 6px;text-transform:uppercase;margin-top:4px;}
 .adicional-box{margin-top:10px;padding-top:10px;border-top:1px solid var(--borda);}
 .adicional-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
@@ -111,6 +127,11 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .detalhe-nome{font-size:28px;color:var(--marrom-escuro);margin-bottom:10px;}
 .detalhe-destaque{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--dourado);line-height:1.5;margin-bottom:14px;padding:10px 14px;background:var(--offwhite2);border-left:3px solid var(--dourado);}
 .detalhe-desc{font-size:14px;color:var(--texto-medio);line-height:1.8;margin-bottom:18px;}
+.quiz-titulo{font-size:20px;color:var(--marrom-escuro);text-align:center;margin:8px 0 16px;line-height:1.4;}
+.quiz-pergunta{font-size:18px;color:var(--marrom);text-align:center;margin-bottom:16px;}
+.quiz-opcoes{display:flex;flex-direction:column;gap:10px;}
+.quiz-opcao{background:var(--offwhite2);border:1.5px solid var(--borda);color:var(--marrom-escuro);padding:12px 16px;font-family:'Jost',sans-serif;font-size:14px;cursor:pointer;text-align:left;transition:all 0.2s;}
+.quiz-opcao:hover{border-color:var(--dourado);background:white;}
 .wizard-overlay{position:fixed;inset:0;background:rgba(44,24,16,0.75);z-index:800;display:none;align-items:center;justify-content:center;padding:16px;}
 .wizard-overlay.open{display:flex;}
 .wizard-modal{background:white;width:480px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;border-top:3px solid var(--dourado);}
@@ -237,7 +258,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 <nav>
   <div class="nav-logo serif">Ana Chies</div>
   <ul class="nav-links">
-    <li><a onclick="showPage('cardapio')">Cardápio</a></li>
+    <li><a onclick="verCardapioCompleto()">Cardápio</a></li>
     <li><a onclick="showPage('cuidados')">Nossos Cuidados</a></li>
     <li><a onclick="showPage('contato')">Contato</a></li>
   </ul>
@@ -261,9 +282,43 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="hero-actions">
       <div class="cta-wrap">
         <span class="cta-label cta-label-claro">👉 Encomende aqui</span>
-        <button class="btn-primary btn-destaque" onclick="showPage('cardapio')">Ver Cardápio</button>
+        <button class="btn-primary btn-destaque" onclick="verCardapioCompleto()">Ver Cardápio</button>
       </div>
       <button class="btn-outline" onclick="showPage('cuidados')">Nossos Cuidados</button>
+    </div>
+  </div>
+  <div class="section" id="intencao-section">
+    <h2 class="section-title serif">O que você está procurando?</h2>
+    <div class="section-line"></div>
+    <div class="intencao-grid">
+      <div class="intencao-card" onclick="irParaIntencao('geral')">
+        <div class="intencao-icon">🍫</div>
+        <div class="intencao-titulo serif">Comprar um doce</div>
+        <div class="intencao-desc">Ver o cardápio completo</div>
+      </div>
+      <div class="intencao-card" onclick="irParaIntencao('dia-a-dia')">
+        <div class="intencao-icon">🥐</div>
+        <div class="intencao-titulo serif">Algo pro dia a dia</div>
+        <div class="intencao-desc">Individual e prático</div>
+      </div>
+      <div class="intencao-card" onclick="irParaIntencao('evento')">
+        <div class="intencao-icon">🎉</div>
+        <div class="intencao-titulo serif">Presente ou evento</div>
+        <div class="intencao-desc">Pra compartilhar</div>
+      </div>
+      <div class="intencao-card" onclick="irParaIntencao('encomenda')">
+        <div class="intencao-icon">🎁</div>
+        <div class="intencao-titulo serif">Montar uma encomenda</div>
+        <div class="intencao-desc">Combinar pelo WhatsApp</div>
+      </div>
+      <div class="intencao-card" onclick="irParaIntencao('falar')">
+        <div class="intencao-icon">💬</div>
+        <div class="intencao-titulo serif">Falar com a Ana</div>
+        <div class="intencao-desc">Tirar dúvidas no WhatsApp</div>
+      </div>
+    </div>
+    <div class="cta-wrap" style="margin-top:24px;">
+      <button class="btn-outline" onclick="abrirQuiz()">Me ajuda a escolher 💛</button>
     </div>
   </div>
   <div class="section">
@@ -272,7 +327,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <p style="text-align:center;color:var(--texto-medio);line-height:1.9;max-width:600px;margin:0 auto;font-size:15px;">Na Ana Chies, cada receita é preparada com cuidado e consciência. Priorizamos ingredientes naturais, produção artesanal e sabores que respeitam o verdadeiro potencial dos alimentos — porque doce de verdade une sabor, qualidade e propósito.</p>
     <div class="cta-wrap" style="margin-top:32px;">
       <span class="cta-label cta-label-escuro">👉 Encomende aqui</span>
-      <button class="btn-primary btn-destaque" onclick="showPage('cardapio')">Fazer Meu Pedido</button>
+      <button class="btn-primary btn-destaque" onclick="verCardapioCompleto()">Fazer Meu Pedido</button>
     </div>
   </div>
 </div>
@@ -284,6 +339,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="section-line"></div>
     <button class="voltar-btn" onclick="showPage('home')">← Voltar</button>
     <div class="busca-box"><input type="text" id="busca-cardapio" placeholder="🔎 Buscar no cardápio... (ex: cookies)" oninput="renderCardapio()"></div>
+    <div id="filtro-ativo-banner"></div>
     <div id="produtos-lista"><div style="text-align:center;padding:40px;color:var(--texto-medio);">Carregando cardápio... ☁️</div></div>
   </div>
 </div>
@@ -293,7 +349,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   <div class="section">
     <h2 class="section-title serif">Meu Pedido</h2>
     <div class="section-line"></div>
-    <button class="voltar-btn" onclick="showPage('cardapio')">← Voltar ao Cardápio</button>
+    <button class="voltar-btn" onclick="verCardapioCompleto()">← Voltar ao Cardápio</button>
     <div id="carrinho-itens"></div>
     <div id="carrinho-form"></div>
   </div>
@@ -366,6 +422,18 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
           <div class="form-group"><label>Categoria</label><select id="novo-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
           <div class="form-group"><label>Vegano?</label><select id="novo-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
           <div class="form-group"><label>Baby Friendly?</label><select id="novo-baby"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+          <div class="form-group full">
+            <label>Tags de ocasião/perfil (opcional) — ajuda o site a recomendar esse produto certo pra cada visitante</label>
+            <div class="tags-produto-grid">
+              <label class="tag-check"><input type="checkbox" id="novo-tag-dia-a-dia"> Dia a dia</label>
+              <label class="tag-check"><input type="checkbox" id="novo-tag-presente"> Presente</label>
+              <label class="tag-check"><input type="checkbox" id="novo-tag-evento"> Evento</label>
+              <label class="tag-check"><input type="checkbox" id="novo-tag-compartilhar"> Compartilhar</label>
+              <label class="tag-check"><input type="checkbox" id="novo-tag-individual"> Individual</label>
+              <label class="tag-check"><input type="checkbox" id="novo-tag-chocolatudo"> Mais Chocolatudo</label>
+              <label class="tag-check"><input type="checkbox" id="novo-tag-leve"> Mais Leve</label>
+            </div>
+          </div>
           <div class="form-group full"><label>Frase de destaque (opcional)</label><input type="text" id="novo-destaque" placeholder="Ex: O doce que prova que dá pra ser saudável e incrível ao mesmo tempo"></div>
           <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva o produto..."></textarea></div>
           <div class="form-group full">
@@ -474,6 +542,16 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   </div>
 </div>
 
+<div class="detalhe-overlay" id="quizOverlay" onclick="if(event.target===this)fecharQuiz()">
+  <div class="detalhe-modal" style="width:420px;padding:32px;">
+    <button type="button" class="detalhe-fechar" onclick="fecharQuiz()">✕</button>
+    <div class="quiz-titulo serif">Posso te ajudar a encontrar o que você procura 💛</div>
+    <div class="wizard-passo-indicador" id="quiz-indicador" style="padding:0;margin-bottom:6px;"></div>
+    <div class="quiz-pergunta serif" id="quiz-pergunta"></div>
+    <div class="quiz-opcoes" id="quiz-opcoes"></div>
+  </div>
+</div>
+
 <div class="detalhe-overlay" id="detalheOverlay" onclick="if(event.target===this)fecharDetalheProduto()">
   <div class="detalhe-modal">
     <button type="button" class="detalhe-fechar" onclick="fecharDetalheProduto()">✕</button>
@@ -513,6 +591,18 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="edit-modal-grupo"><label>Categoria</label><select id="edit-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
     <div class="edit-modal-grupo"><label>Vegano?</label><select id="edit-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
     <div class="edit-modal-grupo"><label>Baby Friendly?</label><select id="edit-baby"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+    <div class="edit-modal-grupo">
+      <label>Tags de ocasião/perfil (opcional)</label>
+      <div class="tags-produto-grid">
+        <label class="tag-check"><input type="checkbox" id="edit-tag-dia-a-dia"> Dia a dia</label>
+        <label class="tag-check"><input type="checkbox" id="edit-tag-presente"> Presente</label>
+        <label class="tag-check"><input type="checkbox" id="edit-tag-evento"> Evento</label>
+        <label class="tag-check"><input type="checkbox" id="edit-tag-compartilhar"> Compartilhar</label>
+        <label class="tag-check"><input type="checkbox" id="edit-tag-individual"> Individual</label>
+        <label class="tag-check"><input type="checkbox" id="edit-tag-chocolatudo"> Mais Chocolatudo</label>
+        <label class="tag-check"><input type="checkbox" id="edit-tag-leve"> Mais Leve</label>
+      </div>
+    </div>
     <div class="edit-modal-grupo"><label>Frase de destaque (opcional)</label><input type="text" id="edit-destaque" placeholder="Ex: O doce que prova que dá pra ser saudável e incrível ao mesmo tempo"></div>
     <div class="edit-modal-grupo"><label>Descrição</label><textarea id="edit-desc"></textarea></div>
     <div class="edit-modal-grupo">
@@ -793,6 +883,7 @@ window.adicionarProduto = async function() {
   var destaque = document.getElementById('novo-destaque').value.trim();
   var vegano = document.getElementById('novo-vegano').value;
   var babyFriendly = document.getElementById('novo-baby').value;
+  var tags = lerTagsProduto('novo');
   if(!nome||!preco){ showToast('Preencha nome e preço!'); return; }
   var id = 'p' + Date.now();
   var fotos = window.novasFotos || [];
@@ -800,7 +891,7 @@ window.adicionarProduto = async function() {
   var variantes = window.novasVariantesTemp || [];
   var etapas = window.novoConfiguradorTemp || [];
   try {
-    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, destaque:destaque, vegano:vegano, babyFriendly:babyFriendly, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, destaque:destaque, vegano:vegano, babyFriendly:babyFriendly, tags:tags, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
   } catch(e) {
     showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
     return;
@@ -809,6 +900,7 @@ window.adicionarProduto = async function() {
   document.getElementById('novo-preco').value='';
   document.getElementById('novo-desc').value='';
   document.getElementById('novo-destaque').value='';
+  marcarTagsProduto('novo', []);
   document.getElementById('novo-preview-lista').innerHTML='';
   window.novasFotos=[];
   window.novosAdicionaisTemp=[];
@@ -838,6 +930,7 @@ window.salvarEdicao = async function() {
     cat: document.getElementById('edit-cat').value,
     vegano: document.getElementById('edit-vegano').value,
     babyFriendly: document.getElementById('edit-baby').value,
+    tags: lerTagsProduto('edit'),
     desc: document.getElementById('edit-desc').value.trim(),
     destaque: document.getElementById('edit-destaque').value.trim(),
     adicionais: window.adicionaisTemp,
@@ -987,6 +1080,89 @@ function showPage(p) {
   window.scrollTo(0,0);
 }
 
+function verCardapioCompleto(){
+  window.filtroTags = null;
+  window.filtroTagsModo = null;
+  window.filtroTagsTitulo = null;
+  showPage('cardapio');
+}
+
+function irParaCardapioComFiltro(tags, titulo){
+  window.filtroTags = tags;
+  window.filtroTagsModo = 'or';
+  window.filtroTagsTitulo = titulo;
+  showPage('cardapio');
+}
+
+function irParaIntencao(tipo){
+  if(tipo==='geral'){ verCardapioCompleto(); }
+  else if(tipo==='dia-a-dia'){ irParaCardapioComFiltro(['dia-a-dia','individual'], 'Pro dia a dia'); }
+  else if(tipo==='evento'){ irParaCardapioComFiltro(['evento','presente','compartilhar'], 'Presente ou evento'); }
+  else if(tipo==='encomenda'){ abrirWhats('Olá! Gostaria de montar uma encomenda com a Ana Chies.'); }
+  else if(tipo==='falar'){ abrirWhats('Olá! Gostaria de tirar uma dúvida sobre os produtos da Ana Chies.'); }
+}
+
+var QUIZ_PERGUNTAS = [
+  { id:'q1', texto:'O que você está procurando?', opcoes:[
+    {label:'Um doce pra mim', tag:'individual'},
+    {label:'Presente', tag:'presente'},
+    {label:'Evento', tag:'evento'},
+    {label:'Encomenda', acao:'encomenda'},
+    {label:'Ainda não sei', acao:'geral'}
+  ]},
+  { id:'q2', texto:'Você prefere algo…', opcoes:[
+    {label:'Mais chocolatudo', tag:'chocolatudo'},
+    {label:'Mais leve', tag:'leve'},
+    {label:'Individual', tag:'individual'},
+    {label:'Para compartilhar', tag:'compartilhar'}
+  ]}
+];
+
+function abrirQuiz(){
+  window.quizRespostas = {};
+  window.quizPasso = 0;
+  document.getElementById('quizOverlay').classList.add('open');
+  renderQuizPasso();
+}
+
+function fecharQuiz(){
+  document.getElementById('quizOverlay').classList.remove('open');
+}
+
+function renderQuizPasso(){
+  var p = QUIZ_PERGUNTAS[window.quizPasso];
+  document.getElementById('quiz-indicador').textContent = 'Pergunta '+(window.quizPasso+1)+' de '+QUIZ_PERGUNTAS.length;
+  document.getElementById('quiz-pergunta').textContent = p.texto;
+  var html = '';
+  for(var i=0;i<p.opcoes.length;i++){
+    html += '<button type="button" class="quiz-opcao" onclick="responderQuiz('+window.quizPasso+','+i+')">'+p.opcoes[i].label+'</button>';
+  }
+  document.getElementById('quiz-opcoes').innerHTML = html;
+}
+
+function responderQuiz(passo, idx){
+  var opcao = QUIZ_PERGUNTAS[passo].opcoes[idx];
+  if(opcao.acao==='encomenda'){ fecharQuiz(); irParaIntencao('encomenda'); return; }
+  if(opcao.acao==='geral'){ fecharQuiz(); verCardapioCompleto(); return; }
+  window.quizRespostas[QUIZ_PERGUNTAS[passo].id] = opcao.tag;
+  if(passo < QUIZ_PERGUNTAS.length-1){
+    window.quizPasso++;
+    renderQuizPasso();
+  } else {
+    finalizarQuiz();
+  }
+}
+
+function finalizarQuiz(){
+  var tags = [];
+  for(var k in window.quizRespostas) tags.push(window.quizRespostas[k]);
+  fecharQuiz();
+  window.filtroTags = tags;
+  window.filtroTagsModo = 'and';
+  window.filtroTagsTitulo = 'Recomendado pra você';
+  showPage('cardapio');
+}
+
 function verificarCarregamentoCardapio(){
   if(window._checkCardapioTimeout) clearTimeout(window._checkCardapioTimeout);
   window._checkCardapioTimeout = setTimeout(function(){
@@ -999,6 +1175,33 @@ function verificarCarregamentoCardapio(){
         '</div>';
     }
   }, 7000);
+}
+
+var TAGS_PRODUTO = [
+  {key:'dia-a-dia', label:'Dia a dia'},
+  {key:'presente', label:'Presente'},
+  {key:'evento', label:'Evento'},
+  {key:'compartilhar', label:'Compartilhar'},
+  {key:'individual', label:'Individual'},
+  {key:'chocolatudo', label:'Mais Chocolatudo'},
+  {key:'leve', label:'Mais Leve'}
+];
+
+function lerTagsProduto(prefixo){
+  var tags = [];
+  for(var i=0;i<TAGS_PRODUTO.length;i++){
+    var el = document.getElementById(prefixo+'-tag-'+TAGS_PRODUTO[i].key);
+    if(el && el.checked) tags.push(TAGS_PRODUTO[i].key);
+  }
+  return tags;
+}
+
+function marcarTagsProduto(prefixo, tags){
+  tags = tags || [];
+  for(var i=0;i<TAGS_PRODUTO.length;i++){
+    var el = document.getElementById(prefixo+'-tag-'+TAGS_PRODUTO[i].key);
+    if(el) el.checked = tags.indexOf(TAGS_PRODUTO[i].key)!==-1;
+  }
 }
 
 function popularSelects() {
@@ -1133,7 +1336,32 @@ function iniciarAutoPlayFotos(){
   }, 3500);
 }
 
+function produtoPassaFiltroTags(prod, tags, modo){
+  if(!tags || !tags.length) return true;
+  var tagsProd = prod.tags || [];
+  if(modo==='and') return tags.every(function(t){ return tagsProd.indexOf(t)!==-1; });
+  return tags.some(function(t){ return tagsProd.indexOf(t)!==-1; });
+}
+
+function resolverFiltroTags(){
+  window.filtroFallbackMsg = false;
+  if(!window.filtroTags || !window.filtroTags.length) return;
+  var prods = window.produtos || [];
+  var tags = window.filtroTags;
+  if(!window.filtroTagsModo) window.filtroTagsModo = 'and';
+  var contaAnd = prods.filter(function(p){ return produtoPassaFiltroTags(p, tags, 'and'); }).length;
+  if(window.filtroTagsModo==='and' && contaAnd===0) window.filtroTagsModo = 'or';
+  var contaFinal = prods.filter(function(p){ return produtoPassaFiltroTags(p, tags, window.filtroTagsModo); }).length;
+  if(contaFinal===0){
+    window.filtroTags = null;
+    window.filtroTagsModo = null;
+    window.filtroTagsTitulo = null;
+    window.filtroFallbackMsg = true;
+  }
+}
+
 function renderCardapio() {
+  resolverFiltroTags();
   var cats = window.categorias || [];
   var prods = window.produtos || [];
   var buscaEl = document.getElementById('busca-cardapio');
@@ -1144,6 +1372,7 @@ function renderCardapio() {
     var catNomeLower = cat.nome.toLowerCase();
     var catProds = prods.filter(function(p){
       if(p.cat !== cat.nome) return false;
+      if(!produtoPassaFiltroTags(p, window.filtroTags, window.filtroTagsModo)) return false;
       if(!busca) return true;
       return p.nome.toLowerCase().indexOf(busca)!==-1 || (p.desc||'').toLowerCase().indexOf(busca)!==-1 || catNomeLower.indexOf(busca)!==-1;
     });
@@ -1197,6 +1426,18 @@ function renderCardapio() {
     msgVazio = busca ? 'Nenhum produto encontrado para "'+busca+'".' : 'Nenhum produto cadastrado ainda.';
   }
   document.getElementById('produtos-lista').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--texto-medio);">'+msgVazio+'</div>';
+  var bannerEl = document.getElementById('filtro-ativo-banner');
+  if(bannerEl){
+    if(window.filtroTags && window.filtroTags.length){
+      bannerEl.innerHTML = '<div class="filtro-ativo">Mostrando: <strong>'+(window.filtroTagsTitulo||'Seleção')+'</strong> · <a onclick="verCardapioCompleto()">Ver cardápio completo</a></div>';
+    } else {
+      bannerEl.innerHTML = '';
+    }
+  }
+  if(window.filtroFallbackMsg){
+    showToast('Ainda estamos organizando essa curadoria — aqui está o cardápio completo!');
+    window.filtroFallbackMsg = false;
+  }
   iniciarAutoPlayFotos();
 }
 
@@ -1379,6 +1620,7 @@ function abrirDetalheProduto(prodId){
     }
     acao += '</div>';
   }
+  acao += '<div style="text-align:center;margin-top:14px;"><a onclick="abrirWhats(\'Olá! Gostaria de saber mais sobre o produto '+prod.nome+'.\')" style="font-size:12px;color:var(--dourado);text-decoration:underline;cursor:pointer;">Dúvidas sobre esse produto? Fale no WhatsApp</a></div>';
   document.getElementById('detalhe-acao').innerHTML = acao;
   document.getElementById('detalheOverlay').classList.add('open');
 }
@@ -1492,7 +1734,7 @@ function calcularTotais(){
 function renderCarrinho() {
   var cart = window.carrinho || [];
   if(!cart.length) {
-    document.getElementById('carrinho-itens').innerHTML='<div style="text-align:center;padding:60px 0;color:var(--texto-medio);"><div style="font-size:40px;margin-bottom:16px;">🛍</div><p style="font-family:Cormorant Garamond,serif;font-size:22px;margin-bottom:16px;">Seu pedido está vazio</p><button class="btn-primary" onclick="showPage(\'cardapio\')">Ver Cardápio</button></div>';
+    document.getElementById('carrinho-itens').innerHTML='<div style="text-align:center;padding:60px 0;color:var(--texto-medio);"><div style="font-size:40px;margin-bottom:16px;">🛍</div><p style="font-family:Cormorant Garamond,serif;font-size:22px;margin-bottom:16px;">Seu pedido está vazio</p><button class="btn-primary" onclick="verCardapioCompleto()">Ver Cardápio</button></div>';
     document.getElementById('carrinho-form').innerHTML='';
     return;
   }
@@ -1524,7 +1766,7 @@ function renderCarrinho() {
     '<div class="info-box">💚 <strong>Pix:</strong> Chave '+window.pixChave+' · Após pagamento, envie o comprovante no WhatsApp.<br>💵 <strong>Dinheiro:</strong> Pagamento na retirada.</div>'+
     '<div class="pagamento-opcoes"><div class="pag-opt selected" id="pag-pix" onclick="selPag(\'pix\')">💚 Pix</div><div class="pag-opt" id="pag-dinheiro" onclick="selPag(\'dinheiro\')">💵 Dinheiro</div></div></div>'+
     '<button class="btn-primary" style="width:100%;padding:16px;font-size:14px;letter-spacing:2px;" onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>'+
-    '<button style="width:100%;margin-top:12px;background:transparent;border:1px solid var(--borda);color:var(--marrom);padding:14px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;" onclick="showPage(\'cardapio\')">← Continuar comprando</button>';
+    '<button style="width:100%;margin-top:12px;background:transparent;border:1px solid var(--borda);color:var(--marrom);padding:14px;cursor:pointer;font-family:Jost,sans-serif;font-size:13px;" onclick="verCardapioCompleto()">← Continuar comprando</button>';
 }
 
 function selPag(p){ window.pagSelecionado=p; var opts=document.querySelectorAll('.pag-opt'); for(var i=0;i<opts.length;i++) opts[i].classList.remove('selected'); document.getElementById('pag-'+p).classList.add('selected'); }
@@ -1680,6 +1922,7 @@ function abrirEdit(id){
   document.getElementById('edit-cat').value=prod.cat;
   document.getElementById('edit-vegano').value=prod.vegano;
   document.getElementById('edit-baby').value=prod.babyFriendly||'nao';
+  marcarTagsProduto('edit', prod.tags);
   document.getElementById('edit-desc').value=prod.desc;
   document.getElementById('edit-destaque').value=prod.destaque||'';
   window.editFotos = fotosDoProduto(prod);
