@@ -100,6 +100,17 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
 .montar-btn{background:var(--verde);color:white;border:none;padding:8px 16px;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:'Jost',sans-serif;}
 .montar-btn:hover{background:var(--marrom);}
 .produto-card.clicavel{cursor:pointer;}
+.produto-destaque{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--dourado);line-height:1.5;margin-bottom:8px;padding-left:8px;border-left:2px solid var(--dourado);}
+.detalhe-overlay{position:fixed;inset:0;background:rgba(44,24,16,0.75);z-index:750;display:none;align-items:center;justify-content:center;padding:16px;overflow-y:auto;}
+.detalhe-overlay.open{display:flex;}
+.detalhe-modal{background:white;width:520px;max-width:100%;max-height:90vh;overflow-y:auto;position:relative;border-top:3px solid var(--dourado);}
+.detalhe-fechar{position:absolute;top:12px;right:12px;background:rgba(44,24,16,0.55);color:white;border:none;width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer;z-index:2;}
+.detalhe-foto{width:100%;height:280px;position:relative;}
+.detalhe-foto .produto-foto,.detalhe-foto .produto-foto-carrossel,.detalhe-foto .produto-foto-ph{height:280px;}
+.detalhe-corpo{padding:24px;}
+.detalhe-nome{font-size:28px;color:var(--marrom-escuro);margin-bottom:10px;}
+.detalhe-destaque{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--dourado);line-height:1.5;margin-bottom:14px;padding:10px 14px;background:var(--offwhite2);border-left:3px solid var(--dourado);}
+.detalhe-desc{font-size:14px;color:var(--texto-medio);line-height:1.8;margin-bottom:18px;}
 .wizard-overlay{position:fixed;inset:0;background:rgba(44,24,16,0.75);z-index:800;display:none;align-items:center;justify-content:center;padding:16px;}
 .wizard-overlay.open{display:flex;}
 .wizard-modal{background:white;width:480px;max-width:100%;max-height:90vh;display:flex;flex-direction:column;border-top:3px solid var(--dourado);}
@@ -355,6 +366,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
           <div class="form-group"><label>Categoria</label><select id="novo-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
           <div class="form-group"><label>Vegano?</label><select id="novo-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
           <div class="form-group"><label>Baby Friendly?</label><select id="novo-baby"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+          <div class="form-group full"><label>Frase de destaque (opcional)</label><input type="text" id="novo-destaque" placeholder="Ex: O doce que prova que dá pra ser saudável e incrível ao mesmo tempo"></div>
           <div class="form-group full"><label>Descrição</label><textarea id="novo-desc" placeholder="Descreva o produto..."></textarea></div>
           <div class="form-group full">
             <label>Fotos do produto (pode escolher várias)</label>
@@ -462,6 +474,19 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
   </div>
 </div>
 
+<div class="detalhe-overlay" id="detalheOverlay" onclick="if(event.target===this)fecharDetalheProduto()">
+  <div class="detalhe-modal">
+    <button type="button" class="detalhe-fechar" onclick="fecharDetalheProduto()">✕</button>
+    <div class="detalhe-foto" id="detalhe-foto"></div>
+    <div class="detalhe-corpo">
+      <div class="detalhe-nome serif" id="detalhe-nome"></div>
+      <div class="detalhe-destaque" id="detalhe-destaque"></div>
+      <div class="detalhe-desc" id="detalhe-desc"></div>
+      <div id="detalhe-acao"></div>
+    </div>
+  </div>
+</div>
+
 <div class="wizard-overlay" id="wizardOverlay">
   <div class="wizard-modal">
     <div class="wizard-header">
@@ -488,6 +513,7 @@ nav{background:var(--marrom-escuro);padding:0 2rem;display:flex;align-items:cent
     <div class="edit-modal-grupo"><label>Categoria</label><select id="edit-cat" onchange="onSelectCategoriaMudou(this.id)"></select></div>
     <div class="edit-modal-grupo"><label>Vegano?</label><select id="edit-vegano"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
     <div class="edit-modal-grupo"><label>Baby Friendly?</label><select id="edit-baby"><option value="nao">Não</option><option value="sim">Sim</option></select></div>
+    <div class="edit-modal-grupo"><label>Frase de destaque (opcional)</label><input type="text" id="edit-destaque" placeholder="Ex: O doce que prova que dá pra ser saudável e incrível ao mesmo tempo"></div>
     <div class="edit-modal-grupo"><label>Descrição</label><textarea id="edit-desc"></textarea></div>
     <div class="edit-modal-grupo">
       <label>Fotos (pode escolher várias)</label>
@@ -764,6 +790,7 @@ window.adicionarProduto = async function() {
   var preco = parseFloat(document.getElementById('novo-preco').value);
   var cat = document.getElementById('novo-cat').value;
   var desc = document.getElementById('novo-desc').value.trim();
+  var destaque = document.getElementById('novo-destaque').value.trim();
   var vegano = document.getElementById('novo-vegano').value;
   var babyFriendly = document.getElementById('novo-baby').value;
   if(!nome||!preco){ showToast('Preencha nome e preço!'); return; }
@@ -773,7 +800,7 @@ window.adicionarProduto = async function() {
   var variantes = window.novasVariantesTemp || [];
   var etapas = window.novoConfiguradorTemp || [];
   try {
-    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, vegano:vegano, babyFriendly:babyFriendly, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
+    await set(ref(db, 'produtos/'+id), {id:id, nome:nome, preco:preco, cat:cat, desc:desc, destaque:destaque, vegano:vegano, babyFriendly:babyFriendly, foto:fotos[0]?fotos[0].src:'', fotos:fotos, adicionais:adicionais, variantes:variantes, etapas:etapas});
   } catch(e) {
     showToast('Não foi possível salvar. Verifique se você ainda está logada como admin.');
     return;
@@ -781,6 +808,7 @@ window.adicionarProduto = async function() {
   document.getElementById('novo-nome').value='';
   document.getElementById('novo-preco').value='';
   document.getElementById('novo-desc').value='';
+  document.getElementById('novo-destaque').value='';
   document.getElementById('novo-preview-lista').innerHTML='';
   window.novasFotos=[];
   window.novosAdicionaisTemp=[];
@@ -811,6 +839,7 @@ window.salvarEdicao = async function() {
     vegano: document.getElementById('edit-vegano').value,
     babyFriendly: document.getElementById('edit-baby').value,
     desc: document.getElementById('edit-desc').value.trim(),
+    destaque: document.getElementById('edit-destaque').value.trim(),
     adicionais: window.adicionaisTemp,
     variantes: window.variantesTemp,
     etapas: window.configuradorTemp,
@@ -1062,32 +1091,35 @@ function posicaoCss(pos){
   return pos==='top' ? 'center 0%' : (pos==='bottom' ? 'center 100%' : 'center 50%');
 }
 
-function fotoCardHtml(prod){
+function fotoCardHtml(prod, idPrefix){
+  idPrefix = idPrefix || '';
   var fotos = fotosDoProduto(prod);
   if(!fotos.length) return '<div class="produto-foto-ph">🍫</div>';
   if(fotos.length===1) return '<img src="'+fotos[0].src+'" class="produto-foto" style="object-position:'+posicaoCss(fotos[0].pos)+'" alt="'+prod.nome+'">';
   var dotsHtml='';
-  for(var d=0;d<fotos.length;d++) dotsHtml += '<span class="foto-dot" data-prod-dot="'+prod.id+'" style="opacity:'+(d===0?'1':'0.4')+'"></span>';
+  for(var d=0;d<fotos.length;d++) dotsHtml += '<span class="foto-dot" data-prod-dot="'+idPrefix+prod.id+'" style="opacity:'+(d===0?'1':'0.4')+'"></span>';
   return '<div class="produto-foto-carrossel">'+
-    '<img id="foto-'+prod.id+'" src="'+fotos[0].src+'" class="produto-foto" style="object-position:'+posicaoCss(fotos[0].pos)+'" alt="'+prod.nome+'">'+
-    '<button type="button" class="foto-nav foto-nav-prev" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',-1)">‹</button>'+
-    '<button type="button" class="foto-nav foto-nav-next" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',1)">›</button>'+
+    '<img id="foto-'+idPrefix+prod.id+'" src="'+fotos[0].src+'" class="produto-foto" style="object-position:'+posicaoCss(fotos[0].pos)+'" alt="'+prod.nome+'">'+
+    '<button type="button" class="foto-nav foto-nav-prev" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',-1,\''+idPrefix+'\')">‹</button>'+
+    '<button type="button" class="foto-nav foto-nav-next" onclick="event.stopPropagation();mudarFotoProduto(\''+prod.id+'\',1,\''+idPrefix+'\')">›</button>'+
     '<div class="foto-dots">'+dotsHtml+'</div>'+
     '</div>';
 }
 
-function mudarFotoProduto(prodId, dir){
+function mudarFotoProduto(prodId, dir, idPrefix){
+  idPrefix = idPrefix || '';
   var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
   if(!prod) return;
   var fotos = fotosDoProduto(prod);
   if(fotos.length<2) return;
   if(!window.fotoIndex) window.fotoIndex={};
-  var atual = window.fotoIndex[prodId]||0;
+  var key = idPrefix+prodId;
+  var atual = window.fotoIndex[key]||0;
   atual = (atual + dir + fotos.length) % fotos.length;
-  window.fotoIndex[prodId]=atual;
-  var img = document.getElementById('foto-'+prodId);
+  window.fotoIndex[key]=atual;
+  var img = document.getElementById('foto-'+idPrefix+prodId);
   if(img){ img.src = fotos[atual].src; img.style.objectPosition = posicaoCss(fotos[atual].pos); }
-  var dots = document.querySelectorAll('[data-prod-dot="'+prodId+'"]');
+  var dots = document.querySelectorAll('[data-prod-dot="'+idPrefix+prodId+'"]');
   for(var i=0;i<dots.length;i++) dots[i].style.opacity = (i===atual?'1':'0.4');
 }
 
@@ -1132,12 +1164,14 @@ function renderCardapio() {
         adHtml = '<div class="adicional-box">';
         for(var k=0;k<ads.length;k++) {
           var ad = ads[k];
-          adHtml += '<div class="adicional-item"><div><div class="adicional-nome">'+ad.nome+'</div></div><button class="adicional-btn" onclick="addAdicional(\''+prod.id+'\',\''+ad.id+'\')">+ R$ '+ad.preco.toFixed(2).replace('.',',')+'</button></div>';
+          adHtml += '<div class="adicional-item"><div><div class="adicional-nome">'+ad.nome+'</div></div><button class="adicional-btn" onclick="event.stopPropagation();addAdicional(\''+prod.id+'\',\''+ad.id+'\')">+ R$ '+ad.preco.toFixed(2).replace('.',',')+'</button></div>';
         }
         adHtml += '</div>';
       }
       var variantes = prod.variantes || [];
       var temEtapas = (prod.etapas || []).length > 0;
+      var acaoClique = temEtapas ? ('abrirConfiguradorModal(\''+prod.id+'\')') : ('abrirDetalheProduto(\''+prod.id+'\')');
+      var destaqueHtml = prod.destaque ? '<div class="produto-destaque">✨ '+prod.destaque+'</div>' : '';
       var precoOuVariantesHtml;
       if(temEtapas){
         precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>A partir de R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="montar-btn" onclick="event.stopPropagation();abrirConfiguradorModal(\''+prod.id+'\')">Montar Meu Bolo</button></div>';
@@ -1145,14 +1179,14 @@ function renderCardapio() {
         var pillsHtml = '<div class="variante-box"><div class="variante-titulo">Escolha a versão:</div><div class="variante-opcoes">';
         for(var vv=0; vv<variantes.length; vv++){
           var variante = variantes[vv];
-          pillsHtml += '<button type="button" class="variante-pill" onclick="addCarrinhoVariante(\''+prod.id+'\',\''+variante.id+'\')">'+variante.nome+' <span class="variante-preco">R$ '+variante.preco.toFixed(2).replace('.',',')+'</span></button>';
+          pillsHtml += '<button type="button" class="variante-pill" onclick="event.stopPropagation();addCarrinhoVariante(\''+prod.id+'\',\''+variante.id+'\')">'+variante.nome+' <span class="variante-preco">R$ '+variante.preco.toFixed(2).replace('.',',')+'</span></button>';
         }
         pillsHtml += '</div></div>';
         precoOuVariantesHtml = pillsHtml;
       } else {
-        precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>';
+        precoOuVariantesHtml = '<div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="event.stopPropagation();addCarrinho(\''+prod.id+'\')">+ Adicionar</button></div>';
       }
-      html += '<div class="produto-card'+(temEtapas?' clicavel':'')+'"'+(temEtapas?' onclick="abrirConfiguradorModal(\''+prod.id+'\')"':'')+'>'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+(prod.babyFriendly==='sim'?'<span class="baby-badge">🍼 Baby Friendly</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div><div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+(temEtapas?'':adHtml)+'</div></div>';
+      html += '<div class="produto-card clicavel" onclick="'+acaoClique+'">'+(prod.vegano==='sim'?'<span class="vegano-badge">Vegano</span>':'')+(prod.babyFriendly==='sim'?'<span class="baby-badge">🍼 Baby Friendly</span>':'')+fotoCardHtml(prod)+'<div class="produto-info"><div class="produto-nome serif">'+prod.nome+'</div>'+destaqueHtml+'<div class="produto-desc">'+prod.desc+'</div>'+precoOuVariantesHtml+(temEtapas?'':adHtml)+'</div></div>';
     }
     html += '</div></div>';
   }
@@ -1310,6 +1344,47 @@ function wizardFinalizar(){
   atualizarFloat();
   showToast('"'+prod.nome+'" adicionado!');
   fecharConfiguradorModal();
+}
+
+// ── DETALHE DO PRODUTO ──
+function abrirDetalheProduto(prodId){
+  var prod = (window.produtos||[]).find(function(p){ return p.id==prodId; });
+  if(!prod) return;
+  if(prod.etapas && prod.etapas.length){ abrirConfiguradorModal(prodId); return; }
+  document.getElementById('detalhe-foto').innerHTML = fotoCardHtml(prod, 'detalhe-');
+  document.getElementById('detalhe-nome').textContent = prod.nome;
+  var destEl = document.getElementById('detalhe-destaque');
+  if(prod.destaque){ destEl.style.display='block'; destEl.textContent = '"'+prod.destaque+'"'; }
+  else { destEl.style.display='none'; }
+  document.getElementById('detalhe-desc').textContent = prod.desc;
+
+  var variantes = prod.variantes || [];
+  var acao;
+  if(variantes.length>0){
+    acao = '<div class="variante-box"><div class="variante-titulo">Escolha a versão:</div><div class="variante-opcoes">';
+    for(var i=0;i<variantes.length;i++){
+      var v = variantes[i];
+      acao += '<button type="button" class="variante-pill" onclick="addCarrinhoVariante(\''+prod.id+'\',\''+v.id+'\');fecharDetalheProduto();">'+v.nome+' <span class="variante-preco">R$ '+v.preco.toFixed(2).replace('.',',')+'</span></button>';
+    }
+    acao += '</div></div>';
+  } else {
+    acao = '<div class="produto-bottom"><div class="produto-preco serif"><span>R$ </span>'+prod.preco.toFixed(2).replace('.',',')+'</div><button class="adicionar-btn" onclick="addCarrinho(\''+prod.id+'\');fecharDetalheProduto();">+ Adicionar</button></div>';
+  }
+  var ads = prod.adicionais || [];
+  if(ads.length>0){
+    acao += '<div class="adicional-box">';
+    for(var k=0;k<ads.length;k++){
+      var ad = ads[k];
+      acao += '<div class="adicional-item"><div><div class="adicional-nome">'+ad.nome+'</div></div><button class="adicional-btn" onclick="addAdicional(\''+prod.id+'\',\''+ad.id+'\')">+ R$ '+ad.preco.toFixed(2).replace('.',',')+'</button></div>';
+    }
+    acao += '</div>';
+  }
+  document.getElementById('detalhe-acao').innerHTML = acao;
+  document.getElementById('detalheOverlay').classList.add('open');
+}
+
+function fecharDetalheProduto(){
+  document.getElementById('detalheOverlay').classList.remove('open');
 }
 
 function addAdicional(prodId,adId) {
@@ -1606,6 +1681,7 @@ function abrirEdit(id){
   document.getElementById('edit-vegano').value=prod.vegano;
   document.getElementById('edit-baby').value=prod.babyFriendly||'nao';
   document.getElementById('edit-desc').value=prod.desc;
+  document.getElementById('edit-destaque').value=prod.destaque||'';
   window.editFotos = fotosDoProduto(prod);
   renderPreviewFotos('edit-preview-lista', 'editFotos');
   window.adicionaisTemp=JSON.parse(JSON.stringify(prod.adicionais||[]));
